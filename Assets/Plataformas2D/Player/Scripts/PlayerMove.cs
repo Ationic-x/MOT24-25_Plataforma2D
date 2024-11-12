@@ -9,11 +9,14 @@ public class PlayerMove : MonoBehaviour
 {
     private float inputX;
     [SerializeField] private float speedX = 5f;
-    SpriteRenderer sr;
+    private SpriteRenderer sr;
+    private PlayerStates ps;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        ps = GetComponent<PlayerStates>();
         sr = transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
     }
 
@@ -22,11 +25,21 @@ public class PlayerMove : MonoBehaviour
     {
         inputX = Input.GetAxis("Horizontal");
 
-        transform.position += Vector3.right * inputX * speedX * Time.deltaTime;
-        flip();
+        ps.IsMoving = (inputX != 0);
+
+        MovesPlayer();
+        Flip();
     }
 
-    private void flip() 
+    private void MovesPlayer()
+    {
+        if (inputX < 0 && ps.LeftCollision || inputX > 0 && ps.RightCollision)
+            return;
+
+        transform.position += Vector3.right * inputX * speedX * Time.deltaTime;
+    }
+
+    private void Flip() 
     {
         if (inputX == 0)
             return;
