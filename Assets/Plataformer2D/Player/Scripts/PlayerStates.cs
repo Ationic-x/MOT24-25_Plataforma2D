@@ -5,125 +5,125 @@ using UnityEngine;
 public class PlayerStates : MonoBehaviour
 {
     // Movement States
-    [SerializeField] private bool isRunning;
-    [SerializeField] private bool isDashing;
-    [SerializeField] private bool isJumping;
-    [SerializeField] private bool isJumpFalling;
-    [SerializeField] private bool isWallJumping;
-    [SerializeField] private bool isJumpCut;
-    [SerializeField] private bool isSliding;
+    [SerializeField] private bool _isRunning;
+    [SerializeField] private bool _isDashing;
+    [SerializeField] private bool _isJumping;
+    [SerializeField] private bool _isJumpFalling;
+    [SerializeField] private bool _isWallJumping;
+    [SerializeField] private bool _isJumpCut;
+    [SerializeField] private bool _isSliding;
 
     // Collistion State
-    [SerializeField] private bool isGrounded;
-    [SerializeField] private bool isCollidedLeft;
-    [SerializeField] private bool isCollidedRight;
+    [SerializeField] private bool _isGrounded;
+    [SerializeField] private bool _isCollidedLeft;
+    [SerializeField] private bool _isCollidedRight;
 
 
     // General States
-    [SerializeField] private bool isFacingRight = true; // By default the character is facing right
-    [SerializeField] private bool isDashRefilling;
+    [SerializeField] private bool _isFacingRight = true; // By default the character is facing right
+    [SerializeField] private bool _isDashRefilling;
 
     // Player Counts
-    [SerializeField] private int dashesLeft;
+    [SerializeField] private int _dashesLeft;
 
     // Player Time
-    [SerializeField] private float wallJumpStartTime;
-    [SerializeField] private float jumpDelayStartTime;
+    [SerializeField] private float _wallJumpStartTime;
+    [SerializeField] private float _jumpDelayStartTime;
 
     #region Getters And Setters
     // Movement States
     public bool IsRunning
     {
-        get => isRunning;
-        set => isRunning = value;
+        get => _isRunning;
+        set => _isRunning = value;
     }
 
     public bool IsDashing
     {
-        get => isDashing;
-        set => isDashing = value;
+        get => _isDashing;
+        set => _isDashing = value;
     }
 
     public bool IsJumping
     {
-        get => isJumping;
-        set => isJumping = value;
+        get => _isJumping;
+        set => _isJumping = value;
     }
 
     public bool IsJumpFalling
     {
-        get => isJumpFalling;
-        set => isJumpFalling = value;
+        get => _isJumpFalling;
+        set => _isJumpFalling = value;
     }
 
     public bool IsWallJumping
     {
-        get => isWallJumping;
-        set => isWallJumping = value;
+        get => _isWallJumping;
+        set => _isWallJumping = value;
     }
 
     public bool IsJumpCut
 	{
-        get => isJumpCut;
-        set => isJumpCut = value;
+        get => _isJumpCut;
+        set => _isJumpCut = value;
 	}
 
     public bool IsSliding
 	{
-        get => isSliding;
-        set => isSliding = value;
+        get => _isSliding;
+        set => _isSliding = value;
     }
 
     // Collision States
     public bool IsGrounded
     {
-        get => isGrounded;
-        set => isGrounded = value;
+        get => _isGrounded;
+        set => _isGrounded = value;
     }
 
     public bool IsCollidedLeft
     {
-        get => isCollidedLeft;
-        set => isCollidedLeft = value;
+        get => _isCollidedLeft;
+        set => _isCollidedLeft = value;
     }
 
     public bool IsCollidedRight
     {
-        get => isCollidedRight;
-        set => isCollidedRight = value;
+        get => _isCollidedRight;
+        set => _isCollidedRight = value;
     }
 
     // General States
     public bool IsFacingRight
     {
-        get => isFacingRight;
-        set => isFacingRight = value;
+        get => _isFacingRight;
+        set => _isFacingRight = value;
     }
 
     public bool IsDashRefilling
 	{
-        get => isDashRefilling;
-        set => isDashRefilling = value;
+        get => _isDashRefilling;
+        set => _isDashRefilling = value;
 	}
 
     // Player Counts
     public int DashesLeft
 	{
-        get => dashesLeft;
-        set => dashesLeft = value;
+        get => _dashesLeft;
+        set => _dashesLeft = value;
 	}
 
     // Player Time
     public float WallJumpStartTime
 	{
-        get => wallJumpStartTime;
-        set => wallJumpStartTime = value;
+        get => _wallJumpStartTime;
+        set => _wallJumpStartTime = value;
     }
 
     public float JumpDelayStartTime
 	{
-        get => jumpDelayStartTime;
-        set => jumpDelayStartTime = value;
+        get => _jumpDelayStartTime;
+        set => _jumpDelayStartTime = value;
     }
 
     #endregion

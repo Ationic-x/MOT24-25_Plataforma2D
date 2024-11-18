@@ -1,43 +1,70 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static AudioManager;
+using static PlayerAudio;
 
 public class PlayerAudio : MonoBehaviour
 {
-    [SerializeField] private AudioManager am;
-    private PlayerStates ps;
+    // [SerializeField] private AudioManager _am;
+    private PlayerStates _ps;
 
     // States to avoid reproduce multiple times
-    private bool audioJumping;
-    private bool audioWallJumping;
+    private bool _audioJumping;
+    private bool _audioWallJumping;
+    [SerializeField] private List<AudioClip> _playerClips;
+
+    public enum Sound
+    {
+        JumpStart,
+        JumpLand,
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        ps = GetComponent<PlayerStates>();
+        _ps = GetComponent<PlayerStates>();
     }
+
+
 
     // Update is called once per frame
     void Update()
     {
-        if (!audioJumping && (ps.IsJumping || ps.IsJumpFalling))
+        if (!_audioJumping && (_ps.IsJumping || _ps.IsJumpFalling))
 		{
-            audioJumping = true;
-            am.PlaySoundOnce(AudioManager.Sound.JumpStart, 1);
+            _audioJumping = true;
+            PlaySoundOnce("JumpStart", GetAudioClip(Sound.JumpStart), 1);
 		}
 
-        if (!audioWallJumping && ps.IsWallJumping)
+        if (!_audioWallJumping && _ps.IsWallJumping)
 		{
-            audioWallJumping = true;
-            audioJumping = true;
-            am.PlaySoundOnce(AudioManager.Sound.JumpStart, 1);
+            _audioWallJumping = true;
+            _audioJumping = true;
+            PlaySoundOnce("JumpStart", GetAudioClip(Sound.JumpStart), 1);
         }
 
-        if (audioJumping && ps.IsGrounded)
+        if (_audioJumping && _ps.IsGrounded)
 		{
-            audioJumping = false;
-            audioWallJumping = false;
-            am.PlaySoundOnce(AudioManager.Sound.JumpLand, 1);
+            _audioJumping = false;
+            _audioWallJumping = false;
+            PlaySoundOnce("JumpLand", GetAudioClip(Sound.JumpLand), 1);
         }
+    }
+
+
+    private AudioClip GetAudioClip(Sound sound)
+    {
+        switch (sound)
+        {
+            case Sound.JumpStart:
+                int randomIndex = Random.Range(0, 1);
+                return _playerClips[randomIndex];
+            case Sound.JumpLand:
+                return _playerClips[2];
+        }
+
+        Debug.LogWarning($"Audio not found: {sound}");
+        return null;
     }
 }

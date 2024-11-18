@@ -5,19 +5,19 @@ using UnityEngine;
 
 public class PlayerCollisions : MonoBehaviour
 {
-    private PlayerStates ps;
+    private PlayerStates _ps;
 
-    [SerializeField] private Transform groundCheckPoint;
-    [SerializeField] private Vector2 groundCheckSize = new Vector2(0.49f, 0.03f);
-    [SerializeField] private Transform frontWallCheckPoint;
-    [SerializeField] private Transform backWallCheckPoint;
-    [SerializeField] private Vector2 wallCheckSize = new Vector2(0.5f, 1f);
-    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private Transform _groundCheckPoint;
+    [SerializeField] private Vector2 _groundCheckSize = new Vector2(0.49f, 0.03f);
+    [SerializeField] private Transform _frontWallCheckPoint;
+    [SerializeField] private Transform _backWallCheckPoint;
+    [SerializeField] private Vector2 _wallCheckSize = new Vector2(0.5f, 1f);
+    [SerializeField] private LayerMask _groundLayer;
 
     // Start is called before the first frame update
     void Start()
     {
-        ps = GetComponent<PlayerStates>();
+        _ps = GetComponent<PlayerStates>();
     }
 
     // Update is called once per frame
@@ -27,28 +27,28 @@ public class PlayerCollisions : MonoBehaviour
         bool isGrounded = false, isCollidedRight = false, isCollidedLeft = false;
 
         // Exceptions
-        if (!ps.IsDashing && !ps.IsJumping)
+        if (!_ps.IsDashing && !_ps.IsJumping)
         {
             //Ground Check
-            if (Physics2D.OverlapBox(groundCheckPoint.position, groundCheckSize, 0, groundLayer))
+            if (Physics2D.OverlapBox(_groundCheckPoint.position, _groundCheckSize, 0, _groundLayer))
                 isGrounded = true;
         }
 
-        if (!ps.IsWallJumping)
+        if (!_ps.IsWallJumping)
         {
-            bool frontCollider = Physics2D.OverlapBox(frontWallCheckPoint.position, wallCheckSize, 0, groundLayer);
-            bool backCollider = Physics2D.OverlapBox(backWallCheckPoint.position, wallCheckSize, 0, groundLayer);
+            bool frontCollider = Physics2D.OverlapBox(_frontWallCheckPoint.position, _wallCheckSize, 0, _groundLayer);
+            bool backCollider = Physics2D.OverlapBox(_backWallCheckPoint.position, _wallCheckSize, 0, _groundLayer);
 
             //Right Wall Check
-            isCollidedRight = ps.IsFacingRight ? frontCollider : backCollider;
+            isCollidedRight = _ps.IsFacingRight ? frontCollider : backCollider;
 
             //Left Wall Check
-            isCollidedLeft = ps.IsFacingRight ? backCollider : frontCollider;
+            isCollidedLeft = _ps.IsFacingRight ? backCollider : frontCollider;
         }
 
 
-        ps.IsGrounded = isGrounded;
-        ps.IsCollidedRight = isCollidedRight;
-        ps.IsCollidedLeft = isCollidedLeft;
+        _ps.IsGrounded = isGrounded;
+        _ps.IsCollidedRight = isCollidedRight;
+        _ps.IsCollidedLeft = isCollidedLeft;
     }
 }

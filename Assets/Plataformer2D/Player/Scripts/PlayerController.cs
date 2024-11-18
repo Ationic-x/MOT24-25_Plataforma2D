@@ -4,143 +4,143 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-	[SerializeField] private PlayerData data; // Player parameters
+	[SerializeField] private PlayerData _data; // Player parameters
 
 	// Input variables
-	[SerializeField] private Vector2 moveInput;
-	[SerializeField] private bool jumpButton;
-	[SerializeField] private bool dashButton;
+	[SerializeField] private Vector2 _moveInput;
+	[SerializeField] private bool _jumpButton;
+	[SerializeField] private bool _dashButton;
 
-	private PlayerStates ps;
-	private Rigidbody2D rb;
+	private PlayerStates _ps;
+	private Rigidbody2D _rb;
 
 	// Start is called before the first frame update
 	void Start()
 	{
-		ps = GetComponent<PlayerStates>();
-		rb = GetComponent<Rigidbody2D>();
-		SetGravityScale(data.gravityScale);
+		_ps = GetComponent<PlayerStates>();
+		_rb = GetComponent<Rigidbody2D>();
+		SetGravityScale(_data.gravityScale);
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		moveInput.x = Input.GetKey(KeyCode.A) ? -1 : Input.GetKey(KeyCode.D) ? 1 : 0;
+		_moveInput.x = Input.GetKey(KeyCode.A) ? -1 : Input.GetKey(KeyCode.D) ? 1 : 0;
 
-		if (moveInput.x != 0)
-			SwapFacingPosition(moveInput.x > 0);
+		if (_moveInput.x != 0)
+			SwapFacingPosition(_moveInput.x > 0);
 
-		jumpButton = Input.GetKey(KeyCode.J);
-		dashButton = Input.GetKeyDown(KeyCode.K);
+		_jumpButton = Input.GetKey(KeyCode.J);
+		_dashButton = Input.GetKeyDown(KeyCode.K);
 
-		ps.IsJumpCut = ps.IsJumping && !jumpButton;
+		_ps.IsJumpCut = _ps.IsJumping && !_jumpButton;
 
-		if ((ps.IsJumping || ps.IsJumpFalling) && ps.IsGrounded)
-			ps.JumpDelayStartTime = Time.time;
+		if ((_ps.IsJumping || _ps.IsJumpFalling) && _ps.IsGrounded)
+			_ps.JumpDelayStartTime = Time.time;
 
-		if (rb.velocity.y < 0 && !ps.IsSliding && !ps.IsDashing)
+		if (_rb.linearVelocity.y < 0 && !_ps.IsSliding && !_ps.IsDashing)
 		{
-			ps.IsJumping = false;
+			_ps.IsJumping = false;
 
-			ps.IsJumpFalling = true;
+			_ps.IsJumpFalling = true;
 		}
 
-		if (ps.IsWallJumping && Time.time - ps.WallJumpStartTime > data.wallJumpTime)
-			ps.IsWallJumping = false;
+		if (_ps.IsWallJumping && Time.time - _ps.WallJumpStartTime > _data.wallJumpTime)
+			_ps.IsWallJumping = false;
 
-		if (ps.IsGrounded && !ps.IsJumping && !ps.IsWallJumping)
+		if (_ps.IsGrounded && !_ps.IsJumping && !_ps.IsWallJumping)
 		{
-			ps.IsJumpCut = false;
+			_ps.IsJumpCut = false;
 
-			ps.IsJumpFalling = false;
+			_ps.IsJumpFalling = false;
 		}
 
-		if (!ps.IsDashing)
+		if (!_ps.IsDashing)
 		{
 			//Jump
-			if (jumpButton && CanJump())			
+			if (_jumpButton && CanJump())			
 				Jump();
 
 			//WallJump
-			else if (ps.IsSliding && Input.GetKeyDown(KeyCode.J))
+			else if (_ps.IsSliding && Input.GetKeyDown(KeyCode.J))
 			{
-				ps.WallJumpStartTime = Time.time;
+				_ps.WallJumpStartTime = Time.time;
 
-				WallJump(ps.IsFacingRight ? -1 : 1);
+				WallJump(_ps.IsFacingRight ? -1 : 1);
 			}
 		}
 
-		if (CanDash() && dashButton)
+		if (CanDash() && _dashButton)
 		{
 			Vector2 dashDir;
 
 			//Freeze game for split second. Adds juiciness and a bit of forgiveness over directional input
-			Sleep(data.dashSleepTime);
+			Sleep(_data.dashSleepTime);
 
 			//If not direction pressed, dash forward
-			if (moveInput != Vector2.zero)
-				dashDir = moveInput;
+			if (_moveInput != Vector2.zero)
+				dashDir = _moveInput;
 			else
-				dashDir = ps.IsFacingRight ? Vector2.right : Vector2.left;
+				dashDir = _ps.IsFacingRight ? Vector2.right : Vector2.left;
 
 			// Update when dashing (outside the coroutine this is called once)
-			ps.IsDashing = true;
-			ps.IsJumping = false;
-			ps.IsJumpFalling = false;
-			ps.IsWallJumping = false;
-			ps.IsJumpCut = false;
-			ps.IsGrounded = false;
-			ps.IsCollidedRight = false;
-			ps.IsCollidedLeft = false;
+			_ps.IsDashing = true;
+			_ps.IsJumping = false;
+			_ps.IsJumpFalling = false;
+			_ps.IsWallJumping = false;
+			_ps.IsJumpCut = false;
+			_ps.IsGrounded = false;
+			_ps.IsCollidedRight = false;
+			_ps.IsCollidedLeft = false;
 
 			StartCoroutine(nameof(StartDash), dashDir);
 		}
 
-		ps.IsSliding = CanSlide();
+		_ps.IsSliding = CanSlide();
 
 		//Higher gravity if we've released the jump input or are falling
-		if (ps.IsSliding)
+		if (_ps.IsSliding)
 		{
 			SetGravityScale(0);
 		}
-		else if (rb.velocity.y < 0 && moveInput.y < 0)
+		else if (_rb.linearVelocity.y < 0 && _moveInput.y < 0)
 		{
 			//Much higher gravity if holding down
-			SetGravityScale(data.gravityScale * data.fastFallGravityMult);
+			SetGravityScale(_data.gravityScale * _data.fastFallGravityMult);
 			//Caps maximum fall speed, so when falling over large distances we don't accelerate to insanely high speeds
-			rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, -data.maxFastFallSpeed));
+			_rb.linearVelocity = new Vector2(_rb.linearVelocity.x, Mathf.Max(_rb.linearVelocity.y, -_data.maxFastFallSpeed));
 		}
-		else if (ps.IsJumpCut)
+		else if (_ps.IsJumpCut)
 		{
 			//Higher gravity if jump button released
-			SetGravityScale(data.gravityScale * data.jumpCutGravityMult);
-			rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, -data.maxFallSpeed));
+			SetGravityScale(_data.gravityScale * _data.jumpCutGravityMult);
+			_rb.linearVelocity = new Vector2(_rb.linearVelocity.x, Mathf.Max(_rb.linearVelocity.y, -_data.maxFallSpeed));
 		}
-		else if ((ps.IsJumping || ps.IsWallJumping || ps.IsJumpFalling) && Mathf.Abs(rb.velocity.y) < data.jumpHangTimeThreshold)
+		else if ((_ps.IsJumping || _ps.IsWallJumping || _ps.IsJumpFalling) && Mathf.Abs(_rb.linearVelocity.y) < _data.jumpHangTimeThreshold)
 		{
-			SetGravityScale(data.gravityScale * data.jumpHangGravityMult);
+			SetGravityScale(_data.gravityScale * _data.jumpHangGravityMult);
 		}
-		else if (rb.velocity.y < 0)
+		else if (_rb.linearVelocity.y < 0)
 		{
 			//Higher gravity if falling
-			SetGravityScale(data.gravityScale * data.fallGravityMult);
+			SetGravityScale(_data.gravityScale * _data.fallGravityMult);
 			//Caps maximum fall speed, so when falling over large distances we don't accelerate to insanely high speeds
-			rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, -data.maxFallSpeed));
+			_rb.linearVelocity = new Vector2(_rb.linearVelocity.x, Mathf.Max(_rb.linearVelocity.y, -_data.maxFallSpeed));
 		}
 		else
 		{
 			//Default gravity if standing on a platform or moving upwards
-			SetGravityScale(data.gravityScale);
+			SetGravityScale(_data.gravityScale);
 		}
 	}
 
 	private void FixedUpdate()
 	{
 		//Handle Run
-		if (!ps.IsDashing)
+		if (!_ps.IsDashing)
 		{
-			if (ps.IsWallJumping)
-				Run(data.wallJumpRunLerp);
+			if (_ps.IsWallJumping)
+				Run(_data.wallJumpRunLerp);
 			else
 				Run(1);
 		}
@@ -150,7 +150,7 @@ public class PlayerController : MonoBehaviour
 		//}
 
 		//Handle Slide
-		if (ps.IsSliding)
+		if (_ps.IsSliding)
 			Slide();
 	}
 
@@ -159,17 +159,17 @@ public class PlayerController : MonoBehaviour
 	{
 
 		// Player cant be in another states
-		if (ps.IsWallJumping || ps.IsDashing || ps.IsGrounded)
+		if (_ps.IsWallJumping || _ps.IsDashing || _ps.IsGrounded)
 			return false;
 		 
 		// Player movement input must be in the same at collider
-		if (!(ps.IsCollidedLeft && moveInput.x < 0) && !(ps.IsCollidedRight && moveInput.x > 0))
+		if (!(_ps.IsCollidedLeft && _moveInput.x < 0) && !(_ps.IsCollidedRight && _moveInput.x > 0))
 			return false;
 
 		// If you are not moving the X (close wall or stopped cases), without consider sliding
-		if (!ps.IsSliding && rb.velocity.x == 0)
+		if (!_ps.IsSliding && _rb.linearVelocity.x == 0)
 			// Can slide only when reach max height or press again a move inputn
-			if (rb.velocity.y > 0 && !(Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D)))
+			if (_rb.linearVelocity.y > 0 && !(Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D)))
 				return false;
 
 		return true;
@@ -178,11 +178,11 @@ public class PlayerController : MonoBehaviour
 	private bool CanJump()
 	{
 		// Player must be in the floor
-		if (!ps.IsGrounded || ps.IsJumping || ps.IsSliding)
+		if (!_ps.IsGrounded || _ps.IsJumping || _ps.IsSliding)
 			return false;
 
 		// Player must be in the floor a minimum of time
-		if (ps.JumpDelayStartTime - Time.time > -data.delayJump)
+		if (_ps.JumpDelayStartTime - Time.time > -_data.delayJump)
 			return false;
 
 		return true;
@@ -190,22 +190,22 @@ public class PlayerController : MonoBehaviour
 
 	private bool CanDash()
 	{
-		if (!ps.IsDashing && ps.DashesLeft < data.dashAmount && ps.IsGrounded && !ps.IsDashRefilling)
+		if (!_ps.IsDashing && _ps.DashesLeft < _data.dashAmount && _ps.IsGrounded && !_ps.IsDashRefilling)
 		{
 			StartCoroutine(nameof(RefillDash), 1);
 		}
 
-		return ps.DashesLeft > 0;
+		return _ps.DashesLeft > 0;
 	}
 
 	private void SwapFacingPosition(bool facingRight)
 	{
 		// Avoid flip before the animation end
-		if (ps.IsSliding || ps.IsDashing) return;
+		if (_ps.IsSliding || _ps.IsDashing) return;
 
-		if (ps.IsFacingRight != facingRight)
+		if (_ps.IsFacingRight != facingRight)
 		{
-			ps.IsFacingRight = facingRight;
+			_ps.IsFacingRight = facingRight;
 			
 			Vector3 newScale = transform.localScale;
 			newScale.x *= -1;
@@ -216,44 +216,44 @@ public class PlayerController : MonoBehaviour
 	private void Jump()
 	{
 		// Update states when jump
-		ps.IsJumping = true;
-		ps.IsWallJumping = false;
-		ps.IsJumpCut = false;
-		ps.IsJumpFalling = false;
-		ps.IsGrounded = false;
+		_ps.IsJumping = true;
+		_ps.IsWallJumping = false;
+		_ps.IsJumpCut = false;
+		_ps.IsJumpFalling = false;
+		_ps.IsGrounded = false;
 
 		//We increase the force applied if we are falling
 		//This means we'll always feel like we jump the same amount 
 		//(setting the player's Y velocity to 0 beforehand will likely work the same, but I find this more elegant :D)
-		float force = data.jumpForce;
-		if (rb.velocity.y < 0)
-			force -= rb.velocity.y;
+		float force = _data.jumpForce;
+		if (_rb.linearVelocity.y < 0)
+			force -= _rb.linearVelocity.y;
 
-		rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
+		_rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
 	}
 
 	private void Slide()
 	{
 		//We remove the remaining upwards Impulse to prevent upwards sliding
-		if (rb.velocity.y > 0)
+		if (_rb.linearVelocity.y > 0)
 		{
-			rb.AddForce(-rb.velocity.y * Vector2.up, ForceMode2D.Impulse);
+			_rb.AddForce(-_rb.linearVelocity.y * Vector2.up, ForceMode2D.Impulse);
 		}
 
 		//Works the same as the Run but only in the y-axis
-		float speedDif = data.slideSpeed - rb.velocity.y;
-		float movement = speedDif * data.slideAccel;
+		float speedDif = _data.slideSpeed - _rb.linearVelocity.y;
+		float movement = speedDif * _data.slideAccel;
 		
 		//So, we clamp the movement here to prevent any over corrections (these aren't noticeable in the Run)
 		//The force applied can't be greater than the (negative) speedDifference * by how many times a second FixedUpdate() is called. For more info research how force are applied to rigidbodies.
 		movement = Mathf.Clamp(movement, -Mathf.Abs(speedDif) * (1 / Time.fixedDeltaTime), Mathf.Abs(speedDif) * (1 / Time.fixedDeltaTime));
 
-		rb.AddForce(movement * Vector2.up);
+		_rb.AddForce(movement * Vector2.up);
 
 		// Remove jumping state and jump falling
-		ps.IsJumping = false;
-		ps.IsJumpFalling = false;
-		ps.IsWallJumping = false;
+		_ps.IsJumping = false;
+		_ps.IsJumpFalling = false;
+		_ps.IsWallJumping = false;
 	}
 
 	private void Sleep(float duration)
@@ -274,38 +274,38 @@ public class PlayerController : MonoBehaviour
 	// Method to make run the player in the X axis
 	private void Run(float lerpAmount)
 	{
-		float targetSpeed = moveInput.x * data.runMaxSpeed; // -1~1 * Max Speed
-		targetSpeed = Mathf.Lerp(rb.velocity.x, targetSpeed, lerpAmount); // Get values betwen current.s and target.s (smothness)
+		float targetSpeed = _moveInput.x * _data.runMaxSpeed; // -1~1 * Max Speed
+		targetSpeed = Mathf.Lerp(_rb.linearVelocity.x, targetSpeed, lerpAmount); // Get values betwen current.s and target.s (smothness)
 
 		float accelRate;
 
 		// Calculate acceleration and decceleration
-		if (ps.IsGrounded)
-			accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? data.runAccelAmount : data.runDeccelAmount;
+		if (_ps.IsGrounded)
+			accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? _data.runAccelAmount : _data.runDeccelAmount;
 		else
-			accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? data.runAccelAmount * data.accelInAir : data.runDeccelAmount * data.deccelInAir;
+			accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? _data.runAccelAmount * _data.accelInAir : _data.runDeccelAmount * _data.deccelInAir;
 
-		if ((ps.IsJumping || ps.IsWallJumping || ps.IsJumpFalling) && Mathf.Abs(rb.velocity.y) < data.jumpHangTimeThreshold)
+		if ((_ps.IsJumping || _ps.IsWallJumping || _ps.IsJumpFalling) && Mathf.Abs(_rb.linearVelocity.y) < _data.jumpHangTimeThreshold)
 		{
-			accelRate *= data.jumpHangAccelerationMult;
-			targetSpeed *= data.jumpHangMaxSpeedMult;
+			accelRate *= _data.jumpHangAccelerationMult;
+			targetSpeed *= _data.jumpHangMaxSpeedMult;
 		}
 
 		// Preserve the speed of the character, remove any decceleration if have a greater speed than max speed (jump wall case)
-		if (data.doConserveMomentum 
-			&& Mathf.Abs(rb.velocity.x) > Mathf.Abs(targetSpeed) 
-			&& Mathf.Sign(rb.velocity.x) == Mathf.Sign(targetSpeed) 
+		if (_data.doConserveMomentum 
+			&& Mathf.Abs(_rb.linearVelocity.x) > Mathf.Abs(targetSpeed) 
+			&& Mathf.Sign(_rb.linearVelocity.x) == Mathf.Sign(targetSpeed) 
 			&& Mathf.Abs(targetSpeed) > 0.01f 
-			&& !ps.IsGrounded)
+			&& !_ps.IsGrounded)
 			accelRate = 0;
 
-		float speedDif = targetSpeed - rb.velocity.x; // Get distance between target.s and current.s
+		float speedDif = targetSpeed - _rb.linearVelocity.x; // Get distance between target.s and current.s
 
 		float movement = speedDif * accelRate; // Multiply speedDif by accelRate factor
 
-		rb.AddForce(movement * Vector2.right, ForceMode2D.Force); // Add movement force into X axis
+		_rb.AddForce(movement * Vector2.right, ForceMode2D.Force); // Add movement force into X axis
 
-		ps.IsRunning = moveInput.x != 0 && ps.IsGrounded; // Change State
+		_ps.IsRunning = _moveInput.x != 0 && _ps.IsGrounded; // Change State
 
 		/* 
 		 * Basic explanation: We detect a number between target speed and current speed (defined lerp amount), by default 1 so is max speed i.e 10 max speed
@@ -321,29 +321,29 @@ public class PlayerController : MonoBehaviour
 	private void WallJump(int dir)
 	{
 		// Update states when walljump
-		ps.IsWallJumping = true;
-		ps.IsJumping = false;
-		ps.IsJumpCut = false;
-		ps.IsJumpFalling = false;
-		ps.IsSliding = false;
+		_ps.IsWallJumping = true;
+		_ps.IsJumping = false;
+		_ps.IsJumpCut = false;
+		_ps.IsJumpFalling = false;
+		_ps.IsSliding = false;
 
-		Vector2 force = new Vector2(data.wallJumpForce.x, data.wallJumpForce.y);
+		Vector2 force = new Vector2(_data.wallJumpForce.x, _data.wallJumpForce.y);
 		force.x *= dir; //apply force in opposite direction of wall
 
-		if (Mathf.Sign(rb.velocity.x) != Mathf.Sign(force.x))
-			force.x -= rb.velocity.x;
+		if (Mathf.Sign(_rb.linearVelocity.x) != Mathf.Sign(force.x))
+			force.x -= _rb.linearVelocity.x;
 
-		if (rb.velocity.y < 0) //checks whether player is falling, if so we subtract the velocity.y (counteracting force of gravity). This ensures the player always reaches our desired jump force or greater
-			force.y -= rb.velocity.y;
+		if (_rb.linearVelocity.y < 0) //checks whether player is falling, if so we subtract the velocity.y (counteracting force of gravity). This ensures the player always reaches our desired jump force or greater
+			force.y -= _rb.linearVelocity.y;
 
 		//Unlike in the run we want to use the Impulse mode.
 		//The default mode will apply are force instantly ignoring masss
-		rb.AddForce(force, ForceMode2D.Impulse);
+		_rb.AddForce(force, ForceMode2D.Impulse);
 	}
 
 	public void SetGravityScale(float scale)
 	{
-		rb.gravityScale = scale;
+		_rb.gravityScale = scale;
 	}
 
 	//Dash Coroutine
@@ -352,20 +352,20 @@ public class PlayerController : MonoBehaviour
 		//Overall this method of dashing aims to mimic Celeste, if you're looking for
 		// a more physics-based approach try a method similar to that used in the jump
 
-		ps.IsGrounded = false;
-		ps.IsDashing = true;
+		_ps.IsGrounded = false;
+		_ps.IsDashing = true;
 
 		float startTime = Time.time;
 
-		ps.DashesLeft--;
+		_ps.DashesLeft--;
 		//_isDashAttacking = true;
 
 		SetGravityScale(0);
 
 		//We keep the player's velocity at the dash speed during the "attack" phase (in celeste the first 0.15s)
-		while (Time.time - startTime <= data.dashAttackTime)
+		while (Time.time - startTime <= _data.dashAttackTime)
 		{
-			rb.velocity = dir.normalized * data.dashSpeed;
+			_rb.linearVelocity = dir.normalized * _data.dashSpeed;
 			//Pauses the loop until the next frame, creating something of a Update loop. 
 			//This is a cleaner implementation opposed to multiple timers and this coroutine approach is actually what is used in Celeste :D
 			yield return null;
@@ -377,24 +377,24 @@ public class PlayerController : MonoBehaviour
 
 		//Begins the "end" of our dash where we return some control to the player but still limit run acceleration (see Update() and Run())
 		//SetGravityScale(Data.gravityScale);
-		rb.velocity = data.dashEndSpeed * dir.normalized;
+		_rb.linearVelocity = _data.dashEndSpeed * dir.normalized;
 
-		while (Time.time - startTime <= data.dashEndTime)
+		while (Time.time - startTime <= _data.dashEndTime)
 		{
 			yield return null;
 		}
 
 		//Dash over
-		ps.IsDashing = false;
+		_ps.IsDashing = false;
 	}
 
 	//Short period before the player is able to dash again
 	private IEnumerator RefillDash(int amount)
 	{
 		//SHoet cooldown, so we can't constantly dash along the ground, again this is the implementation in Celeste, feel free to change it up
-		ps.IsDashRefilling = true;
-		yield return new WaitForSeconds(data.dashRefillTime);
-		ps.IsDashRefilling = false;
-		ps.DashesLeft = Mathf.Min(data.dashAmount, ps.DashesLeft + amount);
+		_ps.IsDashRefilling = true;
+		yield return new WaitForSeconds(_data.dashRefillTime);
+		_ps.IsDashRefilling = false;
+		_ps.DashesLeft = Mathf.Min(_data.dashAmount, _ps.DashesLeft + amount);
 	}
 }
