@@ -7,20 +7,35 @@ public class PauseMenuController : MonoBehaviour
 	[SerializeField] private int _selectedOption = 0;
 	private int _moveInput;
 	private int _timeHolded = 0;
-	private Animator[] _guiOptions;
+	private Animator[] _guiOptionsAnimator;
 	private Animator _selectAnimator;
+	private Animator _pauseMenuAnimator;
 
-    void Start()
+	private bool _isPaused;
+
+    void Awake()
     {
-        _guiOptions = transform.Find("gui").GetComponentsInChildren<Animator>();
-        _selectAnimator = transform.Find("select").gameObject.GetComponent<Animator>();
-        _guiOptions[0].SetBool("Selected", true);
+		GameObject graphics = transform.Find("Graphics").gameObject;
+		_pauseMenuAnimator = GetComponent<Animator>();
+		_guiOptionsAnimator = graphics.transform.Find("gui").GetComponentsInChildren<Animator>();
+        _selectAnimator = graphics.transform.Find("select").gameObject.GetComponent<Animator>();
+        _guiOptionsAnimator[0].SetBool("Selected", true);
         StartCoroutine("HoldPress");
     }
 
     // Update is called once per frame
     void Update()
     {
+		if (!_isPaused)
+		{
+			if (Input.GetKeyDown(KeyCode.P))
+				Pause();
+			else
+				return;
+		} 
+		else if (Input.GetKeyDown(KeyCode.X))	
+			Resume();
+
         _moveInput = Input.GetKey(KeyCode.W) ? -1 : Input.GetKey(KeyCode.S) ? 1 : 0;
 
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.S))
@@ -28,10 +43,10 @@ public class PauseMenuController : MonoBehaviour
 			_timeHolded = 1;
 			int newOption = _selectedOption + _moveInput;
 
-			if (newOption > -1 && newOption < _guiOptions.Length)
+			if (newOption > -1 && newOption < _guiOptionsAnimator.Length)
 			{
-				_guiOptions[_selectedOption].SetBool("Selected", false);
-				_guiOptions[newOption].SetBool("Selected", true);
+				_guiOptionsAnimator[_selectedOption].SetBool("Selected", false);
+				_guiOptionsAnimator[newOption].SetBool("Selected", true);
 				_selectAnimator.SetInteger("Position", newOption);
 				_selectAnimator.SetTrigger("Change");
 				_selectedOption = newOption;
@@ -47,10 +62,10 @@ public class PauseMenuController : MonoBehaviour
 			{
 				int newOption = _selectedOption + _moveInput;
 
-				if (newOption > -1 && newOption < _guiOptions.Length)
+				if (newOption > -1 && newOption < _guiOptionsAnimator.Length)
 				{
-					_guiOptions[_selectedOption].SetBool("Selected", false);
-					_guiOptions[newOption].SetBool("Selected", true);
+					_guiOptionsAnimator[_selectedOption].SetBool("Selected", false);
+					_guiOptionsAnimator[newOption].SetBool("Selected", true);
 					_selectAnimator.SetInteger("Position", newOption);
 					_selectAnimator.SetTrigger("Change");
 					_selectedOption = newOption;
@@ -61,5 +76,19 @@ public class PauseMenuController : MonoBehaviour
 
 			yield return new WaitForSeconds(0.5f / _timeHolded);
 		}
+	}
+
+	private void Pause()
+	{
+		_isPaused = true;
+		_pauseMenuAnimator.SetBool("Pause", true);
+		Time.timeScale = 0f;
+	}
+
+	private void Resume()
+	{
+		_isPaused = false;
+		_pauseMenuAnimator.SetBool("Pause", false);
+		Time.timeScale = 1f;
 	}
 }
