@@ -1,23 +1,29 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
 	[SerializeField] private PlayerData _data; // Player parameters
+	private PlayerInput _pi;
 
 	// Input variables
 	[SerializeField] private Vector2 _moveInput;
-	[SerializeField] private bool _jumpButton;
-	[SerializeField] private bool _dashButton;
+	[SerializeField] private bool _jumpPressed;
+	[SerializeField] private bool _dashPressed;
 
 	private PlayerStates _ps;
 	private Rigidbody2D _rb;
 
-	// Start is called before the first frame update
-	void Awake()
+    [Header("Actions")]
+    [SerializeField] private InputActionReference jumpAction;
+    [SerializeField] private InputActionReference moveAction;
+
+    // Start is called before the first frame update
+    void Awake()
 	{
+        _pi = GetComponent<PlayerInput>();
 		_ps = GetComponent<PlayerStates>();
 		_rb = GetComponent<Rigidbody2D>();
 		SetGravityScale(_data.gravityScale);
@@ -26,15 +32,16 @@ public class PlayerController : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		_moveInput.x = Input.GetKey(KeyCode.A) ? -1 : Input.GetKey(KeyCode.D) ? 1 : 0;
+		float tempX = moveAction.action.ReadValue<Vector2>().x;
+        _moveInput.x = tempX > 0 ? 1 : tempX  < 0 ? -1 : 0;
 
-		if (_moveInput.x != 0)
+        if (_moveInput.x != 0)
 			SwapFacingPosition(_moveInput.x > 0);
 
-		_jumpButton = Input.GetKey(KeyCode.J);
-		_dashButton = Input.GetKeyDown(KeyCode.K);
+		_jumpPressed = jumpAction.action.IsPressed();
+		_dashPressed = Input.GetKeyDown(KeyCode.J);
 
-		_ps.IsJumpCut = _ps.IsJumping && !_jumpButton;
+		_ps.IsJumpCut = _ps.IsJumping && !_jumpPressed;
 
 		if ((_ps.IsJumping || _ps.IsJumpFalling) && _ps.IsGrounded)
 			_ps.JumpDelayStartTime = Time.time;
@@ -59,11 +66,11 @@ public class PlayerController : MonoBehaviour
 		if (!_ps.IsDashing)
 		{
 			//Jump
-			if (_jumpButton && CanJump())			
+			if (_jumpPressed && CanJump())			
 				Jump();
 
 			//WallJump
-			else if (_ps.IsSliding && Input.GetKeyDown(KeyCode.J))
+			else if (_ps.IsSliding && jumpAction.action.triggered)
 			{
 				_ps.WallJumpStartTime = Time.time;
 
@@ -71,7 +78,7 @@ public class PlayerController : MonoBehaviour
 			}
 		}
 
-		if (CanDash() && _dashButton)
+		if (CanDash() && _dashPressed)
 		{
 			Vector2 dashDir;
 
