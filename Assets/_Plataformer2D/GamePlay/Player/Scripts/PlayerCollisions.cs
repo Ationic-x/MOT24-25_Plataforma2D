@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerCollisions : MonoBehaviour
@@ -15,7 +12,7 @@ public class PlayerCollisions : MonoBehaviour
     [SerializeField] private LayerMask _groundLayer;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         _ps = GetComponent<PlayerStates>();
     }

@@ -13,7 +13,7 @@ public class PlayerStates : MonoBehaviour
     [SerializeField] private bool _isJumpCut;
     [SerializeField] private bool _isSliding;
 
-    // Collistion State
+    // Collision States
     [SerializeField] private bool _isGrounded;
     [SerializeField] private bool _isCollidedLeft;
     [SerializeField] private bool _isCollidedRight;

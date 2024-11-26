@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static AudioManager;
-using static PlayerAudio;
 
 public class PlayerAudio : MonoBehaviour
 {
@@ -21,7 +20,7 @@ public class PlayerAudio : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         _ps = GetComponent<PlayerStates>();
     }

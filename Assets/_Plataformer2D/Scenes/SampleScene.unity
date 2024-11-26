@@ -243,7 +243,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
+  m_VertexColorAlwaysGammaSpace: 1
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -1263,7 +1263,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _slideDust: {fileID: 1038168246061390451, guid: 125f8934180f6c343b34155a48923ef3, type: 3}
-  _ps: {fileID: 924687580}
   _frontWallCheckPoint: {fileID: 795853011}
 --- !u!1 &924687569
 GameObject:
