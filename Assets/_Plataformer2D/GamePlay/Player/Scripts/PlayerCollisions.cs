@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class PlayerCollisions : MonoBehaviour
 {
-    private PlayerStates _ps;
+    private PlayerController _pc;
+    private PlayerStates _ps => _pc.PS;
 
     [SerializeField] private Transform _groundCheckPoint;
     [SerializeField] private Vector2 _groundCheckSize = new Vector2(0.49f, 0.03f);
@@ -14,7 +15,7 @@ public class PlayerCollisions : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        _ps = GetComponent<PlayerStates>();
+        _pc = GetComponent<PlayerController>();
     }
 
     // Update is called once per frame

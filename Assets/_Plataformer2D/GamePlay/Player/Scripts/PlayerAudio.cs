@@ -6,7 +6,8 @@ using static AudioManager;
 public class PlayerAudio : MonoBehaviour
 {
     // [SerializeField] private AudioManager _am;
-    private PlayerStates _ps;
+    private PlayerController _pc;
+    private PlayerStates _ps => _pc.PS;
 
     // States to avoid reproduce multiple times
     private bool _audioJumping;
@@ -22,7 +23,7 @@ public class PlayerAudio : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        _ps = GetComponent<PlayerStates>();
+        _pc = GetComponent<PlayerController>();
     }
 
 

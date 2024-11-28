@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -5,162 +6,197 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
-	[SerializeField] protected PlayerData _data; // Player parameters
+	[SerializeField] private PlayerData _data; // Player parameters
 	private PlayerInput _pi;
 
 	// Input variables
-	[SerializeField] protected Vector2 _moveInput;
+	[SerializeField] private Vector2 _moveInput;
 	[SerializeField] private bool _jumpPressed;
 	[SerializeField] private bool _dashPressed;
 
-	protected PlayerStates _ps;
-	protected Rigidbody2D _rb;
+	[SerializeField] private PlayerStates _ps;
+	private Rigidbody2D _rb;
 
     [Header("Actions")]
     [SerializeField] private InputActionReference jumpAction;
-    [SerializeField] private InputActionReference moveAction;
+    [SerializeField] public InputActionReference moveAction;
+
+	public event Action<bool> OnJumpTrigger;
+	public event Action OnDashTrigger;
+
+    public event System.Action OnKeyPressed;
+    public event System.Action OnKeyReleased;
 
     // Start is called before the first frame update
     void Awake()
 	{
+
+		jumpAction.action.performed += HandleKeyPressed;
+
         _pi = GetComponent<PlayerInput>();
-		_ps = GetComponent<PlayerStates>();
 		_rb = GetComponent<Rigidbody2D>();
-		SetGravityScale(_data.gravityScale);
+
+        SetGravityScale(_data.gravityScale);
 	}
 
-	// Update is called once per frame
-	void Update()
-	{
-		float tempX = moveAction.action.ReadValue<Vector2>().x;
-        _moveInput.x = tempX > 0 ? 1 : tempX  < 0 ? -1 : 0;
+    private void OnEnable()
+    {
+        jumpAction.action.Enable();
 
-        if (_moveInput.x != 0)
-			SwapFacingPosition(_moveInput.x > 0);
+        jumpAction.action.started += HandleKeyPressed;
+        jumpAction.action.canceled += HandleKeyReleased;
+    }
 
-		_jumpPressed = jumpAction.action.IsPressed();
-		_dashPressed = Input.GetKeyDown(KeyCode.J);
+    private void OnDisable()
+    {
+        jumpAction.action.Disable();
 
-		_ps.IsJumpCut = _ps.IsJumping && !_jumpPressed;
+        jumpAction.action.started -= HandleKeyPressed;
+        jumpAction.action.canceled -= HandleKeyReleased;
+    }
 
-		if ((_ps.IsJumping || _ps.IsJumpFalling) && _ps.IsGrounded)
-			_ps.JumpDelayStartTime = Time.time;
+    private void HandleKeyPressed(InputAction.CallbackContext context)
+    {
+        OnKeyPressed?.Invoke();
+    }
+	
+	private void HandleKeyReleased(InputAction.CallbackContext context)
+    {
+        OnKeyPressed?.Invoke();
+    }
 
-		if (_rb.linearVelocity.y < 0 && !_ps.IsSliding && !_ps.IsDashing)
-		{
-			_ps.IsJumping = false;
+    // Update is called once per frame
+ //   void Update()
+	//{
+	//	float tempX = moveAction.action.ReadValue<Vector2>().x;
+	//	_moveInput.x = tempX > 0 ? 1 : tempX < 0 ? -1 : 0;
 
-			_ps.IsJumpFalling = true;
-		}
+	//	if (_moveInput.x != 0)
+	//		SwapFacingPosition(_moveInput.x > 0);
+	//	jumpAction.action.hold
+	//	if (jumpAction.action.triggered) OnJumpTrigger?.Invoke();
+	//	if (Input.GetKeyDown(KeyCode.J)) OnDashTrigger?.Invoke();
 
-		if (_ps.IsWallJumping && Time.time - _ps.WallJumpStartTime > _data.wallJumpTime)
-			_ps.IsWallJumping = false;
+	//	_ps.IsJumpCut = _ps.IsJumping && !_jumpPressed;
 
-		if (_ps.IsGrounded && !_ps.IsJumping && !_ps.IsWallJumping)
-		{
-			_ps.IsJumpCut = false;
+	//	if ((_ps.IsJumping || _ps.IsJumpFalling) && _ps.IsGrounded)
+	//		_ps.JumpDelayStartTime = Time.time;
 
-			_ps.IsJumpFalling = false;
-		}
+	//	if (_rb.linearVelocity.y < 0 && !_ps.IsSliding && !_ps.IsDashing)
+	//	{
+	//		_ps.IsJumping = false;
 
-		if (!_ps.IsDashing)
-		{
-			//Jump
-			if (_jumpPressed && CanJump())			
-				Jump();
+	//		_ps.IsJumpFalling = true;
+	//	}
 
-			//WallJump
-			else if (_ps.IsSliding && jumpAction.action.triggered)
-			{
-				_ps.WallJumpStartTime = Time.time;
+	//	if (_ps.IsWallJumping && Time.time - _ps.WallJumpStartTime > _data.wallJumpTime)
+	//		_ps.IsWallJumping = false;
 
-				WallJump(_ps.IsFacingRight ? -1 : 1);
-			}
-		}
+	//	if (_ps.IsGrounded && !_ps.IsJumping && !_ps.IsWallJumping)
+	//	{
+	//		_ps.IsJumpCut = false;
 
-		if (CanDash() && _dashPressed)
-		{
-			Vector2 dashDir;
+	//		_ps.IsJumpFalling = false;
+	//	}
 
-			//Freeze game for split second. Adds juiciness and a bit of forgiveness over directional input
-			Sleep(_data.dashSleepTime);
+	//	if (!_ps.IsDashing)
+	//	{
+	//		//Jump
+	//		if (_jumpPressed && CanJump())
+	//			Jump();
 
-			//If not direction pressed, dash forward
-			if (_moveInput != Vector2.zero)
-				dashDir = _moveInput;
-			else
-				dashDir = _ps.IsFacingRight ? Vector2.right : Vector2.left;
+	//		//WallJump
+	//		else if (_ps.IsSliding && jumpAction.action.triggered)
+	//		{
+	//			_ps.WallJumpStartTime = Time.time;
 
-			// Update when dashing (outside the coroutine this is called once)
-			_ps.IsDashing = true;
-			_ps.IsJumping = false;
-			_ps.IsJumpFalling = false;
-			_ps.IsWallJumping = false;
-			_ps.IsJumpCut = false;
-			_ps.IsGrounded = false;
-			_ps.IsCollidedRight = false;
-			_ps.IsCollidedLeft = false;
+	//			WallJump(_ps.IsFacingRight ? -1 : 1);
+	//		}
+	//	}
 
-			StartCoroutine(nameof(StartDash), dashDir);
-		}
+	//	if (CanDash() && _dashPressed)
+	//	{
+	//		Vector2 dashDir;
 
-		_ps.IsSliding = CanSlide();
+	//		//Freeze game for split second. Adds juiciness and a bit of forgiveness over directional input
+	//		Sleep(_data.dashSleepTime);
 
-		//Higher gravity if we've released the jump input or are falling
-		if (_ps.IsSliding)
-		{
-			SetGravityScale(0);
-		}
-		else if (_rb.linearVelocity.y < 0 && _moveInput.y < 0)
-		{
-			//Much higher gravity if holding down
-			SetGravityScale(_data.gravityScale * _data.fastFallGravityMult);
-			//Caps maximum fall speed, so when falling over large distances we don't accelerate to insanely high speeds
-			_rb.linearVelocity = new Vector2(_rb.linearVelocity.x, Mathf.Max(_rb.linearVelocity.y, -_data.maxFastFallSpeed));
-		}
-		else if (_ps.IsJumpCut)
-		{
-			//Higher gravity if jump button released
-			SetGravityScale(_data.gravityScale * _data.jumpCutGravityMult);
-			_rb.linearVelocity = new Vector2(_rb.linearVelocity.x, Mathf.Max(_rb.linearVelocity.y, -_data.maxFallSpeed));
-		}
-		else if ((_ps.IsJumping || _ps.IsWallJumping || _ps.IsJumpFalling) && Mathf.Abs(_rb.linearVelocity.y) < _data.jumpHangTimeThreshold)
-		{
-			SetGravityScale(_data.gravityScale * _data.jumpHangGravityMult);
-		}
-		else if (_rb.linearVelocity.y < 0)
-		{
-			//Higher gravity if falling
-			SetGravityScale(_data.gravityScale * _data.fallGravityMult);
-			//Caps maximum fall speed, so when falling over large distances we don't accelerate to insanely high speeds
-			_rb.linearVelocity = new Vector2(_rb.linearVelocity.x, Mathf.Max(_rb.linearVelocity.y, -_data.maxFallSpeed));
-		}
-		else
-		{
-			//Default gravity if standing on a platform or moving upwards
-			SetGravityScale(_data.gravityScale);
-		}
-	}
+	//		//If not direction pressed, dash forward
+	//		if (_moveInput != Vector2.zero)
+	//			dashDir = _moveInput;
+	//		else
+	//			dashDir = _ps.IsFacingRight ? Vector2.right : Vector2.left;
 
-	private void FixedUpdate()
-	{
-		//Handle Run
-		if (!_ps.IsDashing)
-		{
-			if (_ps.IsWallJumping)
-				Run(_data.wallJumpRunLerp);
-			else
-				Run(1);
-		}
-		//else if (_isDashAttacking)
-		//{
-		//	Run(Data.dashEndRunLerp);
-		//}
+	//		// Update when dashing (outside the coroutine this is called once)
+	//		_ps.IsDashing = true;
+	//		_ps.IsJumping = false;
+	//		_ps.IsJumpFalling = false;
+	//		_ps.IsWallJumping = false;
+	//		_ps.IsJumpCut = false;
+	//		_ps.IsGrounded = false;
+	//		_ps.IsCollidedRight = false;
+	//		_ps.IsCollidedLeft = false;
 
-		//Handle Slide
-		if (_ps.IsSliding)
-			Slide();
-	}
+	//		StartCoroutine(nameof(StartDash), dashDir);
+	//	}
+
+	//	_ps.IsSliding = CanSlide();
+
+	//	//Higher gravity if we've released the jump input or are falling
+	//	if (_ps.IsSliding)
+	//	{
+	//		SetGravityScale(0);
+	//	}
+	//	else if (_rb.linearVelocity.y < 0 && _moveInput.y < 0)
+	//	{
+	//		//Much higher gravity if holding down
+	//		SetGravityScale(_data.gravityScale * _data.fastFallGravityMult);
+	//		//Caps maximum fall speed, so when falling over large distances we don't accelerate to insanely high speeds
+	//		_rb.linearVelocity = new Vector2(_rb.linearVelocity.x, Mathf.Max(_rb.linearVelocity.y, -_data.maxFastFallSpeed));
+	//	}
+	//	else if (_ps.IsJumpCut)
+	//	{
+	//		//Higher gravity if jump button released
+	//		SetGravityScale(_data.gravityScale * _data.jumpCutGravityMult);
+	//		_rb.linearVelocity = new Vector2(_rb.linearVelocity.x, Mathf.Max(_rb.linearVelocity.y, -_data.maxFallSpeed));
+	//	}
+	//	else if ((_ps.IsJumping || _ps.IsWallJumping || _ps.IsJumpFalling) && Mathf.Abs(_rb.linearVelocity.y) < _data.jumpHangTimeThreshold)
+	//	{
+	//		SetGravityScale(_data.gravityScale * _data.jumpHangGravityMult);
+	//	}
+	//	else if (_rb.linearVelocity.y < 0)
+	//	{
+	//		//Higher gravity if falling
+	//		SetGravityScale(_data.gravityScale * _data.fallGravityMult);
+	//		//Caps maximum fall speed, so when falling over large distances we don't accelerate to insanely high speeds
+	//		_rb.linearVelocity = new Vector2(_rb.linearVelocity.x, Mathf.Max(_rb.linearVelocity.y, -_data.maxFallSpeed));
+	//	}
+	//	else
+	//	{
+	//		//Default gravity if standing on a platform or moving upwards
+	//		SetGravityScale(_data.gravityScale);
+	//	}
+	//}
+
+	//private void FixedUpdate()
+	//{
+	//	//Handle Run
+	//	if (!_ps.IsDashing)
+	//	{
+	//		if (_ps.IsWallJumping)
+	//			Run(_data.wallJumpRunLerp);
+	//		else
+	//			Run(1);
+	//	}
+	//	//else if (_isDashAttacking)
+	//	//{
+	//	//	Run(Data.dashEndRunLerp);
+	//	//}
+
+	//	//Handle Slide
+	//	if (_ps.IsSliding)
+	//		Slide();
+	//}
 
 	private void SwapFacingPosition(bool facingRight)
 	{
@@ -207,4 +243,8 @@ public class PlayerController : MonoBehaviour
     {
         throw new System.NotImplementedException();
     }
+
+	public PlayerStates PS { get { return _ps; } }
+	public Rigidbody2D RB { get { return _rb; } }
+	public PlayerData Data { get { return _data; } }
 }

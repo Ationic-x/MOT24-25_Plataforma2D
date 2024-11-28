@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerStates : MonoBehaviour
+[System.Serializable]
+public class PlayerStates
 {
     // Movement States
     [SerializeField] private bool _isRunning;

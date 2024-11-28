@@ -5,7 +5,8 @@ public class PlayerAnimation : MonoBehaviour
 
     private Animator _animator;
     private SpriteRenderer _sr;
-    private PlayerStates _ps;
+    private PlayerController _pc;
+    private PlayerStates _ps => _pc.PS;
 
     [SerializeField] private GameObject _slideDust;
     [SerializeField] private Transform _frontWallCheckPoint;
@@ -13,7 +14,7 @@ public class PlayerAnimation : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        _ps = GetComponentInParent<PlayerStates>();
+        _pc = GetComponentInParent<PlayerController>();
         _animator = GetComponent<Animator>();
         _sr = GetComponent<SpriteRenderer>();
     }
