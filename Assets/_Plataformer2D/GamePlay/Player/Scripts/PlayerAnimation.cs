@@ -6,10 +6,11 @@ public class PlayerAnimation : MonoBehaviour
     private Animator _animator;
     private SpriteRenderer _sr;
     private PlayerController _pc;
-    private PlayerStates _ps => _pc.PS;
+    private PlayerStates _ps;
 
     [SerializeField] private GameObject _slideDust;
     [SerializeField] private Transform _frontWallCheckPoint;
+    [SerializeField] private Transform _backWallCheckPoint;
 
     // Start is called before the first frame update
     void Awake()
@@ -19,8 +20,25 @@ public class PlayerAnimation : MonoBehaviour
         _sr = GetComponent<SpriteRenderer>();
     }
 
-    // Update is called once per frame
-    void Update()
+	private void Start()
+	{
+        _ps = _pc.PS;
+        
+        _ps.OnFacingRightChanged += OnFacingRightChanged;
+	}
+    
+    private void OnDisable()
+	{
+        _ps.OnFacingRightChanged -= OnFacingRightChanged;
+    }
+
+	private void OnFacingRightChanged(bool isFacingRight)
+	{
+        _sr.flipX = !isFacingRight;
+	}
+
+	// Update is called once per frame
+	void Update()
     {
         _animator.SetBool("Grounded", _ps.IsGrounded);
         _animator.SetBool("Jump", _ps.IsJumping || _ps.IsWallJumping);
@@ -33,8 +51,10 @@ public class PlayerAnimation : MonoBehaviour
     // Animation Event to spawn a dust cloud when slide
     private void AE_SlideDust()
     {
-        GameObject dust = Instantiate(_slideDust, _frontWallCheckPoint.position, gameObject.transform.localRotation);
-        dust.transform.localScale = new Vector3(_ps.IsFacingRight ? 1 : -1, 1, 1);
+        bool orientation = _ps.IsFacingRight;
+        
+        GameObject dust = Instantiate(_slideDust, orientation ? _frontWallCheckPoint.position : _backWallCheckPoint.position, gameObject.transform.localRotation);
+        dust.transform.localScale = new Vector3(orientation ? 1 : -1, 1, 1);
     }
 }
 

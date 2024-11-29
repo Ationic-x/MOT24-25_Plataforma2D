@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,18 +23,18 @@ public class PlayerStates
 
     // General States
     [SerializeField] private bool _isFacingRight = true; // By default the character is facing right
-    [SerializeField] private bool _isDashRefilling;
-
-    // Player Counts
-    [SerializeField] private int _dashesLeft;
 
     // Player Time
     [SerializeField] private float _wallJumpStartTime;
-    [SerializeField] private float _jumpDelayStartTime;
+    [SerializeField] private float _jumpFinishTime;
 
-    #region Getters And Setters
-    // Movement States
-    public bool IsRunning { get => _isRunning; set => _isRunning = value; }
+
+	// Events
+	public event Action<bool> OnFacingRightChanged;
+
+	#region Getters And Setters
+	// Movement States
+	public bool IsRunning { get => _isRunning; set => _isRunning = value; }
 
     public bool IsDashing { get => _isDashing; set => _isDashing = value; }
 
@@ -55,17 +56,21 @@ public class PlayerStates
     public bool IsCollidedRight { get => _isCollidedRight; set => _isCollidedRight = value; }
 
     // General States
-    public bool IsFacingRight { get => _isFacingRight; set => _isFacingRight = value; }
-
-    public bool IsDashRefilling { get => _isDashRefilling; set => _isDashRefilling = value; }
-
-    // Player Counts
-    public int DashesLeft { get => _dashesLeft; set => _dashesLeft = value; }
+    public bool IsFacingRight {
+        get => _isFacingRight;
+        set {
+            if (_isFacingRight != value)
+            {
+                _isFacingRight = value;
+                OnFacingRightChanged?.Invoke(value);
+            }
+        } 
+    }
 
     // Player Time
     public float WallJumpStartTime { get => _wallJumpStartTime; set => _wallJumpStartTime = value; }
 
-    public float JumpDelayStartTime { get => _jumpDelayStartTime; set => _jumpDelayStartTime = value; }
+    public float JumpFinishTime { get => _jumpFinishTime; set => _jumpFinishTime = value; }
 
     #endregion
 }

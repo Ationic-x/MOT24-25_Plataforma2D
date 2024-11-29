@@ -1178,7 +1178,7 @@ Transform:
   m_GameObject: {fileID: 795853010}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.3, y: 0.65, z: 0}
+  m_LocalPosition: {x: 0.35, y: 0.67, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1309,6 +1309,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _slideDust: {fileID: 1038168246061390451, guid: 125f8934180f6c343b34155a48923ef3, type: 3}
   _frontWallCheckPoint: {fileID: 795853011}
+  _backWallCheckPoint: {fileID: 1084296555}
 --- !u!1 &924687569
 GameObject:
   m_ObjectHideFlags: 0
@@ -1324,6 +1325,7 @@ GameObject:
   - component: {fileID: 924687579}
   - component: {fileID: 924687582}
   - component: {fileID: 924687583}
+  - component: {fileID: 924687586}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1383,7 +1385,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.1, y: 0.69}
+  m_Offset: {x: 0, y: 0.69}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1393,7 +1395,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.8, y: 1.25}
+  m_Size: {x: 0.7, y: 1.25}
   m_EdgeRadius: 0
 --- !u!114 &924687579
 MonoBehaviour:
@@ -1411,7 +1413,7 @@ MonoBehaviour:
   _groundCheckSize: {x: 0.49, y: 0.03}
   _frontWallCheckPoint: {fileID: 795853011}
   _backWallCheckPoint: {fileID: 1084296555}
-  _wallCheckSize: {x: 0.5, y: 1}
+  _wallCheckSize: {x: 0.5, y: 0.8}
   _groundLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -1455,7 +1457,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _data: {fileID: 11400000, guid: ae8c7062212e37e47b3f138aa613cdb4, type: 2}
-  _moveInput: {x: 0, y: 0}
   _jumpPressed: 0
   _dashPressed: 0
   _ps:
@@ -1470,12 +1471,11 @@ MonoBehaviour:
     _isCollidedLeft: 0
     _isCollidedRight: 0
     _isFacingRight: 1
-    _isDashRefilling: 0
-    _dashesLeft: 0
     _wallJumpStartTime: 0
-    _jumpDelayStartTime: 0
-  jumpAction: {fileID: -3520561882209015758, guid: d5396d3213946204fb444d92b2d9c79c, type: 3}
-  moveAction: {fileID: -7416575508440316108, guid: d5396d3213946204fb444d92b2d9c79c, type: 3}
+    _jumpFinishTime: 0
+  _jumpAction: {fileID: -3520561882209015758, guid: d5396d3213946204fb444d92b2d9c79c, type: 3}
+  _moveAction: {fileID: -7416575508440316108, guid: d5396d3213946204fb444d92b2d9c79c, type: 3}
+  _dashAction: {fileID: 9088247980762585050, guid: d5396d3213946204fb444d92b2d9c79c, type: 3}
 --- !u!114 &924687583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1577,11 +1577,30 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: cad2f6cd-da08-4204-9dfc-1a47a9cddb02
     m_ActionName: 'Player/Run[/Keyboard/leftShift]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: fe2f5f4b-1ae1-4fda-b16a-e29e15dff30a
+    m_ActionName: 'Player/Dash[/Keyboard/j]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &924687586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 924687569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d24975bb3a6553488d396b3d6cdfc78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _moveInput: {x: 0, y: 0}
+  _jumpInput: 0
+  _dashInput: 0
 --- !u!1 &933631496
 GameObject:
   m_ObjectHideFlags: 0
@@ -1806,7 +1825,7 @@ Transform:
   m_GameObject: {fileID: 1084296554}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.5, y: 0.65, z: 0}
+  m_LocalPosition: {x: -0.35, y: 0.67, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5522,7 +5541,7 @@ Transform:
   m_GameObject: {fileID: 1897944134}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.072, y: 0.07, z: 0}
+  m_LocalPosition: {x: 0, y: 0.07, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

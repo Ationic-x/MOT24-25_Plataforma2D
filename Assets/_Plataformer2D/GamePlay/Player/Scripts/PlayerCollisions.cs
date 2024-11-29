@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerCollisions : MonoBehaviour
 {
     private PlayerController _pc;
-    private PlayerStates _ps => _pc.PS;
+    private PlayerStates _ps;
 
     [SerializeField] private Transform _groundCheckPoint;
     [SerializeField] private Vector2 _groundCheckSize = new Vector2(0.49f, 0.03f);
@@ -18,8 +18,13 @@ public class PlayerCollisions : MonoBehaviour
         _pc = GetComponent<PlayerController>();
     }
 
-    // Update is called once per frame
-    void Update()
+	private void Start()
+	{
+        _ps = _pc.PS;
+    }
+
+	// Update is called once per frame
+	void Update()
     {
         // False default values
         bool isGrounded = false, isCollidedRight = false, isCollidedLeft = false;
@@ -34,19 +39,27 @@ public class PlayerCollisions : MonoBehaviour
 
         if (!_ps.IsWallJumping)
         {
-            bool frontCollider = Physics2D.OverlapBox(_frontWallCheckPoint.position, _wallCheckSize, 0, _groundLayer);
-            bool backCollider = Physics2D.OverlapBox(_backWallCheckPoint.position, _wallCheckSize, 0, _groundLayer);
+            isCollidedRight = Physics2D.OverlapBox(_frontWallCheckPoint.position, _wallCheckSize, 0, _groundLayer);
+            isCollidedLeft = Physics2D.OverlapBox(_backWallCheckPoint.position, _wallCheckSize, 0, _groundLayer);
 
-            //Right Wall Check
-            isCollidedRight = _ps.IsFacingRight ? frontCollider : backCollider;
-
-            //Left Wall Check
-            isCollidedLeft = _ps.IsFacingRight ? backCollider : frontCollider;
+            // Avoid cases where the character is buried
+            if (isCollidedRight && isCollidedLeft)
+                isCollidedLeft = isCollidedRight = false;
         }
 
 
         _ps.IsGrounded = isGrounded;
         _ps.IsCollidedRight = isCollidedRight;
         _ps.IsCollidedLeft = isCollidedLeft;
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        
+        Gizmos.DrawWireCube(_frontWallCheckPoint.position, _wallCheckSize);
+        Gizmos.DrawWireCube(_backWallCheckPoint.position, _wallCheckSize);
+        
+        Gizmos.DrawWireCube(_groundCheckPoint.position, _groundCheckSize);
     }
 }

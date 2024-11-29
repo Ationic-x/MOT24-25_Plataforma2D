@@ -43,7 +43,7 @@ MonoBehaviour:
   jumpHangTimeThreshold: 0
   jumpHangAccelerationMult: 1
   jumpHangMaxSpeedMult: 1
-  wallJumpForce: {x: 15, y: 3}
+  wallJumpForce: {x: 12, y: 5}
   wallJumpRunLerp: 0.05
   wallJumpTime: 0.3
   doTurnOnWallJump: 1
@@ -51,12 +51,10 @@ MonoBehaviour:
   slideAccel: 2
   coyoteTime: 0.2
   jumpInputBufferTime: 0.2
-  dashAmount: 1
   dashSpeed: 20
   dashSleepTime: 0.05
   dashAttackTime: 0.15
   dashEndTime: 0.25
   dashEndSpeed: {x: 15, y: 15}
   dashEndRunLerp: 0.5
-  dashRefillTime: 0.15
   dashInputBufferTime: 0.1
