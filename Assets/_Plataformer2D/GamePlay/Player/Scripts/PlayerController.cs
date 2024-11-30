@@ -31,13 +31,13 @@ public class PlayerController : ActorController
 		SetGravityScale(_data.gravityScale);
 	}
 
-	public void SwapFacingPosition(bool facingRight)
+	public void SwapFacingPosition(bool isFacingRight)
 	{
 		// Avoid flip before the animation end
 		if (_ps.IsSliding || _ps.IsDashing) return;
 
-		if (_ps.IsFacingRight != facingRight)
-			_ps.IsFacingRight = facingRight;
+		if (_ps.IsFacingRight != isFacingRight)
+			_ps.IsFacingRight = isFacingRight;
 	}
 
 	public void Sleep(float duration)

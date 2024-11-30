@@ -62,7 +62,7 @@ public class PlayerStates
             if (_isFacingRight != value)
             {
                 _isFacingRight = value;
-                OnFacingRightChanged?.Invoke(value);
+                OnFacingRightChanged?.Invoke(_isFacingRight);
             }
         } 
     }

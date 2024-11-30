@@ -1,10 +1,11 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+
 public class PlayerMovement2D : MonoBehaviour
 {
-
 	private PlayerController _pc;
 	
 	private PlayerStates _ps;
@@ -16,6 +17,9 @@ public class PlayerMovement2D : MonoBehaviour
 	[SerializeField] private Vector2 _moveInput;
 	[SerializeField] private bool _jumpInput;
 	[SerializeField] private bool _dashInput;
+
+	private float _jumpInputStartTime;
+	private float _dashInputStartTime;
 
 	private void Awake()
 	{
@@ -63,14 +67,19 @@ public class PlayerMovement2D : MonoBehaviour
 	public void OnJumpInput(InputAction.CallbackContext context = default)
 	{
 		_jumpInput = context.performed;
-
+		
+		if (_jumpInput)
+			_jumpInputStartTime = Time.time;	
 
 		StartCoroutine(HandleJump());
 	}
 	
 	public void OnDashInput(InputAction.CallbackContext context = default)
 	{
-		_dashInput = context.performed;
+		_dashInput = context.performed;  // Currently isn't used
+
+		if (_dashInput)
+			_dashInputStartTime = Time.time;
 
 		StartCoroutine(HandleDash());
 	}
@@ -83,8 +92,7 @@ public class PlayerMovement2D : MonoBehaviour
 		if (_moveInput.x != 0)
 			_pc.SwapFacingPosition(_moveInput.x > 0);
 
-		HandleJumpStates();
-
+		HandleStates();
 		HandleGravity();
 	}
 
@@ -112,9 +120,12 @@ public class PlayerMovement2D : MonoBehaviour
 	
 
 	#region Handle Behaviour (A bridge between actions and general behaviour)
-	private void HandleJumpStates()
+	private void HandleStates()
 	{
 		_ps.IsJumpCut = _ps.IsJumping && !_jumpInput;
+
+		if (_ps.IsSliding && _ps.IsGrounded)
+			_ps.IsSliding = false;
 
 		if ((_ps.IsJumping || _ps.IsJumpFalling) && _ps.IsGrounded)
 			_ps.JumpFinishTime = Time.time;
@@ -177,7 +188,9 @@ public class PlayerMovement2D : MonoBehaviour
 
 	IEnumerator HandleJump()
 	{
-		while (_jumpInput) {
+
+		while (_jumpInput || (Time.time - _dashInputStartTime) < _data.jumpInputBufferTime) {
+
 			//Jump
 			if (CanJump())
 				Jump();
@@ -196,18 +209,21 @@ public class PlayerMovement2D : MonoBehaviour
 
 	IEnumerator HandleDash()
 	{
-		Vector2 dashDir;
+		if (CanDash())
+		{
+			Vector2 dashDir;
 
-		//Freeze game for split second. Adds juiciness and a bit of forgiveness over directional input
-		_pc.Sleep(_data.dashSleepTime);
+			//Freeze game for split second. Adds juiciness and a bit of forgiveness over directional input
+			_pc.Sleep(_data.dashSleepTime);
 
-		//If not direction pressed, dash forward
-		if (_moveInput != Vector2.zero)
-			dashDir = _moveInput;
-		else
-			dashDir = _ps.IsFacingRight ? Vector2.right : Vector2.left;
+			//If not direction pressed, dash forward
+			if (_moveInput != Vector2.zero)
+				dashDir = _moveInput;
+			else
+				dashDir = _ps.IsFacingRight ? Vector2.right : Vector2.left;
 
-		StartCoroutine(nameof(Dash), dashDir);
+			StartCoroutine(nameof(Dash), dashDir);
+		}
 		
 		yield return new WaitForFixedUpdate();
 	}
@@ -254,6 +270,8 @@ public class PlayerMovement2D : MonoBehaviour
 	private void Jump()
 	{
 		// Update states when jump
+		_jumpInputStartTime = 0;
+
 		_ps.IsJumping = true;
 
 		_ps.IsWallJumping = false;
@@ -350,6 +368,8 @@ public class PlayerMovement2D : MonoBehaviour
 	private void WallJump(int dir)
 	{
 		// Update states when start walljumping
+		_jumpInputStartTime = 0;
+
 		_ps.IsWallJumping = true;
 
 		_ps.IsJumping = false;
@@ -379,6 +399,8 @@ public class PlayerMovement2D : MonoBehaviour
 		// a more physics-based approach try a method similar to that used in the jump
 
 		// Update States when start dashing
+		_dashInputStartTime = 0;
+
 		_ps.IsDashing = true;
 
 		_ps.IsJumping = false;
@@ -421,5 +443,4 @@ public class PlayerMovement2D : MonoBehaviour
 		_ps.IsDashing = false;
 	}
 	#endregion
-
 }
