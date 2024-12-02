@@ -27,8 +27,8 @@ public class PlayerStates
 
 	// Events
 	public event Action<bool> OnFacingRightChanged;
-	public event Action OnSlidingChanged;
-	public event Action OnGroundedChanged;
+	public event Action<bool> OnSlidingChanged;
+	public event Action<bool> OnGroundedChanged;
 
 	#region Getters And Setters
 	// Movement States
@@ -52,7 +52,7 @@ public class PlayerStates
             if (_isSliding != value)
             {
                 _isSliding = value;
-                OnSlidingChanged?.Invoke();
+                OnSlidingChanged?.Invoke(_isSliding);
             }
         }
     }
@@ -66,7 +66,7 @@ public class PlayerStates
             if (_isGrounded != value)
             {
                 _isGrounded = value;
-                OnGroundedChanged?.Invoke();
+                OnGroundedChanged?.Invoke(_isGrounded);
             }
         }
     }

@@ -20,13 +20,14 @@ public class PlayerMovement2D : MonoBehaviour
 
 	// Movement states
 	private float _wallJumpStartTime;
-	private float _jumpFinishTime;
-	private float _jumpInputStartTime;
 	private float _dashInputStartTime;
 	[SerializeField] private float _jumpCoyoteTime;
 	[SerializeField] private float _wallJumpCoyoteTime;
 	
 	private bool _slideIsFacingRight;
+
+	// Movement count
+	private int _jumpsLeft;
 
 	private void Awake()
 	{
@@ -37,6 +38,8 @@ public class PlayerMovement2D : MonoBehaviour
 	{
 		_rb = _pc.RB;
 		_data = _pc.Data;
+
+		_jumpsLeft = _data.jumpAmount; // TODO: locked max jump amount (require perk)
 	}
 
 	#region Events
@@ -85,11 +88,9 @@ public class PlayerMovement2D : MonoBehaviour
 	private void OnJumpInput(InputAction.CallbackContext context = default)
 	{
 		_jumpInput = context.performed;
-		
-		if (_jumpInput)
-			_jumpInputStartTime = Time.time;	
 
-		StartCoroutine(HandleJump());
+		if (_jumpInput)
+			StartCoroutine(HandleJump());
 	}
 
 	private void OnDashInput(InputAction.CallbackContext context = default)
@@ -102,14 +103,26 @@ public class PlayerMovement2D : MonoBehaviour
 		StartCoroutine(HandleDash());
 	}
 
-	private void OnGroundedChanged()
+	private void OnGroundedChanged(bool isGrounded)
 	{
-		_jumpCoyoteTime = Time.time;
+		if (isGrounded)
+			_jumpsLeft = _data.jumpAmount;
+		else
+		{
+			_jumpCoyoteTime = Time.time;
+			_jumpsLeft--;
+		}
 	}
 	
-	private void OnSlidingChanged()
+	private void OnSlidingChanged(bool isSliding)
 	{
-		_wallJumpCoyoteTime = Time.time;
+		if (isSliding)
+			_jumpsLeft = _data.jumpAmount;
+		else
+		{
+			_wallJumpCoyoteTime = Time.time;
+			_jumpsLeft--;
+		}
 	}
 	#endregion
 
@@ -153,9 +166,6 @@ public class PlayerMovement2D : MonoBehaviour
 		_ps.IsSliding = CanSlide();
 
 		_ps.IsJumpCut = _ps.IsJumping && !_jumpInput;
-
-		if ((_ps.IsJumping || _ps.IsFalling) && _ps.IsGrounded)
-			_jumpFinishTime = Time.time;
 
 		if (_rb.linearVelocity.y < 0 && !_ps.IsSliding && !_ps.IsDashing)
 		{
@@ -215,23 +225,19 @@ public class PlayerMovement2D : MonoBehaviour
 
 	IEnumerator HandleJump()
 	{
+		//Jump
+		if (CanJump())
+			Jump();
 
-		while (_jumpInput || (Time.time - _dashInputStartTime) < _data.jumpInputBufferTime) {
+		//WallJump
+		else if (CanWallJump())
+		{
+			_wallJumpStartTime = Time.time;
 
-			//Jump
-			if (CanJump())
-				Jump();
-
-			//WallJump
-			else if (CanWallJump() && _pc.JumpAction.action.triggered)
-			{
-				_wallJumpStartTime = Time.time;
-
-				WallJump();
-			}
-
-			yield return new WaitForFixedUpdate();
+			WallJump();
 		}
+
+		yield return new WaitForFixedUpdate();
 	}
 
 	IEnumerator HandleDash()
@@ -279,16 +285,27 @@ public class PlayerMovement2D : MonoBehaviour
 
 	private bool CanJump()
 	{
-		// Player must be in the floor and a minimum of time
-		return (_ps.IsGrounded || Time.time - _jumpCoyoteTime < _data.coyoteTime)
-			&& !_ps.IsJumping
-			&& !_ps.IsSliding
-			&& Time.time - _jumpFinishTime >= _data.delayJump;
+		// Avoid perform a normal jump when sliding
+		if (_ps.IsSliding) return false;
+
+		// Normal jump removes the subtraction on the fall
+		if (_ps.IsGrounded || Time.time - _jumpCoyoteTime < _data.coyoteTime)
+			_jumpsLeft++; 
+
+		// If have jumps is able to jump even in air
+		return _jumpsLeft > 0;
 	}
 
 	private bool CanWallJump()
 	{
-		return _ps.IsSliding || Time.time - _wallJumpCoyoteTime < _data.coyoteTime;
+		// Normal wall jump removes the subtraction on the fall
+		if (_ps.IsSliding || Time.time - _wallJumpCoyoteTime < _data.coyoteTime)
+		{
+			_jumpsLeft++;
+			return true;
+		}
+
+		return false;
 	}
 
 	private bool CanDash()
@@ -302,8 +319,8 @@ public class PlayerMovement2D : MonoBehaviour
 	private void Jump()
 	{
 		// Update states when jump
-		_jumpInputStartTime = 0;
 		_jumpCoyoteTime = 0;
+		_jumpsLeft--;
 
 		_ps.IsJumping = true;
 
@@ -320,6 +337,33 @@ public class PlayerMovement2D : MonoBehaviour
 			force -= _rb.linearVelocity.y;
 
 		_rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
+	}
+
+	private void WallJump()
+	{
+		// Update states when start walljumping
+		_wallJumpCoyoteTime = 0;
+		_jumpsLeft--;
+
+		_ps.IsWallJumping = true;
+
+		_ps.IsJumping = false;
+		_ps.IsJumpCut = false;
+		_ps.IsFalling = false;
+		_ps.IsSliding = false;
+
+		Vector2 force = new Vector2(_data.wallJumpForce.x, _data.wallJumpForce.y);
+		force.x *= _slideIsFacingRight ? -1 : 1; //apply force in opposite direction of wall
+
+		if (Mathf.Sign(_rb.linearVelocity.x) != Mathf.Sign(force.x))
+			force.x -= _rb.linearVelocity.x;
+
+		if (_rb.linearVelocity.y < 0) //checks whether player is falling, if so we subtract the velocity.y (counteracting force of gravity). This ensures the player always reaches our desired jump force or greater
+			force.y -= _rb.linearVelocity.y;
+
+		//Unlike in the run we want to use the Impulse mode.
+		//The default mode will apply are force instantly ignoring masss
+		_rb.AddForce(force, ForceMode2D.Impulse);
 	}
 
 	private void Slide()
@@ -399,34 +443,6 @@ public class PlayerMovement2D : MonoBehaviour
 		 * So we are incrementing a value (also reduced by her mass), till reach the value 0 (max speed)
 		 */
 	}
-
-	private void WallJump()
-	{
-		// Update states when start walljumping
-		_jumpInputStartTime = 0;
-		_wallJumpCoyoteTime = 0;
-
-		_ps.IsWallJumping = true;
-
-		_ps.IsJumping = false;
-		_ps.IsJumpCut = false;
-		_ps.IsFalling = false;
-		_ps.IsSliding = false;
-
-		Vector2 force = new Vector2(_data.wallJumpForce.x, _data.wallJumpForce.y);
-		force.x *= _slideIsFacingRight ? -1 : 1; //apply force in opposite direction of wall
-
-		if (Mathf.Sign(_rb.linearVelocity.x) != Mathf.Sign(force.x))
-			force.x -= _rb.linearVelocity.x;
-
-		if (_rb.linearVelocity.y < 0) //checks whether player is falling, if so we subtract the velocity.y (counteracting force of gravity). This ensures the player always reaches our desired jump force or greater
-			force.y -= _rb.linearVelocity.y;
-
-		//Unlike in the run we want to use the Impulse mode.
-		//The default mode will apply are force instantly ignoring masss
-		_rb.AddForce(force, ForceMode2D.Impulse);
-	}
-
 
 	//Dash Coroutines
 	private IEnumerator Dash(Vector2 dir)
