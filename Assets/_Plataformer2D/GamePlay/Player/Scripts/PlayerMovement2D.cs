@@ -18,8 +18,15 @@ public class PlayerMovement2D : MonoBehaviour
 	[SerializeField] private bool _jumpInput;
 	[SerializeField] private bool _dashInput;
 
+	// Movement states
+	private float _wallJumpStartTime;
+	private float _jumpFinishTime;
 	private float _jumpInputStartTime;
 	private float _dashInputStartTime;
+	[SerializeField] private float _jumpCoyoteTime;
+	[SerializeField] private float _wallJumpCoyoteTime;
+	
+	private bool _slideIsFacingRight;
 
 	private void Awake()
 	{
@@ -28,14 +35,16 @@ public class PlayerMovement2D : MonoBehaviour
 
 	private void Start()
 	{
-		_ps = _pc.PS;
 		_rb = _pc.RB;
 		_data = _pc.Data;
 	}
 
-	#region Inputs events
+	#region Events
 	private void OnEnable()
     {
+		_ps = _pc.PS;
+
+		// Input Events
 		_pc.MoveAction.action.performed += OnMoveInput;
 		_pc.MoveAction.action.canceled += OnMoveInput;
 
@@ -44,10 +53,15 @@ public class PlayerMovement2D : MonoBehaviour
 		
 		_pc.DashAction.action.performed += OnDashInput;
 		_pc.DashAction.action.canceled += OnDashInput;
+
+		// State events
+		_ps.OnSlidingChanged += OnSlidingChanged;
+		_ps.OnGroundedChanged += OnGroundedChanged;
 	}
 
     private void OnDisable()
     {
+		// Input Events
 		_pc.MoveAction.action.performed -= OnMoveInput;
 		_pc.MoveAction.action.canceled -= OnMoveInput;
 
@@ -56,15 +70,19 @@ public class PlayerMovement2D : MonoBehaviour
 
 		_pc.DashAction.action.performed -= OnDashInput;
 		_pc.DashAction.action.canceled -= OnDashInput;
+
+		//	State events
+		_ps.OnSlidingChanged -= OnSlidingChanged;
+		_ps.OnGroundedChanged -= OnGroundedChanged;
 	}
 
-    public void OnMoveInput(InputAction.CallbackContext context = default)
+    private void OnMoveInput(InputAction.CallbackContext context = default)
 	{
 		Vector2 tempVector = context.action.ReadValue<Vector2>();
 		_moveInput.x = tempVector.x > 0 ? 1 : tempVector.x < 0 ? -1 : 0;
 	}
-	
-	public void OnJumpInput(InputAction.CallbackContext context = default)
+
+	private void OnJumpInput(InputAction.CallbackContext context = default)
 	{
 		_jumpInput = context.performed;
 		
@@ -73,8 +91,8 @@ public class PlayerMovement2D : MonoBehaviour
 
 		StartCoroutine(HandleJump());
 	}
-	
-	public void OnDashInput(InputAction.CallbackContext context = default)
+
+	private void OnDashInput(InputAction.CallbackContext context = default)
 	{
 		_dashInput = context.performed;  // Currently isn't used
 
@@ -82,6 +100,16 @@ public class PlayerMovement2D : MonoBehaviour
 			_dashInputStartTime = Time.time;
 
 		StartCoroutine(HandleDash());
+	}
+
+	private void OnGroundedChanged()
+	{
+		_jumpCoyoteTime = Time.time;
+	}
+	
+	private void OnSlidingChanged()
+	{
+		_wallJumpCoyoteTime = Time.time;
 	}
 	#endregion
 
@@ -114,7 +142,7 @@ public class PlayerMovement2D : MonoBehaviour
 		//}
 
 		//Handle Slide
-		if (CanSlide())
+		if (_ps.IsSliding)
 			Slide();
 	}
 	
@@ -122,29 +150,28 @@ public class PlayerMovement2D : MonoBehaviour
 	#region Handle Behaviour (A bridge between actions and general behaviour)
 	private void HandleStates()
 	{
+		_ps.IsSliding = CanSlide();
+
 		_ps.IsJumpCut = _ps.IsJumping && !_jumpInput;
 
-		if (_ps.IsSliding && _ps.IsGrounded)
-			_ps.IsSliding = false;
-
-		if ((_ps.IsJumping || _ps.IsJumpFalling) && _ps.IsGrounded)
-			_ps.JumpFinishTime = Time.time;
+		if ((_ps.IsJumping || _ps.IsFalling) && _ps.IsGrounded)
+			_jumpFinishTime = Time.time;
 
 		if (_rb.linearVelocity.y < 0 && !_ps.IsSliding && !_ps.IsDashing)
 		{
 			_ps.IsJumping = false;
 
-			_ps.IsJumpFalling = true;
+			_ps.IsFalling = true;
 		}
 
-		if (_ps.IsWallJumping && Time.time - _ps.WallJumpStartTime > _data.wallJumpTime)
+		if (_ps.IsWallJumping && Time.time - _wallJumpStartTime > _data.wallJumpTime)
 			_ps.IsWallJumping = false;
 
 		if (_ps.IsGrounded && !_ps.IsJumping && !_ps.IsWallJumping)
 		{
 			_ps.IsJumpCut = false;
 
-			_ps.IsJumpFalling = false;
+			_ps.IsFalling = false;
 		}
 	}
 
@@ -168,7 +195,7 @@ public class PlayerMovement2D : MonoBehaviour
 			_pc.SetGravityScale(_data.gravityScale * _data.jumpCutGravityMult);
 			_rb.linearVelocity = new Vector2(_rb.linearVelocity.x, Mathf.Max(_rb.linearVelocity.y, -_data.maxFallSpeed));
 		}
-		else if ((_ps.IsJumping || _ps.IsWallJumping || _ps.IsJumpFalling) && Mathf.Abs(_rb.linearVelocity.y) < _data.jumpHangTimeThreshold)
+		else if ((_ps.IsJumping || _ps.IsWallJumping || _ps.IsFalling) && Mathf.Abs(_rb.linearVelocity.y) < _data.jumpHangTimeThreshold)
 		{
 			_pc.SetGravityScale(_data.gravityScale * _data.jumpHangGravityMult);
 		}
@@ -196,11 +223,11 @@ public class PlayerMovement2D : MonoBehaviour
 				Jump();
 
 			//WallJump
-			else if (_ps.IsSliding && _pc.JumpAction.action.triggered)
+			else if (CanWallJump() && _pc.JumpAction.action.triggered)
 			{
-				_ps.WallJumpStartTime = Time.time;
+				_wallJumpStartTime = Time.time;
 
-				WallJump(_ps.IsFacingRight ? -1 : 1);
+				WallJump();
 			}
 
 			yield return new WaitForFixedUpdate();
@@ -253,10 +280,15 @@ public class PlayerMovement2D : MonoBehaviour
 	private bool CanJump()
 	{
 		// Player must be in the floor and a minimum of time
-		return _ps.IsGrounded
+		return (_ps.IsGrounded || Time.time - _jumpCoyoteTime < _data.coyoteTime)
 			&& !_ps.IsJumping
 			&& !_ps.IsSliding
-			&& Time.time - _ps.JumpFinishTime >= _data.delayJump;
+			&& Time.time - _jumpFinishTime >= _data.delayJump;
+	}
+
+	private bool CanWallJump()
+	{
+		return _ps.IsSliding || Time.time - _wallJumpCoyoteTime < _data.coyoteTime;
 	}
 
 	private bool CanDash()
@@ -271,12 +303,13 @@ public class PlayerMovement2D : MonoBehaviour
 	{
 		// Update states when jump
 		_jumpInputStartTime = 0;
+		_jumpCoyoteTime = 0;
 
 		_ps.IsJumping = true;
 
 		_ps.IsWallJumping = false;
 		_ps.IsJumpCut = false;
-		_ps.IsJumpFalling = false;
+		_ps.IsFalling = false;
 		_ps.IsGrounded = false;
 
 		//We increase the force applied if we are falling
@@ -295,8 +328,10 @@ public class PlayerMovement2D : MonoBehaviour
 		_ps.IsSliding = true;
 
 		_ps.IsJumping = false;
-		_ps.IsJumpFalling = false;
+		_ps.IsFalling = false;
 		_ps.IsWallJumping = false;
+
+		_slideIsFacingRight = _ps.IsFacingRight;
 
 		//We remove the remaining upwards Impulse to prevent upwards sliding
 		if (_rb.linearVelocity.y > 0)
@@ -334,7 +369,7 @@ public class PlayerMovement2D : MonoBehaviour
 		else
 			accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? _data.runAccelAmount * _data.accelInAir : _data.runDeccelAmount * _data.deccelInAir;
 
-		if ((_ps.IsJumping || _ps.IsWallJumping || _ps.IsJumpFalling) && Mathf.Abs(_rb.linearVelocity.y) < _data.jumpHangTimeThreshold)
+		if ((_ps.IsJumping || _ps.IsWallJumping || _ps.IsFalling) && Mathf.Abs(_rb.linearVelocity.y) < _data.jumpHangTimeThreshold)
 		{
 			accelRate *= _data.jumpHangAccelerationMult;
 			targetSpeed *= _data.jumpHangMaxSpeedMult;
@@ -365,20 +400,21 @@ public class PlayerMovement2D : MonoBehaviour
 		 */
 	}
 
-	private void WallJump(int dir)
+	private void WallJump()
 	{
 		// Update states when start walljumping
 		_jumpInputStartTime = 0;
+		_wallJumpCoyoteTime = 0;
 
 		_ps.IsWallJumping = true;
 
 		_ps.IsJumping = false;
 		_ps.IsJumpCut = false;
-		_ps.IsJumpFalling = false;
+		_ps.IsFalling = false;
 		_ps.IsSliding = false;
 
 		Vector2 force = new Vector2(_data.wallJumpForce.x, _data.wallJumpForce.y);
-		force.x *= dir; //apply force in opposite direction of wall
+		force.x *= _slideIsFacingRight ? -1 : 1; //apply force in opposite direction of wall
 
 		if (Mathf.Sign(_rb.linearVelocity.x) != Mathf.Sign(force.x))
 			force.x -= _rb.linearVelocity.x;
@@ -404,7 +440,7 @@ public class PlayerMovement2D : MonoBehaviour
 		_ps.IsDashing = true;
 
 		_ps.IsJumping = false;
-		_ps.IsJumpFalling = false;
+		_ps.IsFalling = false;
 		_ps.IsWallJumping = false;
 		_ps.IsJumpCut = false;
 		_ps.IsGrounded = false;

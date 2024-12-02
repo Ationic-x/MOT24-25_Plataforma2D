@@ -31,7 +31,7 @@ public class PlayerAudio : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!_audioJumping && (_ps.IsJumping || _ps.IsJumpFalling))
+        if (!_audioJumping && (_ps.IsJumping || _ps.IsFalling))
 		{
             _audioJumping = true;
             PlaySoundOnce("JumpStart", GetAudioClip(Sound.JumpStart), 1);

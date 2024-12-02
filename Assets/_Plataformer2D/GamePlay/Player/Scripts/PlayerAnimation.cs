@@ -20,14 +20,14 @@ public class PlayerAnimation : MonoBehaviour
         _sr = GetComponent<SpriteRenderer>();
     }
 
-	private void Start()
+	private void OnEnable()
 	{
         _ps = _pc.PS;
-        
+
         _ps.OnFacingRightChanged += OnFacingRightChanged;
-	}
-    
-    private void OnDisable()
+    }
+
+	private void OnDisable()
 	{
         _ps.OnFacingRightChanged -= OnFacingRightChanged;
     }
@@ -42,7 +42,7 @@ public class PlayerAnimation : MonoBehaviour
     {
         _animator.SetBool("Grounded", _ps.IsGrounded);
         _animator.SetBool("Jump", _ps.IsJumping || _ps.IsWallJumping);
-        _animator.SetFloat("AirSpeedY", _ps.IsJumpFalling ? -1 : 0);
+        _animator.SetFloat("AirSpeedY", _ps.IsFalling ? -1 : 0);
         _animator.SetBool("WallSlide", _ps.IsSliding);
         _animator.SetInteger("AnimState", _ps.IsRunning ? 1 : 0);
         _animator.SetBool("Roll", _ps.IsDashing);

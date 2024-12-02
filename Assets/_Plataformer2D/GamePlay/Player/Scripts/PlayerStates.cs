@@ -24,13 +24,11 @@ public class PlayerStates
     // General States
     [SerializeField] private bool _isFacingRight = true; // By default the character is facing right
 
-    // Player Time
-    [SerializeField] private float _wallJumpStartTime;
-    [SerializeField] private float _jumpFinishTime;
-
 
 	// Events
 	public event Action<bool> OnFacingRightChanged;
+	public event Action OnSlidingChanged;
+	public event Action OnGroundedChanged;
 
 	#region Getters And Setters
 	// Movement States
@@ -40,23 +38,46 @@ public class PlayerStates
 
     public bool IsJumping { get => _isJumping; set => _isJumping = value; }
 
-    public bool IsJumpFalling { get => _isJumpFalling; set => _isJumpFalling = value; }
+    public bool IsFalling { get => _isJumpFalling; set => _isJumpFalling = value; }
 
     public bool IsWallJumping { get => _isWallJumping; set => _isWallJumping = value; }
 
     public bool IsJumpCut { get => _isJumpCut; set => _isJumpCut = value; }
 
-    public bool IsSliding { get => _isSliding; set => _isSliding = value; }
+    public bool IsSliding 
+    { 
+        get => _isSliding;
+        set
+        {
+            if (_isSliding != value)
+            {
+                _isSliding = value;
+                OnSlidingChanged?.Invoke();
+            }
+        }
+    }
 
     // Collision States
-    public bool IsGrounded { get => _isGrounded; set => _isGrounded = value; }
+    public bool IsGrounded
+    {
+        get => _isGrounded;
+        set
+        {
+            if (_isGrounded != value)
+            {
+                _isGrounded = value;
+                OnGroundedChanged?.Invoke();
+            }
+        }
+    }
 
     public bool IsCollidedLeft { get => _isCollidedLeft; set => _isCollidedLeft = value; }
 
     public bool IsCollidedRight { get => _isCollidedRight; set => _isCollidedRight = value; }
 
     // General States
-    public bool IsFacingRight {
+    public bool IsFacingRight 
+    {
         get => _isFacingRight;
         set {
             if (_isFacingRight != value)
@@ -66,11 +87,6 @@ public class PlayerStates
             }
         } 
     }
-
-    // Player Time
-    public float WallJumpStartTime { get => _wallJumpStartTime; set => _wallJumpStartTime = value; }
-
-    public float JumpFinishTime { get => _jumpFinishTime; set => _jumpFinishTime = value; }
 
     #endregion
 }
