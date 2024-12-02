@@ -3,12 +3,13 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class ParallaxLayer : MonoBehaviour
 {
-    public float parallaxFactor;
+    public Vector3 parallaxFactor;
 
-    public void Move(float delta)
+    public void Move(Vector3 delta)
     {
         Vector3 newPos = transform.localPosition;
-        newPos.x -= delta * parallaxFactor;
+        newPos.x -= delta.x * parallaxFactor.x;
+        newPos.y -= delta.y * parallaxFactor.y;
 
         transform.localPosition = newPos;
     }

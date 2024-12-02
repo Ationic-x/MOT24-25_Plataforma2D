@@ -20,7 +20,6 @@ public class PlayerMovement2D : MonoBehaviour
 
 	// Movement states
 	private float _wallJumpStartTime;
-	private float _dashInputStartTime;
 	[SerializeField] private float _jumpCoyoteTime;
 	[SerializeField] private float _wallJumpCoyoteTime;
 	
@@ -98,9 +97,7 @@ public class PlayerMovement2D : MonoBehaviour
 		_dashInput = context.performed;  // Currently isn't used
 
 		if (_dashInput)
-			_dashInputStartTime = Time.time;
-
-		StartCoroutine(HandleDash());
+			StartCoroutine(HandleDash());
 	}
 
 	private void OnGroundedChanged(bool isGrounded)
@@ -451,8 +448,6 @@ public class PlayerMovement2D : MonoBehaviour
 		// a more physics-based approach try a method similar to that used in the jump
 
 		// Update States when start dashing
-		_dashInputStartTime = 0;
-
 		_ps.IsDashing = true;
 
 		_ps.IsJumping = false;
