@@ -10,7 +10,7 @@ public class PlayerMovement2D : MonoBehaviour
 	
 	private PlayerStates _ps;
 	private Rigidbody2D _rb;
-	private PlayerData _data;
+	private PlayerData _pd;
 
 
 	// Input Variables
@@ -36,9 +36,9 @@ public class PlayerMovement2D : MonoBehaviour
 	private void Start()
 	{
 		_rb = _pc.RB;
-		_data = _pc.Data;
+		_pd = _pc.Data;
 
-		_jumpsLeft = _data.jumpAmount; // TODO: locked max jump amount (require perk)
+		_jumpsLeft = _pd.jumpAmount; // TODO: locked max jump amount (require perk)
 	}
 
 	#region Events
@@ -103,7 +103,7 @@ public class PlayerMovement2D : MonoBehaviour
 	private void OnGroundedChanged(bool isGrounded)
 	{
 		if (isGrounded)
-			_jumpsLeft = _data.jumpAmount;
+			_jumpsLeft = _pd.jumpAmount;
 		else
 		{
 			_jumpCoyoteTime = Time.time;
@@ -114,7 +114,7 @@ public class PlayerMovement2D : MonoBehaviour
 	private void OnSlidingChanged(bool isSliding)
 	{
 		if (isSliding)
-			_jumpsLeft = _data.jumpAmount;
+			_jumpsLeft = _pd.jumpAmount;
 		else
 		{
 			_wallJumpCoyoteTime = Time.time;
@@ -142,7 +142,7 @@ public class PlayerMovement2D : MonoBehaviour
 		if (!_ps.IsDashing)
 		{
 			if (_ps.IsWallJumping)
-				Run(_data.wallJumpRunLerp);
+				Run(_pd.wallJumpRunLerp);
 			else
 				Run(1);
 		}
@@ -171,7 +171,7 @@ public class PlayerMovement2D : MonoBehaviour
 			_ps.IsFalling = true;
 		}
 
-		if (_ps.IsWallJumping && Time.time - _wallJumpStartTime > _data.wallJumpTime)
+		if (_ps.IsWallJumping && Time.time - _wallJumpStartTime > _pd.wallJumpTime)
 			_ps.IsWallJumping = false;
 
 		if (_ps.IsGrounded && !_ps.IsJumping && !_ps.IsWallJumping)
@@ -192,31 +192,31 @@ public class PlayerMovement2D : MonoBehaviour
 		else if (_rb.linearVelocity.y < 0 && _moveInput.y < 0)
 		{
 			//Much higher gravity if holding down
-			_pc.SetGravityScale(_data.gravityScale * _data.fastFallGravityMult);
+			_pc.SetGravityScale(_pd.gravityScale * _pd.fastFallGravityMult);
 			//Caps maximum fall speed, so when falling over large distances we don't accelerate to insanely high speeds
-			_rb.linearVelocity = new Vector2(_rb.linearVelocity.x, Mathf.Max(_rb.linearVelocity.y, -_data.maxFastFallSpeed));
+			_rb.linearVelocity = new Vector2(_rb.linearVelocity.x, Mathf.Max(_rb.linearVelocity.y, -_pd.maxFastFallSpeed));
 		}
 		else if (_ps.IsJumpCut)
 		{
 			//Higher gravity if jump button released
-			_pc.SetGravityScale(_data.gravityScale * _data.jumpCutGravityMult);
-			_rb.linearVelocity = new Vector2(_rb.linearVelocity.x, Mathf.Max(_rb.linearVelocity.y, -_data.maxFallSpeed));
+			_pc.SetGravityScale(_pd.gravityScale * _pd.jumpCutGravityMult);
+			_rb.linearVelocity = new Vector2(_rb.linearVelocity.x, Mathf.Max(_rb.linearVelocity.y, -_pd.maxFallSpeed));
 		}
-		else if ((_ps.IsJumping || _ps.IsWallJumping || _ps.IsFalling) && Mathf.Abs(_rb.linearVelocity.y) < _data.jumpHangTimeThreshold)
+		else if ((_ps.IsJumping || _ps.IsWallJumping || _ps.IsFalling) && Mathf.Abs(_rb.linearVelocity.y) < _pd.jumpHangTimeThreshold)
 		{
-			_pc.SetGravityScale(_data.gravityScale * _data.jumpHangGravityMult);
+			_pc.SetGravityScale(_pd.gravityScale * _pd.jumpHangGravityMult);
 		}
 		else if (_rb.linearVelocity.y < 0)
 		{
 			//Higher gravity if falling
-			_pc.SetGravityScale(_data.gravityScale * _data.fallGravityMult);
+			_pc.SetGravityScale(_pd.gravityScale * _pd.fallGravityMult);
 			//Caps maximum fall speed, so when falling over large distances we don't accelerate to insanely high speeds
-			_rb.linearVelocity = new Vector2(_rb.linearVelocity.x, Mathf.Max(_rb.linearVelocity.y, -_data.maxFallSpeed));
+			_rb.linearVelocity = new Vector2(_rb.linearVelocity.x, Mathf.Max(_rb.linearVelocity.y, -_pd.maxFallSpeed));
 		}
 		else
 		{
 			//Default gravity if standing on a platform or moving upwards
-			_pc.SetGravityScale(_data.gravityScale);
+			_pc.SetGravityScale(_pd.gravityScale);
 		}
 	}
 
@@ -244,7 +244,7 @@ public class PlayerMovement2D : MonoBehaviour
 			Vector2 dashDir;
 
 			//Freeze game for split second. Adds juiciness and a bit of forgiveness over directional input
-			_pc.Sleep(_data.dashSleepTime);
+			_pc.Sleep(_pd.dashSleepTime);
 
 			//If not direction pressed, dash forward
 			if (_moveInput != Vector2.zero)
@@ -286,7 +286,7 @@ public class PlayerMovement2D : MonoBehaviour
 		if (_ps.IsSliding) return false;
 
 		// Normal jump removes the subtraction on the fall
-		if (_ps.IsGrounded || Time.time - _jumpCoyoteTime < _data.coyoteTime)
+		if (_ps.IsGrounded || Time.time - _jumpCoyoteTime < _pd.coyoteTime)
 			_jumpsLeft++; 
 
 		// If have jumps is able to jump even in air
@@ -296,7 +296,7 @@ public class PlayerMovement2D : MonoBehaviour
 	private bool CanWallJump()
 	{
 		// Normal wall jump removes the subtraction on the fall
-		if (_ps.IsSliding || Time.time - _wallJumpCoyoteTime < _data.coyoteTime)
+		if (_ps.IsSliding || Time.time - _wallJumpCoyoteTime < _pd.coyoteTime)
 		{
 			_jumpsLeft++;
 			return true;
@@ -329,7 +329,7 @@ public class PlayerMovement2D : MonoBehaviour
 		//We increase the force applied if we are falling
 		//This means we'll always feel like we jump the same amount 
 		//(setting the player's Y velocity to 0 beforehand will likely work the same, but I find this more elegant :D)
-		float force = _data.jumpForce;
+		float force = _pd.jumpForce;
 		if (_rb.linearVelocity.y < 0)
 			force -= _rb.linearVelocity.y;
 
@@ -349,7 +349,7 @@ public class PlayerMovement2D : MonoBehaviour
 		_ps.IsFalling = false;
 		_ps.IsSliding = false;
 
-		Vector2 force = new Vector2(_data.wallJumpForce.x, _data.wallJumpForce.y);
+		Vector2 force = new Vector2(_pd.wallJumpForce.x, _pd.wallJumpForce.y);
 		force.x *= _slideIsFacingRight ? -1 : 1; //apply force in opposite direction of wall
 
 		if (Mathf.Sign(_rb.linearVelocity.x) != Mathf.Sign(force.x))
@@ -381,8 +381,8 @@ public class PlayerMovement2D : MonoBehaviour
 		}
 
 		//Works the same as the Run but only in the y-axis
-		float speedDif = _data.slideSpeed - _rb.linearVelocity.y;
-		float movement = speedDif * _data.slideAccel;
+		float speedDif = _pd.slideSpeed - _rb.linearVelocity.y;
+		float movement = speedDif * _pd.slideAccel;
 
 		//So, we clamp the movement here to prevent any over corrections (these aren't noticeable in the Run)
 		//The force applied can't be greater than the (negative) speedDifference * by how many times a second FixedUpdate() is called. For more info research how force are applied to rigidbodies.
@@ -399,25 +399,25 @@ public class PlayerMovement2D : MonoBehaviour
 		_ps.IsRunning = _moveInput.x != 0 && _ps.IsGrounded; // Only Run when is grounded
 
 
-		float targetSpeed = _moveInput.x * _data.runMaxSpeed; // -1~1 * Max Speed
+		float targetSpeed = _moveInput.x * _pd.runMaxSpeed; // -1~1 * Max Speed
 		targetSpeed = Mathf.Lerp(_rb.linearVelocity.x, targetSpeed, lerpAmount); // Get values betwen current.s and target.s (smothness)
 
 		float accelRate;
 
 		// Calculate acceleration and decceleration
 		if (_ps.IsGrounded)
-			accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? _data.runAccelAmount : _data.runDeccelAmount;
+			accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? _pd.runAccelAmount : _pd.runDeccelAmount;
 		else
-			accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? _data.runAccelAmount * _data.accelInAir : _data.runDeccelAmount * _data.deccelInAir;
+			accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? _pd.runAccelAmount * _pd.accelInAir : _pd.runDeccelAmount * _pd.deccelInAir;
 
-		if ((_ps.IsJumping || _ps.IsWallJumping || _ps.IsFalling) && Mathf.Abs(_rb.linearVelocity.y) < _data.jumpHangTimeThreshold)
+		if ((_ps.IsJumping || _ps.IsWallJumping || _ps.IsFalling) && Mathf.Abs(_rb.linearVelocity.y) < _pd.jumpHangTimeThreshold)
 		{
-			accelRate *= _data.jumpHangAccelerationMult;
-			targetSpeed *= _data.jumpHangMaxSpeedMult;
+			accelRate *= _pd.jumpHangAccelerationMult;
+			targetSpeed *= _pd.jumpHangMaxSpeedMult;
 		}
 
 		// Preserve the speed of the character, remove any decceleration if have a greater speed than max speed (jump wall case)
-		if (_data.doConserveMomentum
+		if (_pd.doConserveMomentum
 			&& Mathf.Abs(_rb.linearVelocity.x) > Mathf.Abs(targetSpeed)
 			&& Mathf.Sign(_rb.linearVelocity.x) == Mathf.Sign(targetSpeed)
 			&& Mathf.Abs(targetSpeed) > 0.01f
@@ -465,9 +465,9 @@ public class PlayerMovement2D : MonoBehaviour
 		_pc.SetGravityScale(0);
 
 		//We keep the player's velocity at the dash speed during the "attack" phase (in celeste the first 0.15s)
-		while (Time.time - startTime <= _data.dashAttackTime)
+		while (Time.time - startTime <= _pd.dashAttackTime)
 		{
-			_rb.linearVelocity = dir.normalized * _data.dashSpeed;
+			_rb.linearVelocity = dir.normalized * _pd.dashSpeed;
 			//Pauses the loop until the next frame, creating something of a Update loop. 
 			//This is a cleaner implementation opposed to multiple timers and this coroutine approach is actually what is used in Celeste :D
 			yield return null;
@@ -478,10 +478,10 @@ public class PlayerMovement2D : MonoBehaviour
 		//_isDashAttacking = false;
 
 		//Begins the "end" of our dash where we return some control to the player but still limit run acceleration (see Update() and Run())
-		_pc.SetGravityScale(_data.gravityScale);
-		_rb.linearVelocity = _data.dashEndSpeed * dir.normalized;
+		_pc.SetGravityScale(_pd.gravityScale);
+		_rb.linearVelocity = _pd.dashEndSpeed * dir.normalized;
 
-		while (Time.time - startTime <= _data.dashEndTime)
+		while (Time.time - startTime <= _pd.dashEndTime)
 		{
 			yield return null;
 		}
