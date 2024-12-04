@@ -1234,6 +1234,7 @@ GameObject:
   - component: {fileID: 820324458}
   - component: {fileID: 820324457}
   - component: {fileID: 820324460}
+  - component: {fileID: 820324461}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -1286,7 +1287,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: caf8a7d4d4a1ad546ac4fc35ec779cd1, type: 2}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1348,6 +1349,24 @@ MonoBehaviour:
   _slideDust: {fileID: 1038168246061390451, guid: 125f8934180f6c343b34155a48923ef3, type: 3}
   _frontWallCheckPoint: {fileID: 795853011}
   _backWallCheckPoint: {fileID: 1084296555}
+--- !u!114 &820324461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 820324456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 696bbfb9602354845864f5d9ae8e4513, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _ghostPrefab: {fileID: 6828070121878529696, guid: c0768d1bd1aa1fc4888a68ea1e0d1045, type: 3}
+  _poolSize: 10
+  _spawnInterval: 0.05
+  _ghostLifetime: 0.3
+  _trailColor: {r: 0.036264896, g: 0, b: 1, a: 1}
+  _available: 0
 --- !u!1 &924687569
 GameObject:
   m_ObjectHideFlags: 0
@@ -6898,7 +6917,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8077289164064834327, guid: f9fab393d530746439a44665c0500335, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.908
+      value: -4.58
       objectReference: {fileID: 0}
     - target: {fileID: 8077289164064834327, guid: f9fab393d530746439a44665c0500335, type: 3}
       propertyPath: m_LocalPosition.z

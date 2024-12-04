@@ -7,10 +7,13 @@ public class PlayerAnimation : MonoBehaviour
     private SpriteRenderer _sr;
     private PlayerController _pc;
     private PlayerStates _ps;
+    private GhosTrail _gt;
 
     [SerializeField] private GameObject _slideDust;
     [SerializeField] private Transform _frontWallCheckPoint;
     [SerializeField] private Transform _backWallCheckPoint;
+    
+    private float _ghostTrailDelay;
 
     // Start is called before the first frame update
     void Awake()
@@ -18,6 +21,7 @@ public class PlayerAnimation : MonoBehaviour
         _pc = GetComponentInParent<PlayerController>();
         _animator = GetComponent<Animator>();
         _sr = GetComponent<SpriteRenderer>();
+        _gt = GetComponent<GhosTrail>();
     }
 
 	private void OnEnable()
@@ -45,7 +49,17 @@ public class PlayerAnimation : MonoBehaviour
         _animator.SetFloat("AirSpeedY", _ps.IsFalling ? -1 : 0);
         _animator.SetBool("WallSlide", _ps.IsSliding);
         _animator.SetInteger("AnimState", _ps.IsRunning ? 1 : 0);
-        _animator.SetBool("Roll", _ps.IsDashing);
+        if (_ps.IsDashing)
+		{
+            _animator.SetBool("Roll", true);
+            _gt.Available = true;
+            _ghostTrailDelay = Time.time + 0.3f;
+        }
+
+        if (Time.time - _ghostTrailDelay > 0)
+		{
+            _gt.Available = false;
+		}
     }
 
     // Animation Event to spawn a dust cloud when slide

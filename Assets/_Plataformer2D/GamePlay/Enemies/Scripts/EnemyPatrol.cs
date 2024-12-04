@@ -27,7 +27,7 @@ public class EnemyPatrol : MonoBehaviour
         _positionB = _pointB.transform.position;
     }
 
-    private void Start()
+    private void OnEnable()
     {
         _animator.SetInteger("AnimState", 2);
     }
