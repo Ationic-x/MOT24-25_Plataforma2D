@@ -70,7 +70,7 @@ public class PlayerData : ScriptableObject, IStats
 
 	[Header("Dash")]
 	public float dashSpeed;
-	public float dashSleepTime; //Duration for which the game freezes when we press dash but before we read directional input and apply a force
+	public float dashDelay; // Delay between dashes
 	[Space(5)]
 	public float dashAttackTime;
 	[Space(5)]
