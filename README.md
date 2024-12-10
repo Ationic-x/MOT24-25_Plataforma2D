@@ -25,13 +25,21 @@ This list may change over time as new tasks are required/founded and others are 
 - [x] Parallax Background
 - [ ] Level Design
 ### Current Code
-![](https://progress-bar.xyz/80) Improved Movement<br>
-![](https://progress-bar.xyz/10) Logic Enemy<br>
-![](https://progress-bar.xyz/60) Improved Animation<br>
-![](https://progress-bar.xyz/30) Particle Controller<br>
-![](https://progress-bar.xyz/20) Abstraction, Polymorphism, Interfaces, Scriptable Object (organized and more modular)<br>
+![](https://progress-bar.xyz/80) Improved Movement
+
+![](https://progress-bar.xyz/10) Logic Enemy
+
+![](https://progress-bar.xyz/60) Improved Animation
+
+![](https://progress-bar.xyz/30) Particle Controller
+
+![](https://progress-bar.xyz/20) Abstraction, Polymorphism, Interfaces, Scriptable Object (organized and more modular)
+
 ### Documentation
 ![](https://progress-bar.xyz/5) Inline Doc
+
 ![](https://progress-bar.xyz/0) Tagged Doc
+
 ![](https://progress-bar.xyz/1) Unit Test, Debug
+
 ![](https://progress-bar.xyz/5) Rules and Exceptions
