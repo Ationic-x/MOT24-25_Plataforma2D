@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23204dd649e61e048ad15e296acb8388, type: 3}
+  m_Name: HBandit Data
+  m_EditorClassIdentifier: 
+  hp:
+    initialValue: 0
+    runtimeValue: 0
+    OnValueUpdate:
+      m_PersistentCalls:
+        m_Calls: []
+    minValue: 0
+    maxValue: 100
+  sprite: {fileID: 21300000, guid: 317b8365a4649ab459f6cb58ec8f9f18, type: 3}
+  controller: {fileID: 22100000, guid: f822f7ebb064d08498418deaa3f4d10a, type: 2}
+  runMaxSpeed: 6.5
+  runAcceleration: 6.5
+  runAccelAmount: 50
+  runDecceleration: 6.5
+  runDeccelAmount: 50
+  accelInAir: 1
+  deccelInAir: 1
+  doConserveMomentum: 0
+  canJump: 0
+  jumpAmount: 6
+  jumpHeight: 6
+  jumpTimeToApex: 6
+  jumpForce: 0

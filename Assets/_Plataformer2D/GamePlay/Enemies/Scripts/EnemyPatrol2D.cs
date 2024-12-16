@@ -1,7 +1,8 @@
+using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class EnemyPatrol : MonoBehaviour
+public class EnemyPatrol2D : MonoBehaviour
 {
     [SerializeField] private float _patrolDistance = 0.1f;
 
@@ -12,7 +13,7 @@ public class EnemyPatrol : MonoBehaviour
     private bool _reachA = true, _reachB;
 
     [SerializeField] private GameObject _pointA, _pointB;
-    [SerializeField] private PlayerData _pd;
+    private EnemyData _data;
     private Animator _animator;
     private SpriteRenderer _sr;
 
@@ -20,6 +21,7 @@ public class EnemyPatrol : MonoBehaviour
     void Awake()
     {
         _ec = GetComponent<EnemyController>();
+        _data = _ec.Data;
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponentInChildren<Animator>();
         _sr = GetComponentInChildren<SpriteRenderer>();
@@ -63,8 +65,8 @@ public class EnemyPatrol : MonoBehaviour
 
     private void Move(int direction)
     {
-        float targetSpeed = _pd.runMaxSpeed * direction;
-        float accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? _pd.runAccelAmount : _pd.runDeccelAmount;
+        float targetSpeed = _data.runMaxSpeed * direction;
+        float accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? _data.runAccelAmount : _data.runDeccelAmount;
         float speedDif = targetSpeed - _rb.linearVelocity.x;
         float movement = speedDif * accelRate;
         _rb.AddForce(movement * Vector2.right, ForceMode2D.Force);

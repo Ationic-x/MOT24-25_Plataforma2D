@@ -44,9 +44,10 @@ GameObject:
   - component: {fileID: 8077289164064834327}
   - component: {fileID: 7352639059717173918}
   - component: {fileID: 7416652872107549516}
+  - component: {fileID: 7999627552314024910}
   - component: {fileID: 8595263304300873047}
   m_Layer: 0
-  m_Name: Bandit
+  m_Name: LightBandit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -142,6 +143,19 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.65, y: 1.25}
   m_EdgeRadius: 0
+--- !u!114 &7999627552314024910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2403058618083540438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f64ee4f7490ac8a4dbc2079b9f39d547, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _data: {fileID: 11400000, guid: 61a2d048a1d18a645b408a91407f9102, type: 2}
 --- !u!114 &8595263304300873047
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,7 +171,6 @@ MonoBehaviour:
   _patrolDistance: 0.1
   _pointA: {fileID: 9093284262344166343}
   _pointB: {fileID: 8325537524863078209}
-  _pd: {fileID: 11400000, guid: ae8c7062212e37e47b3f138aa613cdb4, type: 2}
 --- !u!1 &5830637533417259824
 GameObject:
   m_ObjectHideFlags: 0
