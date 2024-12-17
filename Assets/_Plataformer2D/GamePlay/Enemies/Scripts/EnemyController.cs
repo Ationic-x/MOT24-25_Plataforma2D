@@ -3,6 +3,7 @@ using UnityEngine;
 public class EnemyController : ActorController
 {
     [SerializeField] private EnemyData _data;
+    [SerializeField] private EnemyStates _es;
 
     public override IStats Stats {
         get => _data;
@@ -24,4 +25,13 @@ public class EnemyController : ActorController
 
     public EnemyData Data { get { return _data; } }
 #endif
+
+    public void SwapFacingPosition(bool isFacingRight)
+    {
+        bool frConversion = _data.isFacingRight ? isFacingRight : !isFacingRight;
+        if (_es.IsFacingRight != frConversion)
+            _es.IsFacingRight = frConversion;
+    }
+
+    public EnemyStates ES { get => _es; }
 }

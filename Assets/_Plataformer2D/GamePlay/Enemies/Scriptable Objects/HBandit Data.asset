@@ -21,6 +21,7 @@ MonoBehaviour:
     minValue: 0
     maxValue: 100
   sprite: {fileID: 21300000, guid: 317b8365a4649ab459f6cb58ec8f9f18, type: 3}
+  isFacingRight: 0
   controller: {fileID: 22100000, guid: f822f7ebb064d08498418deaa3f4d10a, type: 2}
   runMaxSpeed: 6.5
   runAcceleration: 6.5

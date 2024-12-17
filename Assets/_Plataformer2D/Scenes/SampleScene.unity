@@ -1026,6 +1026,23 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &689364772 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5830637533417259824, guid: f9fab393d530746439a44665c0500335, type: 3}
+  m_PrefabInstance: {fileID: 3216319511029475575}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &689364774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 689364772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 564928b9b3eab7f4e823667be8c9893d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &725880805
 GameObject:
   m_ObjectHideFlags: 0
@@ -1098,6 +1115,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 725880805}
   m_CullTransparentMesh: 1
+--- !u!1 &749585017 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3292998157966994818, guid: 95136d58306e11b4fb5c176fd592cb11, type: 3}
+  m_PrefabInstance: {fileID: 3622056112784553878}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &749585019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 749585017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 564928b9b3eab7f4e823667be8c9893d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &759124550
 GameObject:
   m_ObjectHideFlags: 0
@@ -11562,6 +11596,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LightBandit
       objectReference: {fileID: 0}
+    - target: {fileID: 7908619439820946737, guid: f9fab393d530746439a44665c0500335, type: 3}
+      propertyPath: m_FlipX
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8077289164064834327, guid: f9fab393d530746439a44665c0500335, type: 3}
       propertyPath: m_LocalPosition.x
       value: 7.24
@@ -11605,7 +11643,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5830637533417259824, guid: f9fab393d530746439a44665c0500335, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 689364774}
   m_SourcePrefab: {fileID: 100100000, guid: f9fab393d530746439a44665c0500335, type: 3}
 --- !u!1001 &3622056112784553878
 PrefabInstance:
@@ -11655,6 +11696,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1195862845003174787, guid: 95136d58306e11b4fb5c176fd592cb11, type: 3}
+      propertyPath: m_FlipX
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6629545516336763748, guid: 95136d58306e11b4fb5c176fd592cb11, type: 3}
       propertyPath: m_Name
       value: HeavyBandit
@@ -11662,7 +11707,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3292998157966994818, guid: 95136d58306e11b4fb5c176fd592cb11, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 749585019}
   m_SourcePrefab: {fileID: 100100000, guid: 95136d58306e11b4fb5c176fd592cb11, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

@@ -9,6 +9,7 @@ public class EnemyData : ScriptableObject, IStats
     public float HP { get => hp.CurrentValue; set => hp.CurrentValue = value; }
 
     public Sprite sprite;
+    public bool isFacingRight;
     public RuntimeAnimatorController controller;
 
     [Header("Run")]

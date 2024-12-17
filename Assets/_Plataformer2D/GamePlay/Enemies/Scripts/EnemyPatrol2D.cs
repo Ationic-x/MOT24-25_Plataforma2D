@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
+using static EnemyStates;
 
 public class EnemyPatrol2D : MonoBehaviour
 {
@@ -14,8 +15,8 @@ public class EnemyPatrol2D : MonoBehaviour
 
     [SerializeField] private GameObject _pointA, _pointB;
     private EnemyData _data;
-    private Animator _animator;
     private SpriteRenderer _sr;
+    private EnemyStates _es;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -23,28 +24,19 @@ public class EnemyPatrol2D : MonoBehaviour
         _ec = GetComponent<EnemyController>();
         _data = _ec.Data;
         _rb = GetComponent<Rigidbody2D>();
-        _animator = GetComponentInChildren<Animator>();
-        _sr = GetComponentInChildren<SpriteRenderer>();
+        _es = _ec.ES;
         _positionA = _pointA.transform.position;
         _positionB = _pointB.transform.position;
-    }
-
-    private void OnEnable()
-    {
-        _animator.SetInteger("AnimState", 2);
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (_es.CurrentState != LogicState.Patrol) return;
+        
         int direction = CheckTarget();
-        SwapFacingPosition(direction);
+        _ec.SwapFacingPosition(direction > 0);
         Move(direction);
-    }
-
-    public void SwapFacingPosition(int direction)
-    {
-        _sr.flipX = direction > 0 ? true : false;
     }
 
     private int CheckTarget()
