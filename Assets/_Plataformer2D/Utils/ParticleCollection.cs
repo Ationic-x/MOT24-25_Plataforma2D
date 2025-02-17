@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static PlayerDust;
 
 public abstract class ParticleCollection : MonoBehaviour
 {
@@ -14,40 +15,51 @@ public abstract class ParticleCollection : MonoBehaviour
 	protected float loopDelay = 1f;
 	protected ParticleSystem ps;
 	protected List<ParticleData> listPD;
-	protected ParticleSystem.MainModule psMain;
+    protected ParticleData currentPD;
+    protected ParticleSystem.MainModule mainPS;
+	protected ParticleSystem.ShapeModule shapePS;
 	protected Material particlesMaterial;
 	protected ParticleSystemRenderer particleSystemRenderer;
 
 
-	public virtual void SelectParticleEffect<T>(T id) where T : Enum
+	public virtual void SetParticleEffect<T>(T id) where T : Enum
 	{
-		foreach (ParticleData item in listPD)
-		{
-			if (Enum.IsDefined(typeof(T), item.id))
-			{
-				UpdateParticleSystem(item);
-				return;
-			}
-		}
 
-		Console.WriteLine($"The {id} wasn't found in the particle list.");
+        T tmpID = (T)Enum.ToObject(typeof(T), currentPD.id);
+        if (tmpID.Equals(id)) return;
+        foreach (ParticleData item in listPD)
+        {
+            if (Enum.IsDefined(typeof(T), item.id))
+            {
+                if (tmpID.Equals(item.id))
+                {
+                    currentPD = item;
+                    UpdateParticleSystem();
+                    return;
+                }
+            }
+            else
+            {
+                Console.WriteLine($"The {id} wasn't found in the particle list.");
+            }
+        }
 	}
 
-	protected virtual void UpdateParticleSystem(ParticleData data)
+	protected virtual void UpdateParticleSystem()
 	{
-		particlesMaterial.SetFloat("_Duration", data.lifeTime);
+		particlesMaterial.SetFloat("_Duration", currentPD.lifeTime);
 		particlesMaterial.SetFloat("_StartTime", Time.time);
-		particlesMaterial.SetFloat("_Frames", data.frames);
-		particlesMaterial.SetTexture("_Texture2D", data.texture);
+		particlesMaterial.SetFloat("_Frames", currentPD.frames);
+		particlesMaterial.SetTexture("_Texture2D", currentPD.texture);
 
-		particleSystemRenderer.flip = new Vector2(data.flipX ? 1 : 0, data.flipY ? 1 : 0);
-		particleSystemRenderer.pivot = data.position;
+		particleSystemRenderer.flip = new Vector2(currentPD.flipX ? 1 : 0, currentPD.flipY ? 1 : 0);
+		particleSystemRenderer.pivot = currentPD.position;
 
 
-		psMain.startLifetime = data.lifeTime;
-		psMain.simulationSpace = data.isLocal ? ParticleSystemSimulationSpace.Local : ParticleSystemSimulationSpace.World;
+		mainPS.startLifetime = currentPD.lifeTime;
+		mainPS.simulationSpace = currentPD.isLocal ? ParticleSystemSimulationSpace.Local : ParticleSystemSimulationSpace.World;
 
-		loopDelay = data.delayBetweenParticles;
+		loopDelay = currentPD.delayBetweenParticles;
 	}
 
 	public virtual void Play()

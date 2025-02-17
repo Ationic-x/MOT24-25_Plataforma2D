@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static ParticleCollection;
 
-public class ParticleManager : MonoBehaviour
+public class ParticleController : MonoBehaviour
 {
 	[SerializeField] private List<ParticleCollection> _listParticles;
 	[SerializeField] private ParticleCollection _currentCollection;
@@ -15,6 +15,7 @@ public class ParticleManager : MonoBehaviour
 
 	public void SetCollection(CollectionID id)
 	{
+		if (_currentCollection.ID.Equals(id)) return;
 		foreach (var item in _listParticles)
 		{
 			if (item.ID == id)
@@ -33,14 +34,9 @@ public class ParticleManager : MonoBehaviour
 		}
 		else tempID = (CollectionID)id;
 
-		foreach (var item in _listParticles)
-		{
-			if (item.ID == tempID)
-			{
-				_currentCollection = item;
-			}
-		}
+		SetCollection(tempID);
 	}
+
 	public void Play()
 	{
 		_currentCollection.Play();

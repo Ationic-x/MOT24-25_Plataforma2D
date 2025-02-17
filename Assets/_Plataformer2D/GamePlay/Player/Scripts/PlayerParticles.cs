@@ -1,20 +1,24 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static ParticleCollection;
 
 public class PlayerParticles : MonoBehaviour
 {
-    [SerializeField] private List<ParticleSystem> _particlesSystem;
+    [SerializeField] private ParticleController _particleController;
+    private PlayerController _pc;
+    private PlayerStates _ps;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _particlesSystem.ForEach(i => i.Play());
+        
     }
 
-    // Update is called once per frame
-    void Update()
+    public void AE_SlideDust()
     {
-        
+        _particleController.SetCollection(CollectionID.PlayerDust);
+        _particleController.SetParticleEffect();
+        _particleController.Play();
     }
 }

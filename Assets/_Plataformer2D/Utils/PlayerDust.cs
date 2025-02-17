@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class PlayerDust : ParticleCollection
 {
@@ -14,15 +15,17 @@ public class PlayerDust : ParticleCollection
 	[SerializeField] private List<ParticleData> _particleDataList;
 	[SerializeField] private ParticleSystem _particleSystem;
 	[SerializeField] private ParticleSystemRenderer _particleSystemRenderer;
+	private ParticleData _currentPD;
 	public bool debug;
 
 	private void Awake()
 	{
 		ps = _particleSystem;
 		listPD = _particleDataList;
-		psMain = _particleSystem.main;
+		mainPS = _particleSystem.main;
 		particleSystemRenderer = _particleSystemRenderer;
 		particlesMaterial = _particleSystemRenderer.material;
+        shapePS = _particleSystem.shape;
 		id = CollectionID.PlayerDust;
 	}
 
@@ -31,43 +34,49 @@ public class PlayerDust : ParticleCollection
 		if (debug)
 		{
 			debug = false;
-			SelectParticleEffect(DustID.WallDust);
+			SetParticleEffect(DustID.WallDust);
 		}
 	}
 
-	public override void SelectParticleEffect<DustID>(DustID id)
+	public override void SetParticleEffect<DustID>(DustID id)
 	{
-		foreach (ParticleData item in _particleDataList)
+		DustID tmpID = (DustID)Enum.ToObject(typeof(DustID), currentPD.id);
+        if (tmpID.Equals(id)) return;
+        foreach (ParticleData item in _particleDataList)
 		{
 			if (Enum.IsDefined(typeof(DustID), item.id))
 			{
-				UpdateParticleSystem(item);
-				return;
-			}
+				if (tmpID.Equals(item.id))
+				{
+					_currentPD = item;
+					UpdateParticleSystem();
+                    return;
+				}
+			} else
+			{
+                Console.WriteLine($"The {id} wasn't found in the particle list.");
+            }
 		}
-		
-		Console.WriteLine($"The {id} wasn't found in the particle list.");
-		
 	}
 
-	//protected override void UpdateParticleSystem(ParticleData data)
-	//{
-	//	particlesMaterial.SetFloat("_Duration", data.lifeTime);
-	//	particlesMaterial.SetFloat("_StartTime", Time.time); 
-	//	particlesMaterial.SetFloat("_Frames", data.frames);
-	//	particlesMaterial.SetTexture("_Texture2D", data.texture);
+	protected override void UpdateParticleSystem()
+	{
+		particlesMaterial.SetFloat("_Duration", _currentPD.lifeTime);
+		particlesMaterial.SetFloat("_StartTime", Time.time);
+		particlesMaterial.SetFloat("_Frames", _currentPD.frames);
+		particlesMaterial.SetTexture("_Texture2D", _currentPD.texture);
 
-	//	particleSystemRenderer.flip = new Vector2(data.flipX ? 1 : 0, data.flipY ? 1: 0);
-	//	particleSystemRenderer.pivot = data.position;
+		particleSystemRenderer.flip = new Vector2(_currentPD.flipX ? 1 : 0, _currentPD.flipY ? 1 : 0);
 
+        particleSystemRenderer.pivot = _currentPD.position;
 
-	//	psMain.startLifetime = data.lifeTime;
-	//	psMain.simulationSpace = data.isLocal ? ParticleSystemSimulationSpace.Local : ParticleSystemSimulationSpace.World;
+		mainPS.startLifetime = _currentPD.lifeTime;
+		mainPS.simulationSpace = _currentPD.isLocal ? ParticleSystemSimulationSpace.Local : ParticleSystemSimulationSpace.World;
+		
+		shapePS.position = _currentPD.position;
 
-	//	loopDelay = data.delayBetweenParticles;
-
-	//	StartCoroutine("TestLoop");
-	//}
+		loopDelay = _currentPD.delayBetweenParticles;
+	}
 
 	public override void Play()
 	{

@@ -1245,6 +1245,7 @@ GameObject:
   m_Component:
   - component: {fileID: 801536248}
   - component: {fileID: 801536249}
+  - component: {fileID: 801536250}
   m_Layer: 0
   m_Name: Particles
   m_TagString: Untagged
@@ -1285,6 +1286,22 @@ MonoBehaviour:
   _particleSystem: {fileID: 2041147000}
   _particleSystemRenderer: {fileID: 2041146999}
   debug: 0
+--- !u!114 &801536250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 801536247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c3132f643c71614f9d9abef1ced73f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _listParticles:
+  - {fileID: 801536249}
+  _currentCollection: {fileID: 0}
+  _currentParticleEffect: 0
 --- !u!1 &820324456
 GameObject:
   m_ObjectHideFlags: 0
@@ -1438,13 +1455,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 820324456}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d4ba13aea294aaa4092cb4f299090082, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _particlesSystem:
-  - {fileID: 2041147000}
+  _particleController: {fileID: 801536250}
 --- !u!1 &924687569
 GameObject:
   m_ObjectHideFlags: 0
@@ -6697,7 +6713,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -876546973899608171, guid: 67269c4646ea4ae45a12822f6fd588fc, type: 3}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6731,7 +6747,7 @@ ParticleSystemRenderer:
   m_ShadowBias: 0
   m_RenderAlignment: 0
   m_Pivot: {x: 0, y: 0, z: 0}
-  m_Flip: {x: 0, y: 0, z: 0}
+  m_Flip: {x: 1, y: 0, z: 0}
   m_EnableGPUInstancing: 1
   m_ApplyActiveColorSpace: 1
   m_AllowRoll: 1
@@ -6765,7 +6781,7 @@ ParticleSystem:
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
-  looping: 1
+  looping: 0
   prewarm: 0
   playOnAwake: 0
   useUnscaledTime: 0
@@ -7380,16 +7396,16 @@ ParticleSystem:
         m_RotationOrder: 4
   ShapeModule:
     serializedVersion: 6
-    enabled: 0
-    type: 4
+    enabled: 1
+    type: 18
     angle: 25
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
     donutRadius: 0.2
-    m_Position: {x: 0, y: 0, z: 0}
+    m_Position: {x: -0.35, y: 0, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
-    m_Scale: {x: 1, y: 1, z: 1}
+    m_Scale: {x: 0, y: 0, z: 1}
     placementMode: 0
     m_MeshMaterialIndex: 0
     m_MeshNormalOffset: 0

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static AudioManager;
 
+// FIXXME: SHOULD BE CHANGED WITH EVENTS
 public class PlayerAudio : MonoBehaviour
 {
     // [SerializeField] private AudioManager _am;
