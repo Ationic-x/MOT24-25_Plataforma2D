@@ -12,10 +12,11 @@ public class ParticleController : MonoBehaviour
 
 
 	public CollectionID CurrentCollectionID { get => _currentCollection.ID; }
+	public ParticleCollection CurrentCollection { get => _currentCollection; }
 
 	public void SetCollection(CollectionID id)
 	{
-		if (_currentCollection.ID.Equals(id)) return;
+		if (_currentCollection != null && _currentCollection.ID.Equals(id)) return;
 		foreach (var item in _listParticles)
 		{
 			if (item.ID == id)

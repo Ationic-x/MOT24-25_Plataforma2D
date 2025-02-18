@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static ParticleCollection;
 
 public class PlayerParticles : MonoBehaviour
 {
@@ -17,8 +16,8 @@ public class PlayerParticles : MonoBehaviour
 
     public void AE_SlideDust()
     {
-        _particleController.SetCollection(CollectionID.PlayerDust);
-        _particleController.SetParticleEffect();
+        _particleController.SetCollection(ParticleCollection.CollectionID.PlayerDust);
+        _particleController.CurrentCollection.SetParticleEffect(PlayerDust.DustID.WallDust);
         _particleController.Play();
     }
 }

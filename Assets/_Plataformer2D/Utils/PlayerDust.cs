@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class PlayerDust : ParticleCollection
 {
@@ -27,6 +26,7 @@ public class PlayerDust : ParticleCollection
 		particlesMaterial = _particleSystemRenderer.material;
         shapePS = _particleSystem.shape;
 		id = CollectionID.PlayerDust;
+		currentPD = _particleDataList[0];
 	}
 
 	private void Update()
@@ -59,24 +59,24 @@ public class PlayerDust : ParticleCollection
 		}
 	}
 
-	protected override void UpdateParticleSystem()
-	{
-		particlesMaterial.SetFloat("_Duration", _currentPD.lifeTime);
-		particlesMaterial.SetFloat("_StartTime", Time.time);
-		particlesMaterial.SetFloat("_Frames", _currentPD.frames);
-		particlesMaterial.SetTexture("_Texture2D", _currentPD.texture);
+	//protected override void UpdateParticleSystem()
+	//{
+	//	particlesMaterial.SetFloat("_Duration", _currentPD.lifeTime);
+	//	particlesMaterial.SetFloat("_StartTime", Time.time);
+	//	particlesMaterial.SetFloat("_Frames", _currentPD.frames);
+	//	particlesMaterial.SetTexture("_Texture2D", _currentPD.texture);
 
-		particleSystemRenderer.flip = new Vector2(_currentPD.flipX ? 1 : 0, _currentPD.flipY ? 1 : 0);
+	//	particleSystemRenderer.flip = new Vector2(_currentPD.flipX ? 1 : 0, _currentPD.flipY ? 1 : 0);
 
-        particleSystemRenderer.pivot = _currentPD.position;
+ //       particleSystemRenderer.pivot = _currentPD.position;
 
-		mainPS.startLifetime = _currentPD.lifeTime;
-		mainPS.simulationSpace = _currentPD.isLocal ? ParticleSystemSimulationSpace.Local : ParticleSystemSimulationSpace.World;
+	//	mainPS.startLifetime = _currentPD.lifeTime;
+	//	mainPS.simulationSpace = _currentPD.isLocal ? ParticleSystemSimulationSpace.Local : ParticleSystemSimulationSpace.World;
 		
-		shapePS.position = _currentPD.position;
+	//	shapePS.position = _currentPD.position;
 
-		loopDelay = _currentPD.delayBetweenParticles;
-	}
+	//	loopDelay = _currentPD.delayBetweenParticles;
+	//}
 
 	public override void Play()
 	{
@@ -86,13 +86,12 @@ public class PlayerDust : ParticleCollection
 
 	public override void PlayInLoop()
 	{
-		StartCoroutine("Loop");
+		StartCoroutine(Loop());
 	}
 
 	IEnumerator Loop()
 	{
-		particlesMaterial.SetFloat("_StartTime", Time.time);
-		ps.Play();
+		Play();
 		yield return new WaitForSeconds(loopDelay);
 	}
 }

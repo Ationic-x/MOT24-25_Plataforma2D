@@ -22,28 +22,7 @@ public abstract class ParticleCollection : MonoBehaviour
 	protected ParticleSystemRenderer particleSystemRenderer;
 
 
-	public virtual void SetParticleEffect<T>(T id) where T : Enum
-	{
-
-        T tmpID = (T)Enum.ToObject(typeof(T), currentPD.id);
-        if (tmpID.Equals(id)) return;
-        foreach (ParticleData item in listPD)
-        {
-            if (Enum.IsDefined(typeof(T), item.id))
-            {
-                if (tmpID.Equals(item.id))
-                {
-                    currentPD = item;
-                    UpdateParticleSystem();
-                    return;
-                }
-            }
-            else
-            {
-                Console.WriteLine($"The {id} wasn't found in the particle list.");
-            }
-        }
-	}
+	public abstract void SetParticleEffect<T>(T id) where T : Enum;
 
 	protected virtual void UpdateParticleSystem()
 	{
@@ -69,12 +48,12 @@ public abstract class ParticleCollection : MonoBehaviour
 	
 	public virtual void PlayInLoop()
 	{
-		StartCoroutine("Loop");
+		StartCoroutine(Loop());
 	}
 
 	IEnumerator Loop()
 	{
-		ps.Play();
+		Play();
 		yield return new WaitForSeconds(1f);
 	}
 
