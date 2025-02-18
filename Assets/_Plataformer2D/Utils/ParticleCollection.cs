@@ -26,13 +26,14 @@ public abstract class ParticleCollection : MonoBehaviour
 
 	protected virtual void UpdateParticleSystem()
 	{
-		particlesMaterial.SetFloat("_Duration", currentPD.lifeTime);
+        particlesMaterial.SetFloat("_Duration", currentPD.lifeTime);
 		particlesMaterial.SetFloat("_StartTime", Time.time);
 		particlesMaterial.SetFloat("_Frames", currentPD.frames);
 		particlesMaterial.SetTexture("_Texture2D", currentPD.texture);
 
 		particleSystemRenderer.flip = new Vector2(currentPD.flipX ? 1 : 0, currentPD.flipY ? 1 : 0);
-		particleSystemRenderer.pivot = currentPD.position;
+
+		shapePS.position = currentPD.position;
 
 
 		mainPS.startLifetime = currentPD.lifeTime;
@@ -41,7 +42,25 @@ public abstract class ParticleCollection : MonoBehaviour
 		loopDelay = currentPD.delayBetweenParticles;
 	}
 
-	public virtual void Play()
+
+    public void FlipXPosition()
+    {
+        shapePS.position = new Vector2(-shapePS.position.x, shapePS.position.y);
+    }
+
+    public void FlipXTexture()
+    {
+        particleSystemRenderer.flip = new Vector2((int)particleSystemRenderer.flip.x ^ 1 , particleSystemRenderer.flip.y);
+    }
+
+    public void HorizontalFlip()
+    {
+		FlipXPosition();
+		FlipXTexture();
+    }
+
+
+    public virtual void Play()
 	{
 		ps.Play();
 	}
