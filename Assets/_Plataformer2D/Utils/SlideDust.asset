@@ -10,14 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8c1f6c70f629f9a48b6a2752f210a68e, type: 3}
-  m_Name: New Particles Data
+  m_Name: SlideDust
   m_EditorClassIdentifier: 
   id: 0
   lifeTime: 0.5
   delayBetweenParticles: 0
   frames: 5
+  row: 1
   texture: {fileID: 2800000, guid: 23be62253438c4f43a358a5b26cc47bc, type: 3}
-  isLocal: 1
+  isLocal: 0
   flipX: 0
   flipY: 0
   position: {x: 0.35, y: 0}

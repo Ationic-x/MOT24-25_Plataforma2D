@@ -8,9 +8,10 @@ public class ParticleData : ScriptableObject
 	public float lifeTime;
 	public float delayBetweenParticles;
 	public int frames;
+	public int row;
 	public Texture texture;
 	public bool isLocal;
 	public bool flipX;
 	public bool flipY;
-	public Vector2 position;
+	public Vector2 offset;
 }

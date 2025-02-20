@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class PlayerParticles : MonoBehaviour
@@ -20,8 +21,15 @@ public class PlayerParticles : MonoBehaviour
         orientation = _ps.IsFacingRight;
     }
 
+    // FIXME: AE_SLIDEUST() Event is used in animation clip
+    // Maybe is more insteresting using this kind of codes in loops controlled by script
     public void AE_SlideDust()
     {
+        // We use emit instead start because ParticleSystem.play() is slower than
+        // all the update and physics update, so there are some kind of behaviours
+        // like throwing the particle when the character is not even more sliding in the wall
+        Vector2 currentPostion = transform.position;
+
         _particleController.SetCollection(ParticleCollection.CollectionID.PlayerDust);
         _particleController.CurrentCollection.SetParticleEffect(PlayerDust.DustID.WallDust);
         
@@ -31,6 +39,7 @@ public class PlayerParticles : MonoBehaviour
             _particleController.CurrentCollection.HorizontalFlip();
         }
 
-        _particleController.Play();
-    }
+
+		_particleController.Emit(currentPostion);
+	}
 }

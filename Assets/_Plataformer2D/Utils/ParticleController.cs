@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static ParticleCollection;
@@ -47,6 +46,12 @@ public class ParticleController : MonoBehaviour
 	{
 		_currentCollection.PlayInLoop();
 	}
+
+	public void Emit(Vector2 position)
+	{
+		_currentCollection.Emit(position);
+	}
+
 	public void Stop()
 	{
 		_currentCollection.Stop();

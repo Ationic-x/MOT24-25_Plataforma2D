@@ -14,17 +14,17 @@ public class PlayerDust : ParticleCollection
 	[SerializeField] private List<ParticleData> _particleDataList;
 	[SerializeField] private ParticleSystem _particleSystem;
 	[SerializeField] private ParticleSystemRenderer _particleSystemRenderer;
-	private ParticleData _currentPD;
 	public bool debug;
 
 	private void Awake()
 	{
 		ps = _particleSystem;
 		listPD = _particleDataList;
-		mainPS = _particleSystem.main;
 		particleSystemRenderer = _particleSystemRenderer;
 		particlesMaterial = _particleSystemRenderer.material;
+		mainPS = _particleSystem.main;
         shapePS = _particleSystem.shape;
+		animationPS = _particleSystem.textureSheetAnimation;
 		id = CollectionID.PlayerDust;
 
 		// We use the first one to avoid null pointers
@@ -51,7 +51,7 @@ public class PlayerDust : ParticleCollection
 			{
                 if (id.Equals(item.id))
 				{
-					_currentPD = item;
+					currentPD = item;
 					UpdateParticleSystem();
                     return;
 				}
@@ -60,22 +60,5 @@ public class PlayerDust : ParticleCollection
                 Console.WriteLine($"The {id} wasn't found in the particle list.");
             }
 		}
-	}
-
-	public override void Play()
-	{
-		particlesMaterial.SetFloat("_StartTime", Time.deltaTime);
-		ps.Play();
-	}
-
-	public override void PlayInLoop()
-	{
-		StartCoroutine(Loop());
-	}
-
-	IEnumerator Loop()
-	{
-		Play();
-		yield return new WaitForSeconds(loopDelay);
 	}
 }

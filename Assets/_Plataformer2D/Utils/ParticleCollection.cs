@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using static PlayerDust;
 
@@ -18,6 +19,7 @@ public abstract class ParticleCollection : MonoBehaviour
     protected ParticleData currentPD;
     protected ParticleSystem.MainModule mainPS;
 	protected ParticleSystem.ShapeModule shapePS;
+	protected ParticleSystem.TextureSheetAnimationModule animationPS;
 	protected Material particlesMaterial;
 	protected ParticleSystemRenderer particleSystemRenderer;
 
@@ -26,16 +28,16 @@ public abstract class ParticleCollection : MonoBehaviour
 
 	protected virtual void UpdateParticleSystem()
 	{
-        particlesMaterial.SetFloat("_Duration", currentPD.lifeTime);
-		particlesMaterial.SetFloat("_StartTime", Time.time);
-		particlesMaterial.SetFloat("_Frames", currentPD.frames);
-		particlesMaterial.SetTexture("_Texture2D", currentPD.texture);
+        particlesMaterial.SetTexture("_BaseMap", currentPD.texture);
 
 		particleSystemRenderer.flip = new Vector2(currentPD.flipX ? 1 : 0, currentPD.flipY ? 1 : 0);
 
-		shapePS.position = currentPD.position;
+		animationPS.numTilesX = currentPD.frames;
+		animationPS.numTilesY = currentPD.row;
 
+		shapePS.position = currentPD.offset;
 
+		mainPS.duration = currentPD.lifeTime;
 		mainPS.startLifetime = currentPD.lifeTime;
 		mainPS.simulationSpace = currentPD.isLocal ? ParticleSystemSimulationSpace.Local : ParticleSystemSimulationSpace.World;
 
@@ -43,7 +45,8 @@ public abstract class ParticleCollection : MonoBehaviour
 	}
 
 
-    public void FlipXPosition()
+	#region Flips
+	public void FlipXPosition()
     {
         shapePS.position = new Vector2(-shapePS.position.x, shapePS.position.y);
     }
@@ -58,9 +61,10 @@ public abstract class ParticleCollection : MonoBehaviour
 		FlipXPosition();
 		FlipXTexture();
     }
+	#endregion
 
 
-    public virtual void Play()
+	public virtual void Play()
 	{
 		ps.Play();
 	}
@@ -74,6 +78,15 @@ public abstract class ParticleCollection : MonoBehaviour
 	{
 		Play();
 		yield return new WaitForSeconds(1f);
+	}
+
+	public virtual void Emit(Vector2 position)
+	{
+		ParticleSystem.EmitParams parameters = new()
+		{
+			position = position - currentPD.offset,
+		};
+		ps.Emit(parameters, 1);
 	}
 
 	public void Stop()
