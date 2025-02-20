@@ -31,9 +31,11 @@ This list may change over time as new tasks are required/founded and others are 
 
 ![](https://progress-bar.xyz/60) Improved Animation
 
-![](https://progress-bar.xyz/30) Particle Controller
+![](https://progress-bar.xyz/80) Particle Controller
 
-![](https://progress-bar.xyz/20) Abstraction, Polymorphism, Interfaces, Scriptable Object (organized and more modular)
+![](https://progress-bar.xyz/25) Abstraction, Polymorphism, Interfaces, Scriptable Object (organized and more modular)
+
+![](https://progress-bar.xyz/0) Hitbox, Hurtbox, Pushbox.
 
 ### Documentation
 ![](https://progress-bar.xyz/5) Inline Doc
