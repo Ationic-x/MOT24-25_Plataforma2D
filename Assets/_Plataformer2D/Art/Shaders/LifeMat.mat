@@ -42,13 +42,15 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Amplitude: 0.2
+    - _Altitude: 0.55
+    - _Amplitude: 0.07
+    - _Frenquency: 4
     - _Length: 1.5
-    - _Level: -0.2
+    - _Level: 0
     - _OverrideColor: 0
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Speed: 1.7
+    - _Speed: 2.2
     m_Colors:
     - _Color: {r: 0, g: 0, b: 0, a: 0}
     - _MainColor: {r: 0, g: 0, b: 0, a: 0}
