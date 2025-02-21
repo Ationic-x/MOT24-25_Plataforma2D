@@ -47,7 +47,7 @@ public class ParticleController : MonoBehaviour
 		_currentCollection.PlayInLoop();
 	}
 
-	public void Emit(Vector2 position)
+	public void Emit(Vector3 position)
 	{
 		_currentCollection.Emit(position);
 	}

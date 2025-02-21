@@ -1,9 +1,5 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/_Plataformer2D/Art/Shaders/GhostList.shadergraph.meta
 guid: b2f34c12305eb814795db7e3065eb017
-========
-guid: 8513bc9ead065a94ca3fee816f7267f3
->>>>>>>> f848606a35d205f1dff8814c360deff100190235:Assets/_Plataformer2D/Art/Shaders/Dissapear.shadergraph.meta
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}

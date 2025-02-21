@@ -22,9 +22,9 @@ public class EnemyController : ActorController
         if (this == null) return;
         _data.ApplyGraphics2D(gameObject);
     }
+#endif
 
     public EnemyData Data { get { return _data; } }
-#endif
 
     public void SwapFacingPosition(bool isFacingRight)
     {

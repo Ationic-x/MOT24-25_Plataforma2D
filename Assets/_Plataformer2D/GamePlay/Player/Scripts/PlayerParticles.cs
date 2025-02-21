@@ -28,10 +28,10 @@ public class PlayerParticles : MonoBehaviour
         // We use emit instead start because ParticleSystem.play() is slower than
         // all the update and physics update, so there are some kind of behaviours
         // like throwing the particle when the character is not even more sliding in the wall
-        Vector2 currentPostion = transform.position;
+        Vector3 currentPostion = transform.position;
 
         _particleController.SetCollection(ParticleCollection.CollectionID.PlayerDust);
-        _particleController.CurrentCollection.SetParticleEffect(PlayerDust.DustID.WallDust);
+        _particleController.CurrentCollection.SetParticleEffect(DustCollection.DustID.WallDust);
         
         if (orientation != _ps.IsFacingRight)
         {

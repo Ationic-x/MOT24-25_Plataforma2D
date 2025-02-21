@@ -22,6 +22,10 @@ public class EnemyAnimation : MonoBehaviour
 
         _es.OnLogicStateChanged += OnLogicStateChanged;
         _es.OnFacingRightChanged += OnFacingRightChanged;
+        
+        // When we're far the enemy is disabled and the animator is "resetted"
+        // that is we force to use the currentstate if was changed before
+        OnLogicStateChanged(_es.CurrentState);
     }
 
     private void OnDisable()

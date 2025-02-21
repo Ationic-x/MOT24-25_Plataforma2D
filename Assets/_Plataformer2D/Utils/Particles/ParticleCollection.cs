@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using static PlayerDust;
+using static DustCollection;
 
 public abstract class ParticleCollection : MonoBehaviour
 {
@@ -80,11 +80,11 @@ public abstract class ParticleCollection : MonoBehaviour
 		yield return new WaitForSeconds(1f);
 	}
 
-	public virtual void Emit(Vector2 position)
+	public virtual void Emit(Vector3 position)
 	{
 		ParticleSystem.EmitParams parameters = new()
 		{
-			position = position - currentPD.offset,
+			position = position - shapePS.position,
 		};
 		ps.Emit(parameters, 1);
 	}

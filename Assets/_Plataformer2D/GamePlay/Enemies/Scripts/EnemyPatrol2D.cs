@@ -19,7 +19,7 @@ public class EnemyPatrol2D : MonoBehaviour
     private EnemyStates _es;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Awake()
+    private void Awake()
     {
         _ec = GetComponent<EnemyController>();
         _data = _ec.Data;
@@ -29,8 +29,13 @@ public class EnemyPatrol2D : MonoBehaviour
         _positionB = _pointB.transform.position;
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+	private void Start()
+	{
+        _es.CurrentState = LogicState.Patrol;
+	}
+
+	// Update is called once per frame
+	private void FixedUpdate()
     {
         if (_es.CurrentState != LogicState.Patrol) return;
         

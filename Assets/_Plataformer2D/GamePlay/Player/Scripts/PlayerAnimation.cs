@@ -41,7 +41,7 @@ public class PlayerAnimation : MonoBehaviour
         _sr.flipX = !isFacingRight;
 	}
 
-	// FIXXME: SHOULD BE CHANGED WITH EVENTS
+	// FIXME: SHOULD BE CHANGED WITH EVENTS
 	void Update()
     {
         _animator.SetBool("Grounded", _ps.IsGrounded);
@@ -61,14 +61,5 @@ public class PlayerAnimation : MonoBehaviour
             _gt.Available = false;
 		}
     }
-
-    // Animation Event to spawn a dust cloud when slide
-    //private void AE_SlideDust()
-    //{
-    //    bool orientation = _ps.IsFacingRight;
-        
-    //    //GameObject dust = Instantiate(_slideDust, orientation ? _frontWallCheckPoint.position : _backWallCheckPoint.position, gameObject.transform.localRotation);
-    //    //dust.transform.localScale = new Vector3(orientation ? 1 : -1, 1, 1);
-    //}
 }
 
