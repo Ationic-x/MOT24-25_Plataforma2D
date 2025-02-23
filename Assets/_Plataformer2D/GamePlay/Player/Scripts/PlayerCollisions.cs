@@ -18,7 +18,7 @@ public class PlayerCollisions : MonoBehaviour
         _pc = GetComponent<PlayerController>();
     }
 
-	private void Start()
+	private void OnEnable()
 	{
         _ps = _pc.PS;
     }

@@ -7,7 +7,6 @@ using UnityEngine.InputSystem;
 public class PlayerController : ActorController
 {
 	[SerializeField] private PlayerData _data; // Player parameters
-	private PlayerInput _pi;
 
 	// Input variables
 	[SerializeField] private bool _jumpPressed;
@@ -24,8 +23,6 @@ public class PlayerController : ActorController
 	// Start is called before the first frame update
 	void Awake()
 	{
-
-		_pi = GetComponent<PlayerInput>();
 		_rb = GetComponent<Rigidbody2D>();
 
 		SetGravityScale(_data.gravityScale);

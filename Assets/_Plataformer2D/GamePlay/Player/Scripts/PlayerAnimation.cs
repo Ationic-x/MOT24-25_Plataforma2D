@@ -1,3 +1,5 @@
+using System;
+using UnityEditor;
 using UnityEngine;
 
 public class PlayerAnimation : MonoBehaviour
@@ -7,11 +9,16 @@ public class PlayerAnimation : MonoBehaviour
     private PlayerController _pc;
     private PlayerStates _ps;
     private GhosTrail _gt;
-    
-    private float _ghostTrailDelay;
+    private SpriteRenderer _sr;
+	[SerializeField] private string _currentSprite;
 
-    // Start is called before the first frame update
-    void Awake()
+	private float _ghostTrailDelay;
+
+	// Events
+	public event Action<string> OnSpriteChange;
+
+	// Start is called before the first frame update
+	void Awake()
     {
         _pc = GetComponentInParent<PlayerController>();
         _animator = GetComponent<Animator>();
@@ -21,11 +28,20 @@ public class PlayerAnimation : MonoBehaviour
 	private void OnEnable()
 	{
         _ps = _pc.PS;
-    }
+        _sr = GetComponent<SpriteRenderer>();
+		_currentSprite = _sr.sprite.name;
+	}
 
 	// FIXME: SHOULD BE CHANGED WITH EVENTS
 	void Update()
     {
+		string spriteName = _sr.sprite.name;
+        if (!_currentSprite.Equals(spriteName))
+        {
+            _currentSprite = spriteName;
+			OnSpriteChange?.Invoke(_currentSprite);
+        }
+
         _animator.SetBool("Grounded", _ps.IsGrounded);
         _animator.SetBool("Jump", _ps.IsJumping || _ps.IsWallJumping);
         _animator.SetFloat("AirSpeedY", _ps.IsFalling ? -1 : 0);
