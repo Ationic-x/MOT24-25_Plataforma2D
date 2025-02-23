@@ -27,6 +27,9 @@ public class EnemyPatrol2D : MonoBehaviour
         _es = _ec.ES;
         _positionA = _pointA.transform.position;
         _positionB = _pointB.transform.position;
+        // This should be improved
+        Destroy(_pointA);
+        Destroy(_pointB);
     }
 
 	private void Start()

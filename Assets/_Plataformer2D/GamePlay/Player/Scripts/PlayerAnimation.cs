@@ -4,14 +4,9 @@ public class PlayerAnimation : MonoBehaviour
 {
 
     private Animator _animator;
-    private SpriteRenderer _sr;
     private PlayerController _pc;
     private PlayerStates _ps;
     private GhosTrail _gt;
-
-    [SerializeField] private GameObject _slideDust;
-    [SerializeField] private Transform _frontWallCheckPoint;
-    [SerializeField] private Transform _backWallCheckPoint;
     
     private float _ghostTrailDelay;
 
@@ -20,26 +15,13 @@ public class PlayerAnimation : MonoBehaviour
     {
         _pc = GetComponentInParent<PlayerController>();
         _animator = GetComponent<Animator>();
-        _sr = GetComponent<SpriteRenderer>();
         _gt = GetComponent<GhosTrail>();
     }
 
 	private void OnEnable()
 	{
         _ps = _pc.PS;
-
-        _ps.OnFacingRightChanged += OnFacingRightChanged;
     }
-
-	private void OnDisable()
-	{
-        _ps.OnFacingRightChanged -= OnFacingRightChanged;
-    }
-
-	private void OnFacingRightChanged(bool isFacingRight)
-	{
-        _sr.flipX = !isFacingRight;
-	}
 
 	// FIXME: SHOULD BE CHANGED WITH EVENTS
 	void Update()

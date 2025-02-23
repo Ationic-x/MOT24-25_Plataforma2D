@@ -269,15 +269,15 @@ public class PlayerMovement2D : MonoBehaviour
 		if (_ps.IsWallJumping || _ps.IsDashing || _ps.IsGrounded)
 			return false;
 
-		// Player movement input must be in the same at collider
-		if (!(_ps.IsCollidedLeft && _moveInput.x < 0) && !(_ps.IsCollidedRight && _moveInput.x > 0))
+		// Player movement input must be in the same direction at forwardcollider
+		if (!(_ps.IsCollidedForward && (_ps.IsFacingRight ? _moveInput.x > 0 : _moveInput.x < 0)))
 			return false;
 
 		// If you are not moving the X (close wall or stopped cases), without consider sliding
 		if (!_ps.IsSliding && _rb.linearVelocity.x == 0)
-			// Can slide only when reach max height or press again a move inputn
-			if (_rb.linearVelocity.y > 0 && !(Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D)))
-				return false;
+		// Can slide only when reach max height or press again a move input
+		if (_rb.linearVelocity.y > 0 && !(Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D)))
+			return false;
 
 		return true;
 	}
@@ -350,7 +350,7 @@ public class PlayerMovement2D : MonoBehaviour
 		_ps.IsFalling = false;
 		_ps.IsSliding = false;
 
-		Vector2 force = new Vector2(_data.wallJumpForce.x, _data.wallJumpForce.y);
+		Vector2 force = new (_data.wallJumpForce.x, _data.wallJumpForce.y);
 		force.x *= _slideIsFacingRight ? -1 : 1; //apply force in opposite direction of wall
 
 		if (Mathf.Sign(_rb.linearVelocity.x) != Mathf.Sign(force.x))
@@ -456,8 +456,8 @@ public class PlayerMovement2D : MonoBehaviour
 		_ps.IsWallJumping = false;
 		_ps.IsJumpCut = false;
 		_ps.IsGrounded = false;
-		_ps.IsCollidedRight = false;
-		_ps.IsCollidedLeft = false;
+		_ps.IsCollidedForward = false;
+		_ps.IsCollidedBackward = false;
 
 		float startTime = Time.time;
 

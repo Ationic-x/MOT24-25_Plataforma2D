@@ -17,8 +17,8 @@ public class PlayerStates
 
     // Collision States
     [SerializeField] private bool _isGrounded;
-    [SerializeField] private bool _isCollidedLeft;
-    [SerializeField] private bool _isCollidedRight;
+    [SerializeField] private bool _isCollidedBackward;
+    [SerializeField] private bool _isCollidedForward;
 
 
     // General States
@@ -71,9 +71,9 @@ public class PlayerStates
         }
     }
 
-    public bool IsCollidedLeft { get => _isCollidedLeft; set => _isCollidedLeft = value; }
+    public bool IsCollidedBackward { get => _isCollidedBackward; set => _isCollidedBackward = value; }
 
-    public bool IsCollidedRight { get => _isCollidedRight; set => _isCollidedRight = value; }
+    public bool IsCollidedForward { get => _isCollidedForward; set => _isCollidedForward = value; }
 
     // General States
     public bool IsFacingRight 

@@ -37,7 +37,10 @@ public class PlayerController : ActorController
 		if (_ps.IsSliding || _ps.IsDashing) return;
 
 		if (_ps.IsFacingRight != isFacingRight)
+		{
 			_ps.IsFacingRight = isFacingRight;
+			transform.localScale = new (-transform.localScale.x, transform.localScale.y);
+		}
 	}
 
 	public void Sleep(float duration)

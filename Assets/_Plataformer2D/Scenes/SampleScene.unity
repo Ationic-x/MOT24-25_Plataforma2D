@@ -1472,7 +1472,7 @@ GameObject:
   m_Component:
   - component: {fileID: 795853011}
   m_Layer: 0
-  m_Name: Wall F.check
+  m_Name: Forward check
   m_TagString: Untagged
   m_Icon: {fileID: 2488908585195742037, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -1760,9 +1760,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c09817c6702da944c9d50415b72b80a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _slideDust: {fileID: 1038168246061390451, guid: 125f8934180f6c343b34155a48923ef3, type: 3}
-  _frontWallCheckPoint: {fileID: 795853011}
-  _backWallCheckPoint: {fileID: 1084296555}
 --- !u!114 &820324461
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1896,8 +1893,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _groundCheckPoint: {fileID: 1897944135}
   _groundCheckSize: {x: 0.49, y: 0.03}
-  _frontWallCheckPoint: {fileID: 795853011}
-  _backWallCheckPoint: {fileID: 1084296555}
+  _forwardCheckPoint: {fileID: 795853011}
+  _backwardCheckPoint: {fileID: 1084296555}
   _wallCheckSize: {x: 0.5, y: 0.8}
   _groundLayer:
     serializedVersion: 2
@@ -1953,8 +1950,8 @@ MonoBehaviour:
     _isJumpCut: 0
     _isSliding: 0
     _isGrounded: 0
-    _isCollidedLeft: 0
-    _isCollidedRight: 0
+    _isCollidedBackward: 0
+    _isCollidedForward: 0
     _isFacingRight: 1
   _jumpAction: {fileID: -3520561882209015758, guid: d5396d3213946204fb444d92b2d9c79c, type: 3}
   _moveAction: {fileID: -7416575508440316108, guid: d5396d3213946204fb444d92b2d9c79c, type: 3}
@@ -2395,7 +2392,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1084296555}
   m_Layer: 0
-  m_Name: Wall B.check
+  m_Name: Backward check
   m_TagString: Untagged
   m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -5803,7 +5800,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1760470404
 Transform:
   m_ObjectHideFlags: 0
@@ -12126,6 +12123,22 @@ PrefabInstance:
     - target: {fileID: 8077289164064834327, guid: f9fab393d530746439a44665c0500335, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8595263304300873047, guid: f9fab393d530746439a44665c0500335, type: 3}
+      propertyPath: _pointA.x
+      value: 4.69
+      objectReference: {fileID: 0}
+    - target: {fileID: 8595263304300873047, guid: f9fab393d530746439a44665c0500335, type: 3}
+      propertyPath: _pointA.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8595263304300873047, guid: f9fab393d530746439a44665c0500335, type: 3}
+      propertyPath: _pointB.x
+      value: -3.55
+      objectReference: {fileID: 0}
+    - target: {fileID: 8595263304300873047, guid: f9fab393d530746439a44665c0500335, type: 3}
+      propertyPath: _pointB.y
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
