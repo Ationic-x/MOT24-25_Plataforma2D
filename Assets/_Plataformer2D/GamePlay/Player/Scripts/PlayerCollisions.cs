@@ -11,6 +11,7 @@ public class PlayerCollisions : MonoBehaviour
     [SerializeField] private Transform _backwardCheckPoint;
     [SerializeField] private Vector2 _wallCheckSize = new (0.5f, 1f);
     [SerializeField] private LayerMask _groundLayer;
+    [SerializeField] private bool _drawGizmo;
 
     // Start is called before the first frame update
     void Awake()
@@ -24,7 +25,7 @@ public class PlayerCollisions : MonoBehaviour
     }
 
 	// Update is called once per frame
-	void Update()
+	void FixedUpdate()
     {
         // False default values
         bool isGrounded = false, isCollidedForward = false, isCollidedBackward = false;
@@ -55,11 +56,14 @@ public class PlayerCollisions : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.yellow;
+        if (_drawGizmo)
+        {
+            Gizmos.color = Color.yellow;
         
-        Gizmos.DrawWireCube(_forwardCheckPoint.position, _wallCheckSize);
-        Gizmos.DrawWireCube(_backwardCheckPoint.position, _wallCheckSize);
+            Gizmos.DrawWireCube(_forwardCheckPoint.position, _wallCheckSize);
+            Gizmos.DrawWireCube(_backwardCheckPoint.position, _wallCheckSize);
         
-        Gizmos.DrawWireCube(_groundCheckPoint.position, _groundCheckSize);
+            Gizmos.DrawWireCube(_groundCheckPoint.position, _groundCheckSize);        
+        }
     }
 }
