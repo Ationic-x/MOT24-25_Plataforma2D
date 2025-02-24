@@ -86,7 +86,6 @@ public abstract class ParticleCollection : MonoBehaviour
 		{
 			position = position - shapePS.position,
 		};
-		ps.Emit(parameters, 1);
 	}
 
 	public void Stop()
