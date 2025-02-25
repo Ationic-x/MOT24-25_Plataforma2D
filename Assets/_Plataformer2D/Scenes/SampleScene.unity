@@ -1284,23 +1284,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!1 &689364772 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5830637533417259824, guid: f9fab393d530746439a44665c0500335, type: 3}
-  m_PrefabInstance: {fileID: 3216319511029475575}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &689364774
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 689364772}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 564928b9b3eab7f4e823667be8c9893d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &725880805
 GameObject:
   m_ObjectHideFlags: 0
@@ -1390,6 +1373,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 564928b9b3eab7f4e823667be8c9893d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _currentSprite: 
 --- !u!1 &759124550
 GameObject:
   m_ObjectHideFlags: 0
@@ -1792,7 +1776,7 @@ GameObject:
   - component: {fileID: 924687583}
   - component: {fileID: 924687586}
   - component: {fileID: 924687587}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -2081,6 +2065,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerAnimation: {fileID: 820324460}
   _drawGizmo: 1
+  _CollisionLayer:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!1 &933631496
 GameObject:
   m_ObjectHideFlags: 0
@@ -12080,9 +12067,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: LightBandit
       objectReference: {fileID: 0}
-    - target: {fileID: 7908619439820946737, guid: f9fab393d530746439a44665c0500335, type: 3}
-      propertyPath: m_FlipX
-      value: 0
+    - target: {fileID: 6548064440708913796, guid: f9fab393d530746439a44665c0500335, type: 3}
+      propertyPath: _CollisionLayer.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 7352639059717173918, guid: f9fab393d530746439a44665c0500335, type: 3}
+      propertyPath: m_Constraints
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8077289164064834327, guid: f9fab393d530746439a44665c0500335, type: 3}
       propertyPath: m_LocalPosition.x
@@ -12124,29 +12115,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8595263304300873047, guid: f9fab393d530746439a44665c0500335, type: 3}
-      propertyPath: _pointA.x
-      value: 4.69
-      objectReference: {fileID: 0}
-    - target: {fileID: 8595263304300873047, guid: f9fab393d530746439a44665c0500335, type: 3}
-      propertyPath: _pointA.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8595263304300873047, guid: f9fab393d530746439a44665c0500335, type: 3}
-      propertyPath: _pointB.x
-      value: -3.55
-      objectReference: {fileID: 0}
-    - target: {fileID: 8595263304300873047, guid: f9fab393d530746439a44665c0500335, type: 3}
-      propertyPath: _pointB.y
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5830637533417259824, guid: f9fab393d530746439a44665c0500335, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 689364774}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f9fab393d530746439a44665c0500335, type: 3}
 --- !u!1001 &3622056112784553878
 PrefabInstance:

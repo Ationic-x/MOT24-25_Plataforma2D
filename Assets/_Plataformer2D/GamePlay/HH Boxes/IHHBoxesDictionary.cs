@@ -25,5 +25,5 @@ public struct HHBox
 public interface IHHBoxesDictionary
 {
     public Dictionary<string, HHBox> Hitbox { get;}
-    public Dictionary<string, HHBox> Hurtbox { get;}
+    public Dictionary<string, HHBox[]> Hurtbox { get;}
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -8,32 +9,56 @@ using UnityEngine.UIElements;
 
 public class HHBoxesController
 {
-    private Transform _target;
-    private Dictionary<string, HHBox> _hitbox;
-    private Dictionary<string, HHBox> _hurtbox;
+    private readonly Transform _target;
+    private readonly BoxCollider2D _targetCollider;
+    private readonly Dictionary<string, HHBox> _hitbox;
+    private readonly Dictionary<string, HHBox[]> _hurtbox;
+    private LayerMask _layerMask;
 
     // Temporal just for debug
-    private HHBox _currentBox;
+    private HHBox _currentHitbox;
+    private HHBox[] _currentHurtboxes;
 
-    public HHBoxesController(IHHBoxesDictionary dictionary, Transform target)
+    public HHBoxesController(IHHBoxesDictionary dictionary, Transform target, LayerMask layerMask)
     {
         _target = target;
+        _targetCollider = _target.GetComponent<BoxCollider2D>();
         _hitbox = dictionary.Hitbox;
         _hurtbox = dictionary.Hurtbox;
+        _layerMask = layerMask;
     }
 
     public void UpdateBoxes(string sprite)
     {
-        if (_hitbox.TryGetValue(sprite, out HHBox box))
+        if (_hitbox.TryGetValue(sprite, out HHBox hitbox))
         {
-            Physics2D.OverlapBox(_target.position + box.offset, box.size, 0);
-            _currentBox = box;
+            if (!_currentHitbox.Equals(hitbox)) {
+                _targetCollider.size = hitbox.size;
+                _targetCollider.offset = hitbox.offset;
+                _currentHitbox = hitbox;
+            }
         }
-        else
+
+        if (_hurtbox.TryGetValue(sprite, out HHBox[] hurtboxes))
         {
-            Debug.LogWarning("Hitbox not foound in the sprite : " + sprite);
+            if (_currentHurtboxes == null || !_currentHurtboxes.Equals(hurtboxes))
+            {
+                foreach (HHBox hurtbox in hurtboxes)
+                {
+                    // in future we will handle
+                    Collider2D[] colliders = Physics2D.OverlapBoxAll(_target.position + hurtbox.offset, hurtbox.size, 0, _layerMask);
+                    foreach (Collider2D collider in colliders)
+                    {
+                        Debug.Log(_target.name + "--" + collider.name);
+                    }
+                }
+
+
+                _currentHurtboxes = hurtboxes;
+            }
         }
     }
 
-    public HHBox CurrentBox { get => _currentBox; }
+    public HHBox CurrentHitbox { get => _currentHitbox; }
+    public HHBox[] CurrentHurtboxes { get => _currentHurtboxes; }
 }

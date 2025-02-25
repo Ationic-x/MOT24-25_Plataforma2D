@@ -5,11 +5,12 @@ public class PlayerHHBoxes : MonoBehaviour
 {
     [SerializeField] private PlayerAnimation _playerAnimation;
     [SerializeField] private bool _drawGizmo;
+	[SerializeField] private LayerMask _CollisionLayer;
     private HHBoxesController _hhBoxesController;
 
 	private void Awake()
 	{
-		_hhBoxesController = new HHBoxesController(PlayerHHBoxesDictionary.Instance, transform);
+		_hhBoxesController = new HHBoxesController(PlayerHHBoxesDictionary.Instance, transform, _CollisionLayer);
 	}
 
 	private void OnEnable()
@@ -33,14 +34,24 @@ public class PlayerHHBoxes : MonoBehaviour
 	{
 		if (_drawGizmo)
 		{
-			if (_hhBoxesController == null) return;
+            if (_hhBoxesController == null) return;
+            HHBox hitbox = _hhBoxesController.CurrentHitbox;
+            HHBox[] hurtboxes = _hhBoxesController.CurrentHurtboxes;
 
-			Gizmos.color = new Color(0, 1, 0, 0.3f);
+            Gizmos.color = new Color(0, 1, 0, 0.3f);
 
-			HHBox currentBox = _hhBoxesController.CurrentBox;
-			Gizmos.DrawCube(transform.position + currentBox.offset, currentBox.size);
+            Gizmos.DrawCube(transform.position + hitbox.offset, hitbox.size);
+            Gizmos.color = Color.clear;
+            if (hurtboxes != null)
+            {
+                Gizmos.color = new Color(1, 0, 0, 0.3f);
 
-			Gizmos.color = Color.red;
-		}
+                foreach (HHBox hurtbox in hurtboxes)
+                {
+                    // in future we will handle
+                    Gizmos.DrawCube(transform.position + hurtbox.offset, hurtbox.size);
+                }
+            }
+        }
 	}
 }
