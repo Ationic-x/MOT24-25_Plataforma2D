@@ -82,10 +82,11 @@ public abstract class ParticleCollection : MonoBehaviour
 
 	public virtual void Emit(Vector3 position)
 	{
-		ParticleSystem.EmitParams parameters = new()
+		ParticleSystem.EmitParams parameters = new ParticleSystem.EmitParams()
 		{
 			position = position - shapePS.position,
 		};
+		ps.Emit(parameters, 1);
 	}
 
 	public void Stop()

@@ -1,54 +1,39 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class HHBoxesController : MonoBehaviour
+public class HHBoxesController
 {
-    [SerializeField] private Transform _target;
-    private IHHBoxesDictionary _hhBoxesDictionary;
-    [SerializeField] private bool _drawGizmo;
+    private Transform _target;
     private Dictionary<string, HHBox> _hitbox;
     private Dictionary<string, HHBox> _hurtbox;
-    
+
     // Temporal just for debug
     private HHBox _currentBox;
 
-
-    public void OnEnable()
+    public HHBoxesController(IHHBoxesDictionary dictionary, Transform target)
     {
-        _hhBoxesDictionary = GetComponent<IHHBoxesDictionary>();
-        _hitbox = _hhBoxesDictionary.Hitbox;
-        _hitbox = _hhBoxesDictionary.Hurtbox;
+        _target = target;
+        _hitbox = dictionary.Hitbox;
+        _hurtbox = dictionary.Hurtbox;
     }
 
     public void UpdateBoxes(string sprite)
     {
-        Debug.Log(sprite);
-        Debug.Log(_hitbox.Count);
-        foreach (var key in _hitbox.Keys)
-        {
-            Debug.Log("++"+key);
-        }
         if (_hitbox.TryGetValue(sprite, out HHBox box))
         {
             Physics2D.OverlapBox(_target.position + box.offset, box.size, 0);
             _currentBox = box;
-            Debug.Log(_currentBox.offset + "--" + _currentBox.size);
         }
-    }
-
-
-    private void OnDrawGizmosSelected()
-    {
-        if (_drawGizmo)
+        else
         {
-            Gizmos.color = Color.green;
-
-            Gizmos.DrawWireCube(_target.position + _currentBox.offset, _currentBox.size);
-
-            Gizmos.color = Color.red;
+            Debug.LogWarning("Hitbox not foound in the sprite : " + sprite);
         }
     }
+
+    public HHBox CurrentBox { get => _currentBox; }
 }

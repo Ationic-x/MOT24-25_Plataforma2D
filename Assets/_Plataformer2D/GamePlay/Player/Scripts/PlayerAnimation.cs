@@ -6,10 +6,10 @@ public class PlayerAnimation : MonoBehaviour
 {
 
     private Animator _animator;
-    private PlayerController _pc;
-    private PlayerStates _ps;
-    private GhosTrail _gt;
-    private SpriteRenderer _sr;
+    private PlayerController _playerController;
+    private PlayerStates _playerStates;
+    private GhosTrail _ghostTrail;
+    private SpriteRenderer _spriteRenderer;
 	[SerializeField] private string _currentSprite;
 
 	private float _ghostTrailDelay;
@@ -20,43 +20,43 @@ public class PlayerAnimation : MonoBehaviour
 	// Start is called before the first frame update
 	void Awake()
     {
-        _pc = GetComponentInParent<PlayerController>();
+        _playerController = GetComponentInParent<PlayerController>();
         _animator = GetComponent<Animator>();
-        _gt = GetComponent<GhosTrail>();
+        _ghostTrail = GetComponent<GhosTrail>();
     }
 
 	private void OnEnable()
 	{
-        _ps = _pc.PS;
-        _sr = GetComponent<SpriteRenderer>();
-		_currentSprite = _sr.sprite.name;
+        _playerStates = _playerController.PlayerStates;
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+		_currentSprite = _spriteRenderer.sprite.name;
 	}
 
 	// FIXME: SHOULD BE CHANGED WITH EVENTS
 	void Update()
     {
-		string spriteName = _sr.sprite.name;
+		string spriteName = _spriteRenderer.sprite.name;
         if (!_currentSprite.Equals(spriteName))
         {
             _currentSprite = spriteName;
 			OnSpriteChange?.Invoke(_currentSprite);
         }
 
-        _animator.SetBool("Grounded", _ps.IsGrounded);
-        _animator.SetBool("Jump", _ps.IsJumping || _ps.IsWallJumping);
-        _animator.SetFloat("AirSpeedY", _ps.IsFalling ? -1 : 0);
-        _animator.SetBool("WallSlide", _ps.IsSliding);
-        _animator.SetInteger("AnimState", _ps.IsRunning ? 1 : 0);
-        if (_ps.IsDashing)
+        _animator.SetBool("Grounded", _playerStates.IsGrounded);
+        _animator.SetBool("Jump", _playerStates.IsJumping || _playerStates.IsWallJumping);
+        _animator.SetFloat("AirSpeedY", _playerStates.IsFalling ? -1 : 0);
+        _animator.SetBool("WallSlide", _playerStates.IsSliding);
+        _animator.SetInteger("AnimState", _playerStates.IsRunning ? 1 : 0);
+        if (_playerStates.IsDashing)
 		{
             _animator.SetBool("Roll", true);
-            _gt.Available = true;
+            _ghostTrail.Available = true;
             _ghostTrailDelay = Time.time + 0.3f;
         }
 
         if (Time.time - _ghostTrailDelay > 0)
 		{
-            _gt.Available = false;
+            _ghostTrail.Available = false;
 		}
     }
 }

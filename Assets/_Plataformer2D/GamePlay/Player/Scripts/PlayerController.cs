@@ -6,14 +6,14 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : ActorController
 {
-	[SerializeField] private PlayerData _data; // Player parameters
+	[SerializeField] private PlayerData _playerData; // Player parameters
 
 	// Input variables
 	[SerializeField] private bool _jumpPressed;
 	[SerializeField] private bool _dashPressed;
 
-	[SerializeField] private PlayerStates _ps;
-	private Rigidbody2D _rb;
+	[SerializeField] private PlayerStates _playerStates;
+	private Rigidbody2D _rigidbody;
 
     [Header("Actions")]
     [SerializeField] private InputActionReference _jumpAction;
@@ -23,19 +23,19 @@ public class PlayerController : ActorController
 	// Start is called before the first frame update
 	void Awake()
 	{
-		_rb = GetComponent<Rigidbody2D>();
+		_rigidbody = GetComponent<Rigidbody2D>();
 
-		SetGravityScale(_data.gravityScale);
+		SetGravityScale(_playerData.gravityScale);
 	}
 
 	public void SwapFacingPosition(bool isFacingRight)
 	{
 		// Avoid flip before the animation end
-		if (_ps.IsSliding || _ps.IsDashing) return;
+		if (_playerStates.IsSliding || _playerStates.IsDashing) return;
 
-		if (_ps.IsFacingRight != isFacingRight)
+		if (_playerStates.IsFacingRight != isFacingRight)
 		{
-			_ps.IsFacingRight = isFacingRight;
+			_playerStates.IsFacingRight = isFacingRight;
 			transform.localScale = new (-transform.localScale.x, transform.localScale.y);
 		}
 	}
@@ -57,13 +57,13 @@ public class PlayerController : ActorController
 
 	public void SetGravityScale(float scale)
 	{
-		_rb.gravityScale = scale;
+		_rigidbody.gravityScale = scale;
 	}
 
-	public PlayerStates PS { get { return _ps; } }
-	public Rigidbody2D RB { get { return _rb; } }
-	public PlayerData Data { get { return _data; } }
-	public InputActionReference MoveAction { get { return _moveAction; } }
-	public InputActionReference JumpAction { get { return _jumpAction; } }
-	public InputActionReference DashAction { get { return _dashAction; } }
+	public PlayerStates PlayerStates { get => _playerStates; }
+	public Rigidbody2D Rigidbody { get => _rigidbody; }
+	public PlayerData PlayerData { get => _playerData; }
+	public InputActionReference MoveAction { get => _moveAction; }
+	public InputActionReference JumpAction { get => _jumpAction; }
+	public InputActionReference DashAction { get => _dashAction; }
 }

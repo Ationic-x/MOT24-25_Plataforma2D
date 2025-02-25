@@ -1,36 +1,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerHHBoxesDictionary : MonoBehaviour, IHHBoxesDictionary
+public class PlayerHHBoxesDictionary : IHHBoxesDictionary
 {
-    private Dictionary<string, HHBox> _hitbox;
-    private Dictionary<string, HHBox> _hurtbox;
-    private const string BaseName = "HeroKnight_";
+    private static PlayerHHBoxesDictionary _instance;
+    public static PlayerHHBoxesDictionary Instance => _instance ??= new PlayerHHBoxesDictionary();
 
-    private void Awake()
+    public Dictionary<string, HHBox> Hitbox { get; private set; } = new Dictionary<string, HHBox>();
+    public Dictionary<string, HHBox> Hurtbox { get; private set; } = new Dictionary<string, HHBox>();
+
+    private PlayerHHBoxesDictionary()
     {
-        _hitbox = new Dictionary<string, HHBox>();
-        _hurtbox = new Dictionary<string, HHBox>();
         Setup();
     }
 
     private void Setup()
     {
-        #region Idle
-        // Range between 0 - 7
-        HHBox idleBox = new (new Vector2(0, 0), new Vector2(1, 1), HHBox.HHBoxType.HitBox);
-        _hitbox.Add(BaseName + 0, idleBox);
-        _hitbox.Add(BaseName + 1, idleBox);
-        _hitbox.Add(BaseName + 2, idleBox);
-        _hitbox.Add(BaseName + 3, idleBox);
-        _hitbox.Add(BaseName + 4, idleBox);
-        _hitbox.Add(BaseName + 5, idleBox);
-        _hitbox.Add(BaseName + 6, idleBox);
-        _hitbox.Add(BaseName + 7, idleBox);
-        #endregion
+        HHBox idleBox = new HHBox(new Vector2(0, 0.69f), new Vector2(0.7f, 1.25f), HHBox.HHBoxType.HitBox);
+        for (int i = 0; i <= 7; i++)
+        {
+            Hitbox.Add("HeroKnight_" + i, idleBox);
+        }
     }
-
-    public Dictionary<string, HHBox> Hitbox { get => _hitbox;}
-
-    public Dictionary<string, HHBox> Hurtbox { get => _hurtbox;}
 }

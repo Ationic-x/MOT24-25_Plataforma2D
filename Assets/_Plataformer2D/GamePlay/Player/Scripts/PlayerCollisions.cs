@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class PlayerCollisions : MonoBehaviour
 {
-    private PlayerController _pc;
-    private PlayerStates _ps;
+    private PlayerController _playerController;
+    private PlayerStates _playerStates;
 
     [SerializeField] private Transform _groundCheckPoint;
     [SerializeField] private Vector2 _groundCheckSize = new (0.49f, 0.03f);
@@ -16,12 +16,12 @@ public class PlayerCollisions : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        _pc = GetComponent<PlayerController>();
+        _playerController = GetComponent<PlayerController>();
     }
 
 	private void OnEnable()
 	{
-        _ps = _pc.PS;
+        _playerStates = _playerController.PlayerStates;
     }
 
 	// Update is called once per frame
@@ -31,14 +31,14 @@ public class PlayerCollisions : MonoBehaviour
         bool isGrounded = false, isCollidedForward = false, isCollidedBackward = false;
 
         // Exceptions
-        if (!_ps.IsDashing && !_ps.IsJumping)
+        if (!_playerStates.IsDashing && !_playerStates.IsJumping)
         {
             //Ground Check
             if (Physics2D.OverlapBox(_groundCheckPoint.position, _groundCheckSize, 0, _groundLayer))
                 isGrounded = true;
         }
 
-        if (!_ps.IsWallJumping)
+        if (!_playerStates.IsWallJumping)
         {
             isCollidedForward = Physics2D.OverlapBox(_forwardCheckPoint.position, _wallCheckSize, 0, _groundLayer);
             isCollidedBackward = Physics2D.OverlapBox(_backwardCheckPoint.position, _wallCheckSize, 0, _groundLayer);
@@ -49,9 +49,9 @@ public class PlayerCollisions : MonoBehaviour
         }
 
 
-        _ps.IsGrounded = isGrounded;
-        _ps.IsCollidedForward = isCollidedForward;
-        _ps.IsCollidedBackward = isCollidedBackward;
+        _playerStates.IsGrounded = isGrounded;
+        _playerStates.IsCollidedForward = isCollidedForward;
+        _playerStates.IsCollidedBackward = isCollidedBackward;
     }
 
     void OnDrawGizmosSelected()

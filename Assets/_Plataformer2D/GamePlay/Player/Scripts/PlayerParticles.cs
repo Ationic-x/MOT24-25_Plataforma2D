@@ -1,24 +1,29 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerParticles : MonoBehaviour
 {
-    [SerializeField] private ParticleController _particleController;
-    private PlayerController _pc;
-    private PlayerStates _ps;
+    [SerializeField] private GameObject _particlesCollection;
+    private ParticleController _particleController;
+    private PlayerController _playerController;
+    private PlayerStates _playerStates;
     private bool orientation;
 
     void Awake()
     {
-        _pc = GetComponentInParent<PlayerController>();
+        _playerController = GetComponentInParent<PlayerController>();
+		List<ParticleCollection> listParticles = _particlesCollection.GetComponents<ParticleCollection>().ToList();
+		_particleController = new ParticleController(listParticles);
     }
 
     private void OnEnable()
     {
-        _ps = _pc.PS;
-        orientation = _ps.IsFacingRight;
+        _playerStates = _playerController.PlayerStates;
+        orientation = _playerStates.IsFacingRight;
     }
 
     // FIXME: AE_SLIDEUST() Event is used in animation clip
@@ -33,12 +38,11 @@ public class PlayerParticles : MonoBehaviour
         _particleController.SetCollection(ParticleCollection.CollectionID.PlayerDust);
         _particleController.CurrentCollection.SetParticleEffect(DustCollection.DustID.WallDust);
         
-        if (orientation != _ps.IsFacingRight)
+        if (orientation != _playerStates.IsFacingRight)
         {
-            orientation = _ps.IsFacingRight;
+            orientation = _playerStates.IsFacingRight;
             _particleController.CurrentCollection.HorizontalFlip();
         }
-
 
 		_particleController.Emit(currentPostion);
 	}

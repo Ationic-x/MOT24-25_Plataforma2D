@@ -7,8 +7,8 @@ using static AudioManager;
 public class PlayerAudio : MonoBehaviour
 {
     // [SerializeField] private AudioManager _am;
-    private PlayerController _pc;
-    private PlayerStates _ps => _pc.PS;
+    private PlayerController _playerController;
+    private PlayerStates _playerStates => _playerController.PlayerStates;
 
     // States to avoid reproduce multiple times
     private bool _audioJumping;
@@ -24,7 +24,7 @@ public class PlayerAudio : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        _pc = GetComponent<PlayerController>();
+        _playerController = GetComponent<PlayerController>();
     }
 
 
@@ -32,20 +32,20 @@ public class PlayerAudio : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!_audioJumping && (_ps.IsJumping || _ps.IsFalling))
+        if (!_audioJumping && (_playerStates.IsJumping || _playerStates.IsFalling))
 		{
             _audioJumping = true;
             PlaySoundOnce("JumpStart", GetAudioClip(Sound.JumpStart), 1);
 		}
 
-        if (!_audioWallJumping && _ps.IsWallJumping)
+        if (!_audioWallJumping && _playerStates.IsWallJumping)
 		{
             _audioWallJumping = true;
             _audioJumping = true;
             PlaySoundOnce("JumpStart", GetAudioClip(Sound.JumpStart), 1);
         }
 
-        if (_audioJumping && _ps.IsGrounded)
+        if (_audioJumping && _playerStates.IsGrounded)
 		{
             _audioJumping = false;
             _audioWallJumping = false;

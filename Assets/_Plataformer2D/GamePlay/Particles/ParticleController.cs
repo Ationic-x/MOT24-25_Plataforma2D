@@ -3,15 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using static ParticleCollection;
 
-public class ParticleController : MonoBehaviour
+public class ParticleController
 {
-	[SerializeField] private List<ParticleCollection> _listParticles;
-	[SerializeField] private ParticleCollection _currentCollection;
-	[SerializeField] private int _currentParticleEffect;
+	private readonly List<ParticleCollection> _listParticles;
+	private ParticleCollection _currentCollection;
 
 
 	public CollectionID CurrentCollectionID { get => _currentCollection.ID; }
 	public ParticleCollection CurrentCollection { get => _currentCollection; }
+
+	public ParticleController(List<ParticleCollection> listParticles)
+	{
+		_listParticles = listParticles;
+	}
 
 	public void SetCollection(CollectionID id)
 	{
