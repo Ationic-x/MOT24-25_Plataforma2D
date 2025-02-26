@@ -20,6 +20,8 @@ public class PlayerStates
     [SerializeField] private bool _isCollidedBackward;
     [SerializeField] private bool _isCollidedForward;
 
+    // Action States
+    [SerializeField] private bool _isAttacking;
 
     // General States
     [SerializeField] private bool _isFacingRight = true; // By default the character is facing right
@@ -74,6 +76,9 @@ public class PlayerStates
     public bool IsCollidedBackward { get => _isCollidedBackward; set => _isCollidedBackward = value; }
 
     public bool IsCollidedForward { get => _isCollidedForward; set => _isCollidedForward = value; }
+
+    // Action States
+    public bool IsAttacking { get => _isAttacking; set => _isAttacking = value; }
 
     // General States
     public bool IsFacingRight 

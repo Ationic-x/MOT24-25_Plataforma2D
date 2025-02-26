@@ -28,9 +28,9 @@ public class HHBoxesController
         _layerMask = layerMask;
     }
 
-    public void UpdateBoxes(string sprite)
+    public void UpdateBoxes(Tuple<string, string> animationRef)
     {
-        if (_hitbox.TryGetValue(sprite, out HHBox hitbox))
+        if (_hitbox.TryGetValue(animationRef.Item1, out HHBox hitbox))
         {
             if (!_currentHitbox.Equals(hitbox)) {
                 _targetCollider.size = hitbox.size;
@@ -39,24 +39,21 @@ public class HHBoxesController
             }
         }
 
-        if (_hurtbox.TryGetValue(sprite, out HHBox[] hurtboxes))
+        if (_hurtbox.TryGetValue(animationRef.Item1, out HHBox[] hurtboxes))
         {
-            if (_currentHurtboxes == null || !_currentHurtboxes.Equals(hurtboxes))
+			if (_currentHurtboxes == null || !_currentHurtboxes.Equals(hurtboxes)) _currentHurtboxes = hurtboxes;
+
+			foreach (HHBox hurtbox in _currentHurtboxes)
             {
-                foreach (HHBox hurtbox in hurtboxes)
+                // in future we will handle
+                Collider2D[] colliders = Physics2D.OverlapBoxAll(_target.position + hurtbox.offset, hurtbox.size, 0, _layerMask);
+                foreach (Collider2D collider in colliders)
                 {
-                    // in future we will handle
-                    Collider2D[] colliders = Physics2D.OverlapBoxAll(_target.position + hurtbox.offset, hurtbox.size, 0, _layerMask);
-                    foreach (Collider2D collider in colliders)
-                    {
-                        Debug.Log(_target.name + "--" + collider.name);
-                    }
+                    Debug.Log(_target.name + "--" + collider.name);
                 }
-
-
-                _currentHurtboxes = hurtboxes;
             }
         }
+        else _currentHurtboxes = null;
     }
 
     public HHBox CurrentHitbox { get => _currentHitbox; }

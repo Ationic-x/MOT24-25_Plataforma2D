@@ -19,20 +19,29 @@ public class PlayerHHBoxesDictionary : IHHBoxesDictionary
     private void Setup()
     {
         HHBox basicBox = new HHBox(new Vector2(0, 0.69f), new Vector2(0.7f, 1.25f), HHBox.HHBoxType.HitBox);
-        HHBox runBox = new HHBox(new Vector2(0, 0.69f), new Vector2(1.7f, 2.25f), HHBox.HHBoxType.HitBox);
         // Idle animations
         for (int i = 0; i <= 7; i++)
         {
             Hitbox.Add(BaseName + i, basicBox);
         }
 
-        HHBox test = new HHBox(new Vector2(0.3f, 0.69f), new Vector2(0.7f, 1.25f), HHBox.HHBoxType.HitBox);
-        HHBox[] hurtest = {test};
         // Run animations
-        for (int i = 8; i <= 18; i++)
+        for (int i = 8; i <= 17; i++)
         {
-            Hitbox.Add(BaseName + i, runBox);
-            Hurtbox.Add(BaseName + i, hurtest);
+            Hitbox.Add(BaseName + i, basicBox);
         }
-    }
+
+
+        // Attack Animations
+		HHBox attack = new HHBox(new Vector2(0.5f, 0.95f), new Vector2(2f, 1.5f), HHBox.HHBoxType.HitBox);
+		HHBox[] attackboxes = { attack };
+
+		for (int i = 18; i <= 23; i++)
+		{
+			Hitbox.Add(BaseName + i, basicBox);
+            if (i == 21) Hurtbox.Add(BaseName + i, attackboxes);
+            if (i == 22) Hurtbox.Add(BaseName + i, attackboxes);
+            if (i == 23) Hurtbox.Add(BaseName + i, attackboxes);
+		}
+	}
 }

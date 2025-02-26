@@ -1,3 +1,4 @@
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -5,12 +6,12 @@ public class PlayerHHBoxes : MonoBehaviour
 {
     [SerializeField] private PlayerAnimation _playerAnimation;
     [SerializeField] private bool _drawGizmo;
-	[SerializeField] private LayerMask _CollisionLayer;
+	[SerializeField] private LayerMask _collisionLayer;
     private HHBoxesController _hhBoxesController;
 
 	private void Awake()
 	{
-		_hhBoxesController = new HHBoxesController(PlayerHHBoxesDictionary.Instance, transform, _CollisionLayer);
+		_hhBoxesController = new HHBoxesController(PlayerHHBoxesDictionary.Instance, transform, _collisionLayer);
 	}
 
 	private void OnEnable()
@@ -24,34 +25,33 @@ public class PlayerHHBoxes : MonoBehaviour
     }
 
 
-    private void OnSpriteChange(string sprite)
+    private void OnSpriteChange(Tuple<string, string> animationRef)
     {
-        _hhBoxesController.UpdateBoxes(sprite);
+        _hhBoxesController.UpdateBoxes(animationRef);
     }
-
 
 	private void OnDrawGizmosSelected()
 	{
 		if (_drawGizmo)
 		{
-            if (_hhBoxesController == null) return;
-            HHBox hitbox = _hhBoxesController.CurrentHitbox;
-            HHBox[] hurtboxes = _hhBoxesController.CurrentHurtboxes;
+			if (_hhBoxesController == null) return;
+			HHBox hitbox = _hhBoxesController.CurrentHitbox;
+			HHBox[] hurtboxes = _hhBoxesController.CurrentHurtboxes;
 
-            Gizmos.color = new Color(0, 1, 0, 0.3f);
+			Gizmos.color = new Color(0, 1, 0, 0.3f);
 
-            Gizmos.DrawCube(transform.position + hitbox.offset, hitbox.size);
-            Gizmos.color = Color.clear;
-            if (hurtboxes != null)
-            {
-                Gizmos.color = new Color(1, 0, 0, 0.3f);
+			Gizmos.DrawCube(transform.position + hitbox.offset, hitbox.size);
+			Gizmos.color = Color.clear;
+			if (hurtboxes != null)
+			{
+				Gizmos.color = new Color(1, 0, 0, 0.3f);
 
-                foreach (HHBox hurtbox in hurtboxes)
-                {
-                    // in future we will handle
-                    Gizmos.DrawCube(transform.position + hurtbox.offset, hurtbox.size);
-                }
-            }
-        }
+				foreach (HHBox hurtbox in hurtboxes)
+				{
+					// in future we will handle
+					Gizmos.DrawCube(transform.position + hurtbox.offset, hurtbox.size);
+				}
+			}
+		}
 	}
 }

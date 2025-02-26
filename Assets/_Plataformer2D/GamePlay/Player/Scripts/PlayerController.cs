@@ -19,6 +19,7 @@ public class PlayerController : ActorController
     [SerializeField] private InputActionReference _jumpAction;
 	[SerializeField] private InputActionReference _moveAction;
 	[SerializeField] private InputActionReference _dashAction;
+	[SerializeField] private InputActionReference _attackAction;
 
 	// Start is called before the first frame update
 	void Awake()
@@ -66,4 +67,5 @@ public class PlayerController : ActorController
 	public InputActionReference MoveAction { get => _moveAction; }
 	public InputActionReference JumpAction { get => _jumpAction; }
 	public InputActionReference DashAction { get => _dashAction; }
+	public InputActionReference AttackAction { get => _attackAction; }
 }

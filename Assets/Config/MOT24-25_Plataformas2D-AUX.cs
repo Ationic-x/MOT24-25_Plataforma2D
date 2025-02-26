@@ -80,6 +80,15 @@ public partial class @MOT2425_Plataformas2DAUX: IInputActionCollection2, IDispos
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Attack1"",
+                    ""type"": ""Button"",
+                    ""id"": ""a0a58125-5ba1-4870-9197-d45052905fd1"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -311,6 +320,17 @@ public partial class @MOT2425_Plataformas2DAUX: IInputActionCollection2, IDispos
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""931f9f15-a55f-4b8b-93cc-ffc28c9fe147"",
+                    ""path"": ""<Keyboard>/#(L)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Attack1"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -904,6 +924,7 @@ public partial class @MOT2425_Plataformas2DAUX: IInputActionCollection2, IDispos
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
+        m_Player_Attack1 = m_Player.FindAction("Attack1", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -989,6 +1010,7 @@ public partial class @MOT2425_Plataformas2DAUX: IInputActionCollection2, IDispos
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Run;
     private readonly InputAction m_Player_Dash;
+    private readonly InputAction m_Player_Attack1;
     public struct PlayerActions
     {
         private @MOT2425_Plataformas2DAUX m_Wrapper;
@@ -999,6 +1021,7 @@ public partial class @MOT2425_Plataformas2DAUX: IInputActionCollection2, IDispos
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @Run => m_Wrapper.m_Player_Run;
         public InputAction @Dash => m_Wrapper.m_Player_Dash;
+        public InputAction @Attack1 => m_Wrapper.m_Player_Attack1;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1026,6 +1049,9 @@ public partial class @MOT2425_Plataformas2DAUX: IInputActionCollection2, IDispos
             @Dash.started += instance.OnDash;
             @Dash.performed += instance.OnDash;
             @Dash.canceled += instance.OnDash;
+            @Attack1.started += instance.OnAttack1;
+            @Attack1.performed += instance.OnAttack1;
+            @Attack1.canceled += instance.OnAttack1;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -1048,6 +1074,9 @@ public partial class @MOT2425_Plataformas2DAUX: IInputActionCollection2, IDispos
             @Dash.started -= instance.OnDash;
             @Dash.performed -= instance.OnDash;
             @Dash.canceled -= instance.OnDash;
+            @Attack1.started -= instance.OnAttack1;
+            @Attack1.performed -= instance.OnAttack1;
+            @Attack1.canceled -= instance.OnAttack1;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -1236,6 +1265,7 @@ public partial class @MOT2425_Plataformas2DAUX: IInputActionCollection2, IDispos
         void OnJump(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
+        void OnAttack1(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

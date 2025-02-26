@@ -9,9 +9,10 @@ public class EnemyAnimation : MonoBehaviour
     private EnemyController _enemyController;
     private EnemyStates _enemyStates;
     [SerializeField] private string _currentSprite;
+	[SerializeField] private string _currentClip;
 
-    // Events
-    public event Action<string> OnSpriteChange;
+	// Events
+	public event Action<Tuple<string,string>> OnSpriteChange;
 
     // Start is called before the first frame update
     void Awake()
@@ -24,12 +25,14 @@ public class EnemyAnimation : MonoBehaviour
     private void Update()
     {
         string spriteName = _spriteRenderer.sprite.name;
-        if (!_currentSprite.Equals(spriteName))
-        {
-            _currentSprite = spriteName;
-            OnSpriteChange?.Invoke(_currentSprite);
-        }
-    }
+		string clipName = _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
+		if (!_currentSprite.Equals(spriteName) || !_currentClip.Equals(clipName))
+		{
+			_currentClip = clipName;
+			_currentSprite = spriteName;
+			OnSpriteChange?.Invoke(Tuple.Create(_currentSprite, _currentClip));
+		}
+	}
 
     private void OnEnable()
     {
