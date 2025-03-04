@@ -18,16 +18,25 @@ public class Stats : IStats
 
     public void SetupStats(int baseHP, int basePhysic, int baseMagic, int baseDefense, int basePush)
     {
-        SetupStats(baseHP, baseHP, basePhysic, baseMagic, baseDefense, basePush);
+        SetupStats(baseHP, baseHP, basePhysic, basePhysic, baseMagic, baseMagic, baseDefense, baseDefense, basePush, basePush);
     }
     
-    public void SetupStats(int currentHP, int maxHP, int currentPhysic, int currentMagic, int currentDefense, int currentPush)
+    public void SetupStats(int currentHP, int initialHP, int currentPhysic, int initialPhysic, int currentMagic, int initialMagic, int currentDefense, int initialDefense, int currentPush, int initialPush)
     {
-        hp.Update(currentHP);
-        hp.maxValue = maxHP;
-        physic.Update(currentPhysic);
-        magic.Update(currentMagic);
-        defense.Update(currentDefense);
-        push.Update(currentPush);
+        hp.initialValue = initialHP;
+        hp.maxValue = initialHP;
+        hp.CurrentValue = currentHP;
+
+        physic.initialValue = initialPhysic;
+		physic.CurrentValue = currentPhysic;
+
+        magic.initialValue = initialMagic;
+		magic.CurrentValue = currentMagic;
+
+        defense.initialValue = initialDefense;
+		defense.CurrentValue = currentDefense;
+
+        push.initialValue = initialPush;
+		push.CurrentValue = currentPush;
     }
 }
