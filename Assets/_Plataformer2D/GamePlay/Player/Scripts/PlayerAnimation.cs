@@ -1,67 +1,109 @@
 using System;
-using UnityEditor;
 using UnityEngine;
 
-public class PlayerAnimation : MonoBehaviour
+public class PlayerAnimation : ActorAnimation
 {
-
-    private Animator _animator;
     private PlayerController _playerController;
     private PlayerStates _playerStates;
     private GhosTrail _ghostTrail;
-    private SpriteRenderer _spriteRenderer;
-	[SerializeField] private string _currentSprite;
-	[SerializeField] private string _currentClip;
 
 	private float _ghostTrailDelay;
 
+	private bool _wallJump = false;
+	private bool _jump = false;
 	// Events
-	public event Action<Tuple<string, string>> OnSpriteChange;
 
 	// Start is called before the first frame update
-	void Awake()
+	protected override void Awake()
     {
+		base.Awake();
         _playerController = GetComponentInParent<PlayerController>();
-        _animator = GetComponent<Animator>();
         _ghostTrail = GetComponent<GhosTrail>();
-    }
-
-	private void OnEnable()
-	{
-        _playerStates = _playerController.PlayerStates;
-        _spriteRenderer = GetComponent<SpriteRenderer>();
-		_currentSprite = _spriteRenderer.sprite.name;
+		_playerStates = _playerController.PlayerStates;
 	}
 
-	// FIXME: SHOULD BE CHANGED WITH EVENTS
-	void Update()
+	#region Events
+	private void OnGroundedChanged(bool isGrounded)
     {
-		string spriteName = _spriteRenderer.sprite.name;
-        string clipName = _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
-		if (!_currentSprite.Equals(spriteName) || !_currentClip.Equals(clipName))
-		{
-			_currentClip = clipName;
-			_currentSprite = spriteName;
-			OnSpriteChange?.Invoke(Tuple.Create(_currentSprite, _currentClip));
-		}
+		animator.SetBool("Grounded", isGrounded);
+	} 
+    
+    private void OnSlidingChanged(bool isSliding)
+    {
+		animator.SetBool("WallSlide", isSliding);
+	}
+    
+    private void OnRunningChanged(bool isRunning)
+    {
+		animator.SetBool("Run", isRunning);
+	} 
+    
+    private void OnFallingChanged(bool isFalling)
+    {
+		animator.SetBool("Fall", isFalling);
+	}
+    
+    private void OnJumpingChanged(bool isJumping)
+    {
+		_jump = isJumping;
+		animator.SetBool("Jump", _jump || _wallJump);
+	}
+	
+	private void OnWallJumpingChanged(bool isJumping)
+    {
+		_wallJump = isJumping;
+		animator.SetBool("Jump", _jump || _wallJump);
+	}
 
-		_animator.SetBool("Grounded", _playerStates.IsGrounded);
-        _animator.SetBool("Jump", _playerStates.IsJumping || _playerStates.IsWallJumping);
-        _animator.SetFloat("AirSpeedY", _playerStates.IsFalling ? -1 : 0);
-        _animator.SetBool("WallSlide", _playerStates.IsSliding);
-        _animator.SetBool("Attack1", _playerStates.IsAttacking);
-        _animator.SetInteger("AnimState", _playerStates.IsRunning ? 1 : 0);
-        if (_playerStates.IsDashing)
-		{
-            _animator.SetBool("Roll", true);
-            _ghostTrail.Available = true;
-            _ghostTrailDelay = Time.time + 0.3f;
-        }
+    private void OnDashingChanged (bool isDashing)
+    {
+		animator.SetBool("Roll", true);
+		_ghostTrail.Available = true;
+		_ghostTrailDelay = Time.time + 0.3f;
+	}
+
+
+	private void OnAttackChanged(PlayerAttack.AttackType attack)
+    {
+		animator.SetBool("Attack", _playerStates.IsAttacking != 0);
+		animator.SetBool("Attack1", _playerStates.IsAttacking == PlayerAttack.AttackType.Basic);
+		animator.SetBool("Attack2", _playerStates.IsAttacking == PlayerAttack.AttackType.Quick);
+		animator.SetBool("Attack3", _playerStates.IsAttacking == PlayerAttack.AttackType.Big);		
+	}
+	#endregion
+
+	protected override void Update()
+    {
+		base.Update();
 
         if (Time.time - _ghostTrailDelay > 0)
 		{
             _ghostTrail.Available = false;
 		}
     }
+
+	protected override void SubscribeToEvents()
+	{
+		_playerStates.OnGroundedChanged += OnGroundedChanged;
+		_playerStates.OnSlidingChanged += OnSlidingChanged;
+		_playerStates.OnRunningChanged += OnRunningChanged;
+		_playerStates.OnFallingChanged += OnFallingChanged;
+		_playerStates.OnJumpingChanged += OnJumpingChanged;
+		_playerStates.OnWallJumpingChanged += OnWallJumpingChanged;
+		_playerStates.OnDashingChanged += OnDashingChanged;
+		_playerStates.OnAttackChanged += OnAttackChanged;
+	}
+
+	protected override void UnsubscribeFromEvents()
+	{
+		_playerStates.OnGroundedChanged -= OnGroundedChanged;
+		_playerStates.OnSlidingChanged -= OnSlidingChanged;
+		_playerStates.OnRunningChanged -= OnRunningChanged;
+		_playerStates.OnFallingChanged -= OnFallingChanged;
+		_playerStates.OnJumpingChanged -= OnJumpingChanged;
+		_playerStates.OnWallJumpingChanged -= OnWallJumpingChanged;
+		_playerStates.OnDashingChanged -= OnDashingChanged;
+		_playerStates.OnAttackChanged -= OnAttackChanged;
+	}
 }
 

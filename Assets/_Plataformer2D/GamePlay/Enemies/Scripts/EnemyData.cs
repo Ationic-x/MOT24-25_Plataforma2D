@@ -2,12 +2,16 @@ using UnityEngine;
 
 [System.Serializable]
 [CreateAssetMenu(fileName = "New Player Data", menuName = "Actor/Enemy Data")] //Create a new playerData object by right clicking in the Project Menu then Create/Player/Player Data and drag onto the player
-public class EnemyData : ScriptableObject, IStats
+public class EnemyData : ScriptableObject
 {
-    [SerializeField] protected RangedSmartFloat hp;
-    public float HP { get => hp.CurrentValue; set => hp.CurrentValue = value; }
+    [Header("BaseStats")]
+	public int baseHP;
+	public int basePhysic;
+	public int baseMagic;
+	public int baseDefense;
+	public int basePush;
 
-    public Sprite sprite;
+	public Sprite sprite;
     public bool isFacingRight;
     public RuntimeAnimatorController controller;
 

@@ -2,10 +2,14 @@ using UnityEngine;
 
 [System.Serializable]
 [CreateAssetMenu(fileName = "New Player Data", menuName = "Actor/Player Data")] //Create a new playerData object by right clicking in the Project Menu then Create/Player/Player Data and drag onto the player
-public class PlayerData : ScriptableObject, IStats
+public class PlayerData : ScriptableObject
 {
-	[SerializeField] protected RangedSmartFloat hp;
-	public float HP { get => hp.CurrentValue; set => hp.CurrentValue = value; }
+	[Header("BaseStats")]
+	public int baseHP;
+	public int basePhysic;
+	public int baseMagic;
+	public int baseDefense;
+	public int basePush;
 
 	[Header("Gravity")]
 	[HideInInspector] public float gravityStrength; //Downwards force (gravity) needed for the desired jumpHeight and jumpTimeToApex.

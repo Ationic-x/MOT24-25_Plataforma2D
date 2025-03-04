@@ -2,56 +2,32 @@ using System;
 using UnityEngine;
 using static EnemyStates;
 
-public class EnemyAnimation : MonoBehaviour
+public class EnemyAnimation : ActorAnimation
 {
-    private Animator _animator;
-    private SpriteRenderer _spriteRenderer;
     private EnemyController _enemyController;
     private EnemyStates _enemyStates;
-    [SerializeField] private string _currentSprite;
-	[SerializeField] private string _currentClip;
-
-	// Events
-	public event Action<Tuple<string,string>> OnSpriteChange;
 
     // Start is called before the first frame update
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
+        // FIXME: This should be modified
         _enemyController = GetComponentInParent<EnemyController>();
-        _animator = GetComponent<Animator>();
-        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    private void Update()
+    protected override void OnEnable()
     {
-        string spriteName = _spriteRenderer.sprite.name;
-		string clipName = _animator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
-		if (!_currentSprite.Equals(spriteName) || !_currentClip.Equals(clipName))
-		{
-			_currentClip = clipName;
-			_currentSprite = spriteName;
-			OnSpriteChange?.Invoke(Tuple.Create(_currentSprite, _currentClip));
-		}
-	}
 
-    private void OnEnable()
-    {
+        // FIXME: This should be modified
         _enemyStates = _enemyController.ES;
-
-        _enemyStates.OnLogicStateChanged += OnLogicStateChanged;
-        _enemyStates.OnFacingRightChanged += OnFacingRightChanged;
-
-        _currentSprite = _spriteRenderer.sprite.name;
         
         // When we're far the enemy is disabled and the animator is "resetted"
         // that is we force to use the currentstate if was changed before
         OnLogicStateChanged(_enemyStates.CurrentState);
-    }
 
-    private void OnDisable()
-    {
-        _enemyStates.OnLogicStateChanged -= OnLogicStateChanged;
-        _enemyStates.OnFacingRightChanged -= OnFacingRightChanged;
+
+        base.OnEnable();
     }
 
     private void OnLogicStateChanged(LogicState logicState)
@@ -61,7 +37,7 @@ public class EnemyAnimation : MonoBehaviour
             case LogicState.None:
                 break;
             case LogicState.Patrol:
-                _animator.SetInteger("AnimState", 2);
+                animator.SetInteger("AnimState", 2);
                 break;
             default: 
                 break;
@@ -69,6 +45,19 @@ public class EnemyAnimation : MonoBehaviour
     }
     private void OnFacingRightChanged(bool isFacingRight)
     {
-        _spriteRenderer.flipX = !isFacingRight;
+        // Should uses flip scale
+        spriteRenderer.flipX = !isFacingRight;
     }
+
+	protected override void SubscribeToEvents()
+	{
+		_enemyStates.OnLogicStateChanged += OnLogicStateChanged;
+		_enemyStates.OnFacingRightChanged += OnFacingRightChanged;
+	}
+
+	protected override void UnsubscribeFromEvents()
+	{
+		_enemyStates.OnLogicStateChanged -= OnLogicStateChanged;
+		_enemyStates.OnFacingRightChanged -= OnFacingRightChanged;
+	}
 }

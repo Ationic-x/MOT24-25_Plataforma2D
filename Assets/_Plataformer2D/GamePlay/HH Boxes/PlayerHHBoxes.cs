@@ -1,57 +1,11 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerHHBoxes : MonoBehaviour
+public class PlayerHHBoxes : ActorHHBoxes
 {
-    [SerializeField] private PlayerAnimation _playerAnimation;
-    [SerializeField] private bool _drawGizmo;
-	[SerializeField] private LayerMask _collisionLayer;
-    private HHBoxesController _hhBoxesController;
-
-	private void Awake()
+	protected override void Awake()
 	{
-		_hhBoxesController = new HHBoxesController(PlayerHHBoxesDictionary.Instance, transform, _collisionLayer);
-	}
-
-	private void OnEnable()
-    {
-        _playerAnimation.OnSpriteChange += OnSpriteChange;
-    }
-    
-    private void OnDisable()
-    {
-        _playerAnimation.OnSpriteChange -= OnSpriteChange;
-    }
-
-
-    private void OnSpriteChange(Tuple<string, string> animationRef)
-    {
-        _hhBoxesController.UpdateBoxes(animationRef);
-    }
-
-	private void OnDrawGizmosSelected()
-	{
-		if (_drawGizmo)
-		{
-			if (_hhBoxesController == null) return;
-			HHBox hitbox = _hhBoxesController.CurrentHitbox;
-			HHBox[] hurtboxes = _hhBoxesController.CurrentHurtboxes;
-
-			Gizmos.color = new Color(0, 1, 0, 0.3f);
-
-			Gizmos.DrawCube(transform.position + hitbox.offset, hitbox.size);
-			Gizmos.color = Color.clear;
-			if (hurtboxes != null)
-			{
-				Gizmos.color = new Color(1, 0, 0, 0.3f);
-
-				foreach (HHBox hurtbox in hurtboxes)
-				{
-					// in future we will handle
-					Gizmos.DrawCube(transform.position + hurtbox.offset, hurtbox.size);
-				}
-			}
-		}
+		hhBoxesDataInstance = PlayerHHBoxesData.Instance;
+		base.Awake();
 	}
 }

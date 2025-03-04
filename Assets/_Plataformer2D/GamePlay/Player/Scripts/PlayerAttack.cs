@@ -1,15 +1,26 @@
 using System.Collections;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerAttack2D : MonoBehaviour
+public class PlayerAttack : MonoBehaviour
 {
+	public enum AttackType
+	{
+		None = 0,
+		Basic,
+		Quick,
+		Big,
+		Ranged,
+	}
+
+
 	private PlayerController _playerController;
 
 	private PlayerStates _playerStates;
-	private Rigidbody2D _rigidbody;
 	private PlayerData _playerData;
+	[SerializeField] private List<AttackData> _listAttacks;
 
 
 	// Input Variables
@@ -23,7 +34,6 @@ public class PlayerAttack2D : MonoBehaviour
 
 	private void Start()
 	{
-		_rigidbody = _playerController.Rigidbody;
 		_playerData = _playerController.PlayerData;
 	}
 
@@ -47,16 +57,16 @@ public class PlayerAttack2D : MonoBehaviour
 	{
 		_attack1 = context.performed;
 		if (_attack1)
-			StartCoroutine(HandleAttack());
+			StartCoroutine(HandleAttack(_attack1Clip.length, AttackType.Big));
 	}
 
-	IEnumerator HandleAttack()
+	IEnumerator HandleAttack(float duration, AttackType attack)
 	{
-		_playerStates.IsAttacking = true;
+		_playerStates.IsAttacking = attack;
 		
 		// Wait animation duration in frames
-		yield return new WaitForSeconds(_attack1Clip.length);
+		yield return new WaitForSeconds(duration);
 
-		_playerStates.IsAttacking = false;
+		_playerStates.IsAttacking = AttackType.None;
 	}
 }

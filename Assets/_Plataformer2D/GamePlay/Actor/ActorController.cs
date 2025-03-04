@@ -1,18 +1,18 @@
+using System;
 using UnityEngine;
 
-public abstract class ActorController : MonoBehaviour, IActorController
+public abstract class ActorController : MonoBehaviour
 {
-    public virtual IStats Stats
-    {
-        get => throw new System.NotImplementedException();
-    }
+    [SerializeField] protected Stats stats;
 
-    public void Heal(float hl)
+    public virtual Stats Stats { get => stats; }
+
+    public void Heal(int hl)
     {
        Stats.HP += hl;
     }
 
-    public void TakeDamage(float dmg, GameObject src)
+    public void TakeDamage(int dmg)
     {
         Stats.HP -= dmg;
     }

@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class EnemyStates
+public class EnemyStates: ActorStates<Enum>
 {
     // Logic States, define what action is doing
     public enum LogicState
@@ -18,13 +16,7 @@ public class EnemyStates
     // Events
     public event Action<LogicState> OnLogicStateChanged;
 
-    // PhysicState, define in which situation/s is
-    
-    // General States
-    [SerializeField] private bool _isFacingRight = true; // By default the character is facing right
-    
-    // Events
-    public event Action<bool> OnFacingRightChanged;
+    // PhysicState, define in which situation/s
 
 
     #region Logic States
@@ -37,21 +29,6 @@ public class EnemyStates
             {
                 _currentState = value;
                 OnLogicStateChanged?.Invoke(_currentState);
-            }
-        }
-    }
-    #endregion
-
-    #region Physic States
-    public bool IsFacingRight
-    {
-        get => _isFacingRight;
-        set
-        {
-            if (_isFacingRight != value)
-            {
-                _isFacingRight = value;
-                OnFacingRightChanged?.Invoke(_isFacingRight);
             }
         }
     }

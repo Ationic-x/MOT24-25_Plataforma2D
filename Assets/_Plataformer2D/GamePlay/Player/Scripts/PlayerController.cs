@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : ActorController
 {
+	[Expandable]
 	[SerializeField] private PlayerData _playerData; // Player parameters
 
 	// Input variables
@@ -25,6 +26,9 @@ public class PlayerController : ActorController
 	void Awake()
 	{
 		_rigidbody = GetComponent<Rigidbody2D>();
+
+		// This method must be changed, when we have save values in a db
+		stats.SetupStats(_playerData.baseHP, _playerData.basePhysic, _playerData.baseMagic, _playerData.baseDefense, _playerData.basePush);
 
 		SetGravityScale(_playerData.gravityScale);
 	}

@@ -128,7 +128,7 @@ public class PlayerMovement2D : MonoBehaviour
 	// Currently States and Gravity
 	private void Update()
 	{
-		if (_moveInput.x != 0)
+		if (CanMove() && _moveInput.x != 0)
 			_playerController.SwapFacingPosition(_moveInput.x > 0);
 
 		HandleStates();
@@ -136,7 +136,6 @@ public class PlayerMovement2D : MonoBehaviour
 	}
 
 	// All the behaviour managed per update of rb
-	// Currently Run and Walking
 	private void FixedUpdate()
 	{
 		//Handle Run
@@ -163,7 +162,7 @@ public class PlayerMovement2D : MonoBehaviour
 	{
 		_playerStates.IsSliding = CanSlide();
 
-		_playerStates.IsJumpCut = _playerStates.IsJumping && !_jumpInput;
+		_playerStates.IsJumpCut = _playerStates.IsJumping && (!_jumpInput || !CanMove());
 
 		if (_rigidbody.linearVelocity.y < 0 && !_playerStates.IsSliding && !_playerStates.IsDashing)
 		{
@@ -223,16 +222,19 @@ public class PlayerMovement2D : MonoBehaviour
 
 	IEnumerator HandleJump()
 	{
-		//Jump
-		if (CanJump())
-			Jump();
-
-		//WallJump
-		else if (CanWallJump())
+		if (CanMove())
 		{
-			_wallJumpStartTime = Time.time;
+			//Jump
+			if (CanJump())
+				Jump();
 
-			WallJump();
+			//WallJump
+			else if (CanWallJump())
+			{
+				_wallJumpStartTime = Time.time;
+
+				WallJump();
+			}
 		}
 
 		yield return new WaitForFixedUpdate();
@@ -254,7 +256,7 @@ public class PlayerMovement2D : MonoBehaviour
 			else
 				dashDir = _playerStates.IsFacingRight ? Vector2.right : Vector2.left;
 
-			StartCoroutine(nameof(Dash), dashDir);
+			StartCoroutine(Dash(dashDir));
 		}
 		
 		yield return new WaitForFixedUpdate();
@@ -262,9 +264,20 @@ public class PlayerMovement2D : MonoBehaviour
 	#endregion
 
 	#region Checks (Is able to)
+	// Return if the player can do a Movement action
+	private bool CanMove()
+	{
+		// Unable to move when is attacking
+		return _playerStates.IsAttacking == 0;
+	}
+
+
 	// Return if the player can slide in a wall right now
 	private bool CanSlide()
 	{
+		if (!CanMove())
+			return false;
+
 		// Player cant be in another states
 		if (_playerStates.IsWallJumping || _playerStates.IsDashing || _playerStates.IsGrounded)
 			return false;
@@ -309,7 +322,7 @@ public class PlayerMovement2D : MonoBehaviour
 
 	private bool CanDash()
 	{
-		return !_playerStates.IsDashing && Time.time - _dashDelayTime > _playerData.dashDelay;
+		return CanMove() && !_playerStates.IsDashing && Time.time - _dashDelayTime > _playerData.dashDelay;
 	}
 	#endregion
 
@@ -397,10 +410,10 @@ public class PlayerMovement2D : MonoBehaviour
 	private void Run(float lerpAmount)
 	{
 		// Update States when start running
-		_playerStates.IsRunning = _moveInput.x != 0 && _playerStates.IsGrounded; // Only Run when is grounded
+		_playerStates.IsRunning = _moveInput.x != 0 && _playerStates.IsGrounded && CanMove(); // Only Run when is grounded
 
 
-		float targetSpeed = _moveInput.x * _playerData.runMaxSpeed; // -1~1 * Max Speed
+		float targetSpeed = CanMove() ? _moveInput.x * _playerData.runMaxSpeed : 0; // -1~1 * Max Speed
 		targetSpeed = Mathf.Lerp(_rigidbody.linearVelocity.x, targetSpeed, lerpAmount); // Get values betwen current.s and target.s (smothness)
 
 		float accelRate;
@@ -466,7 +479,7 @@ public class PlayerMovement2D : MonoBehaviour
 		_playerController.SetGravityScale(0);
 
 		//We keep the player's velocity at the dash speed during the "attack" phase (in celeste the first 0.15s)
-		while (Time.time - startTime <= _playerData.dashAttackTime)
+		while (CanMove() && Time.time - startTime <= _playerData.dashAttackTime)
 		{
 			_rigidbody.linearVelocity = dir.normalized * _playerData.dashSpeed;
 			//Pauses the loop until the next frame, creating something of a Update loop. 
@@ -482,7 +495,7 @@ public class PlayerMovement2D : MonoBehaviour
 		_playerController.SetGravityScale(_playerData.gravityScale);
 		_rigidbody.linearVelocity = _playerData.dashEndSpeed * dir.normalized;
 
-		while (Time.time - startTime <= _playerData.dashEndTime)
+		while (CanMove() && Time.time - startTime <= _playerData.dashEndTime)
 		{
 			yield return null;
 		}
