@@ -12,8 +12,8 @@ public class PlayerController : ActorController
 	// Input variables
 	[SerializeField] private bool _jumpPressed;
 	[SerializeField] private bool _dashPressed;
-
 	[SerializeField] private PlayerStates _playerStates;
+
 	private Rigidbody2D _rigidbody;
 
     [Header("Actions")]
@@ -27,7 +27,7 @@ public class PlayerController : ActorController
 	{
 		_rigidbody = GetComponent<Rigidbody2D>();
 
-		// This method must be changed, when we have save values in a db
+		// This method must be changed, when we have save values in a DB
 		stats.SetupStats(_playerData.baseHP, _playerData.basePhysic, _playerData.baseMagic, _playerData.baseDefense, _playerData.basePush);
 
 		SetGravityScale(_playerData.gravityScale);
@@ -63,6 +63,22 @@ public class PlayerController : ActorController
 	public void SetGravityScale(float scale)
 	{
 		_rigidbody.gravityScale = scale;
+	}
+
+	private void OnCollisionEnter2D(Collision2D collision)
+	{
+		// This will be modified in future when we got more logical state
+		// is not optimal check all the enter collisions
+		if (collision.collider.TryGetComponent<EnemyController>(out EnemyController ec)){
+			ec.ES.CurrentState = EnemyStates.LogicState.None;
+		}
+	}private void OnCollisionExit2D(Collision2D collision)
+	{
+		// This will be modified in future when we got more logical state
+		// is not optimal check all the enter collisions
+		if (collision.collider.TryGetComponent<EnemyController>(out EnemyController ec)){
+			ec.ES.CurrentState = EnemyStates.LogicState.Patrol;
+		}
 	}
 
 	public PlayerStates PlayerStates { get => _playerStates; }

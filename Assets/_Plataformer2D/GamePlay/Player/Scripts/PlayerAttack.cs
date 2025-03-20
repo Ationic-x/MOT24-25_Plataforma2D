@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerAttack : MonoBehaviour
+public class PlayerAttack : ActorAttack<PlayerAttack.AttackType>
 {
 	public enum AttackType
 	{
@@ -16,38 +16,32 @@ public class PlayerAttack : MonoBehaviour
 	}
 
 
-	private PlayerController _playerController;
-
-	private PlayerStates _playerStates;
-	private PlayerData _playerData;
-	[SerializeField] private List<AttackData> _listAttacks;
-
-
 	// Input Variables
 	[SerializeField] private bool _attack1;
 	[SerializeField] private AnimationClip _attack1Clip;
+	private PlayerController _playerController;
 
-	private void Awake()
+	protected override void Awake()
 	{
-		_playerController = GetComponent<PlayerController>();
+		actorController = GetComponent<PlayerController>();
+		_playerController = (PlayerController)actorController;
+		actorStates = _playerController.PlayerStates;
+		base.Awake();
 	}
 
-	private void Start()
+	protected override void OnEnable()
 	{
-		_playerData = _playerController.PlayerData;
-	}
-
-	private void OnEnable()
-	{
-		_playerStates = _playerController.PlayerStates;
+		base.OnEnable();
 
 		// Input Events
 		_playerController.AttackAction.action.performed += OnAttackInput;
 		_playerController.AttackAction.action.canceled += OnAttackInput;
 	}
 
-	private void OnDisable()
+	protected override void OnDisable()
 	{
+		base.OnDisable();
+
 		// Input Events
 		_playerController.AttackAction.action.performed -= OnAttackInput;
 		_playerController.AttackAction.action.canceled -= OnAttackInput;
@@ -55,18 +49,10 @@ public class PlayerAttack : MonoBehaviour
 
 	private void OnAttackInput(InputAction.CallbackContext context = default)
 	{
+		if (actorStates.IsAttacking != 0) return;
+
 		_attack1 = context.performed;
 		if (_attack1)
-			StartCoroutine(HandleAttack(_attack1Clip.length, AttackType.Big));
-	}
-
-	IEnumerator HandleAttack(float duration, AttackType attack)
-	{
-		_playerStates.IsAttacking = attack;
-		
-		// Wait animation duration in frames
-		yield return new WaitForSeconds(duration);
-
-		_playerStates.IsAttacking = AttackType.None;
+				OnAttack(AttackType.Basic);
 	}
 }

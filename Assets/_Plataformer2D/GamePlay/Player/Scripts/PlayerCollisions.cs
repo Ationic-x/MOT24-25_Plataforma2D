@@ -54,7 +54,7 @@ public class PlayerCollisions : MonoBehaviour
         _playerStates.IsCollidedBackward = isCollidedBackward;
     }
 
-    void OnDrawGizmosSelected()
+	void OnDrawGizmosSelected()
     {
         if (_drawGizmo)
         {

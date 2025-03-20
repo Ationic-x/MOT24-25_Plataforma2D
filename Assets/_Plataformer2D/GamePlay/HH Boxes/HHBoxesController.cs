@@ -52,7 +52,13 @@ public class HHBoxesController
 		Collider2D[] colliders = Physics2D.OverlapBoxAll(_origin.position + hurtbox.offset, hurtbox.size, 0, _layerMask);
 		foreach (Collider2D collider in colliders)
 		{
-			Debug.Log(_origin.name + "--" + collider.name);
+            ActorController target = collider.GetComponent<ActorController>();
+			Attack tmpAttack = _origin.GetComponent<ActorController>().GetAttack();
+            // Store the ID and avoid multiple calls
+            if (!target.DamageBuffer.Contains(tmpAttack.id)){
+                target.DamageBuffer.Push(tmpAttack.id);
+				Debug.Log(tmpAttack.id);
+            }
 		}
 	}
 

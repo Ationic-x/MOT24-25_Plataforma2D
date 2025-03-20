@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3827c87c6c7f8240905b30dfcd3372e, type: 3}
   m_Name: Player Data
   m_EditorClassIdentifier: 
-  baseHP: 0
-  basePhysic: 0
-  baseMagic: 0
-  baseDefense: 0
-  basePush: 0
+  baseHP: 100
+  basePhysic: 10
+  baseMagic: 10
+  baseDefense: 10
+  basePush: 10
   gravityStrength: -16
   gravityScale: 1.6309887
   fallGravityMult: 2

@@ -68,7 +68,7 @@ public class PlayerAnimation : ActorAnimation
 		animator.SetBool("Attack", _playerStates.IsAttacking != 0);
 		animator.SetBool("Attack1", _playerStates.IsAttacking == PlayerAttack.AttackType.Basic);
 		animator.SetBool("Attack2", _playerStates.IsAttacking == PlayerAttack.AttackType.Quick);
-		animator.SetBool("Attack3", _playerStates.IsAttacking == PlayerAttack.AttackType.Big);		
+		animator.SetBool("Attack3", _playerStates.IsAttacking == PlayerAttack.AttackType.Big);
 	}
 	#endregion
 

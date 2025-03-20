@@ -1,9 +1,10 @@
+using System;
 using UnityEngine;
 
 public class EnemyController : ActorController
 {
     [SerializeField] private EnemyData _enemyData;
-    [SerializeField] private EnemyStates _enemyStates;
+	[SerializeField] private EnemyStates _enemyStates;
 
 	// Start is called once before the first execution of Update after the MonoBehaviour is created
 	private void Awake()
@@ -33,4 +34,9 @@ public class EnemyController : ActorController
     }
 
     public EnemyStates ES { get => _enemyStates; }
+
+	private void OnCollisionEnter(Collision collision)
+	{
+		Debug.Log(collision.gameObject.name);
+	}
 }
