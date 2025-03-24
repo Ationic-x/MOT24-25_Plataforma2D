@@ -55,11 +55,18 @@ public class HHBoxesController
             ActorController target = collider.GetComponent<ActorController>();
 			Attack tmpAttack = _origin.GetComponent<ActorController>().GetAttack();
             // Store the ID and avoid multiple calls
-            if (!target.DamageBuffer.Contains(tmpAttack.id)){
-                target.DamageBuffer.Push(tmpAttack.id);
-				Debug.Log(tmpAttack.id);
+            DamageBuffer.Damage match= target.DamageBuffer.Find(tmpAttack.id);
+            if (match.id == 0 || match.time != 0)
+            {
+                if (Time.time - (tmpAttack.delay + match.time) > 0)
+                {
+                    match.time = Time.time;
+                }
+                
+                target.DamageBuffer.Push(new DamageBuffer.Damage(tmpAttack.id, tmpAttack.delay == 0 ? 0 : Time.time));
+                Debug.Log(tmpAttack.id);
             }
-		}
+        }
 	}
 
 	public HHBox CurrentHitbox { get => _currentHitbox; }

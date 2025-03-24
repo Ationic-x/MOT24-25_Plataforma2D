@@ -10,7 +10,7 @@ public class ArrayQueue<T>
     public ArrayQueue(int size, in T initialValue = default)
     {
         if (size < 0) throw new ArgumentException("Value cannot be negative", nameof(size));
-        
+
         items = new T[size];
         Array.Fill(items, initialValue);
     }

@@ -10,13 +10,15 @@ public struct Attack
 	public readonly uint id;
     public readonly int damage;
     public readonly float pushForce;
+	public readonly float delay;
 	// In future we can add status effect
 
-	public Attack(int newDamage, float newPushForce)
+	public Attack(int newDamage, float newPushForce, float newDelay)
 	{
 		id = ++_counter;
         damage = newDamage;
         pushForce = newPushForce;
+		delay = newDelay;
 	}
 }
 
@@ -70,7 +72,8 @@ public abstract class ActorAttack<T> : MonoBehaviour where T : Enum
 		actorController.SetAttack(
 			new Attack(
 				(int)(stats.Magic * currentAttackData.magicalDamageScale + stats.Physic * currentAttackData.physicalDamage),
-				stats.Push * currentAttackData.pushForceScale
+				stats.Push * currentAttackData.pushForceScale,
+				currentAttackData.iframes
 			)
 		);
 	}
