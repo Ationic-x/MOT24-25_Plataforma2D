@@ -41,7 +41,7 @@ MonoBehaviour:
   m_Name: Weather Postprocessing Profile
   m_EditorClassIdentifier: 
   components:
-  - {fileID: -5445245994066485762}
+  - {fileID: 6335233256348956427}
 --- !u!114 &2104183549675291236
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -70,3 +70,31 @@ MonoBehaviour:
   angleOffset:
     m_OverrideState: 0
     m_Value: 0.05
+--- !u!114 &6335233256348956427
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c73cf4a136f94114a97a3fe59bedfb74, type: 3}
+  m_Name: HeatVolumeComponent
+  m_EditorClassIdentifier: 
+  active: 1
+  strength:
+    m_OverrideState: 1
+    m_Value: 0.05
+  speed:
+    m_OverrideState: 1
+    m_Value: 0.42
+  cellDensity:
+    m_OverrideState: 1
+    m_Value: 2.51
+  angleSpeed:
+    m_OverrideState: 1
+    m_Value: 0.39
+  angleOffset:
+    m_OverrideState: 1
+    m_Value: 0

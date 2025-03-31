@@ -20,32 +20,32 @@ public class HeatRendererFeature : ScriptableRendererFeature
 		heatRenderPass = new HeatRenderPass(material, settings);
 
 		heatRenderPass.renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing;
-	}
+    }
 
 	public override void AddRenderPasses(ScriptableRenderer renderer,
 		ref RenderingData renderingData)
 	{
-		if (heatRenderPass == null)
-		{
-			return;
-		}
-		if (renderingData.cameraData.cameraType == CameraType.Game)
-		{
-			renderer.EnqueuePass(heatRenderPass);
-		}
-	}
+        if (heatRenderPass == null)
+        {
+            return;
+        }
+        if (renderingData.cameraData.cameraType == CameraType.Game)
+        {
+            renderer.EnqueuePass(heatRenderPass);
+        }
+    }
 
-	protected override void Dispose(bool disposing)
-	{
-		if (Application.isPlaying)
-		{
-			Destroy(material);
-		}
-		else
-		{
-			DestroyImmediate(material);
-		}
-	}
+    protected override void Dispose(bool disposing)
+    {
+        if (Application.isPlaying)
+        {
+            Destroy(material);
+        }
+        else
+        {
+            DestroyImmediate(material);
+        }
+    }
 }
 
 [Serializable]

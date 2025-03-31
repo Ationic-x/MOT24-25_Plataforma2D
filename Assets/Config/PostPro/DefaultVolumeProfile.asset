@@ -242,6 +242,7 @@ MonoBehaviour:
   - {fileID: 195479032306194483}
   - {fileID: -5674108458067248364}
   - {fileID: 9105592211174775252}
+  - {fileID: 1047740694982292937}
 --- !u!114 &195479032306194483
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -309,6 +310,34 @@ MonoBehaviour:
   chromaticAbberationIntensity:
     m_OverrideState: 1
     m_Value: 0.5
+--- !u!114 &1047740694982292937
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c73cf4a136f94114a97a3fe59bedfb74, type: 3}
+  m_Name: HeatVolumeComponent
+  m_EditorClassIdentifier: 
+  active: 1
+  strength:
+    m_OverrideState: 1
+    m_Value: 0.05
+  speed:
+    m_OverrideState: 1
+    m_Value: 0.05
+  cellDensity:
+    m_OverrideState: 1
+    m_Value: 0.05
+  angleSpeed:
+    m_OverrideState: 1
+    m_Value: 0.05
+  angleOffset:
+    m_OverrideState: 1
+    m_Value: 0.05
 --- !u!114 &1124207672202215125
 MonoBehaviour:
   m_ObjectHideFlags: 3
