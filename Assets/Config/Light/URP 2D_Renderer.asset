@@ -25,8 +25,8 @@ MonoBehaviour:
     probeSamplingDebugTexture: {fileID: 0}
     probeVolumeBlendStatesCS: {fileID: 0}
   m_RendererFeatures:
-  - {fileID: 4277189278102702228}
-  m_RendererFeatureMap: 94c86ba6fca05b3b
+  - {fileID: 5371414039891358511}
+  m_RendererFeatureMap: 2f33453d9c188b4a
   m_UseNativeRenderPass: 0
   m_TransparencySortMode: 0
   m_TransparencySortAxis: {x: 0, y: 1, z: 0}
@@ -54,7 +54,7 @@ MonoBehaviour:
   m_PostProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   m_DefaultMaterialType: 0
   m_DefaultCustomMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
---- !u!114 &4277189278102702228
+--- !u!114 &5371414039891358511
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -64,7 +64,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 631788f64311dda418b77f368b1e4838, type: 3}
-  m_Name: HeatDistortionRendererFeature
+  m_Name: HeatRendererFeature
   m_EditorClassIdentifier: 
   m_Active: 1
-  m_Material: {fileID: 2100000, guid: 5d9ae7a82e80c8d4480d3c97c0c329a2, type: 2}
+  settings:
+    strength: 0
+    speed: 0
+    cellDensity: 0
+    angleSpeed: 0
+    angleOffset: 0
+  shader: {fileID: 4800000, guid: c955270ac478aaf438787fd093766595, type: 3}
