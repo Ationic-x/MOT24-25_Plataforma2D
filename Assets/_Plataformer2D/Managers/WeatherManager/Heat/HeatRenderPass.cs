@@ -8,12 +8,14 @@ public class HeatRenderPass : ScriptableRenderPass
 {
 	private static readonly int strengthID = Shader.PropertyToID("_Strength");
 	private static readonly int speedID = Shader.PropertyToID("_Speed");
+	private static readonly int yCoverageID = Shader.PropertyToID("_YCoverage");
 	private static readonly int cellDensityID = Shader.PropertyToID("_CellDensity");
 	private static readonly int angleSpeedID = Shader.PropertyToID("_AngleSpeed");
 	private static readonly int angleOffsetID = Shader.PropertyToID("_AngleOffset");
 
     private const string k_HeatTextureName = "_HeatTexture";
     private const string k_HeatPassName = "HeatRenderPass";
+    private const string k_BlitPassName = "BlitRenderPass";
 
     private HeatSettings defaultSettings;
 	private Material material;
@@ -37,12 +39,14 @@ public class HeatRenderPass : ScriptableRenderPass
 
 		float strength = OverrideState(defaultSettings.strength, volumeComponent.strength);
 		float speed = OverrideState(defaultSettings.speed, volumeComponent.speed);
+        float yCoverage = OverrideState(defaultSettings.yCoverage, volumeComponent.yCoverage);
         float cellDensity = OverrideState(defaultSettings.cellDensity, volumeComponent.cellDensity);
         float angleSpeed = OverrideState(defaultSettings.angleSpeed, volumeComponent.angleSpeed);
         float angleOffset = OverrideState(defaultSettings.angleOffset, volumeComponent.angleOffset);
 
         material.SetFloat(strengthID, strength);
 		material.SetFloat(speedID, speed);
+		material.SetFloat(yCoverageID, yCoverage);
 		material.SetFloat(cellDensityID, cellDensity);
 		material.SetFloat(angleSpeedID, angleSpeed);
 		material.SetFloat(angleOffsetID, angleOffset);
@@ -80,9 +84,9 @@ public class HeatRenderPass : ScriptableRenderPass
             return;
 
         RenderGraphUtils.BlitMaterialParameters paraHeat = new(srcCamColor, dst, material, 0);
-        renderGraph.AddBlitPass(paraHeat, k_HeatPassName);
+        renderGraph.AddBlitPass(paraHeat, k_BlitPassName);
         
         RenderGraphUtils.BlitMaterialParameters paraHorizontal = new(dst, srcCamColor, material, 1);
-        renderGraph.AddBlitPass(paraHorizontal, k_HeatPassName+"2");
+        renderGraph.AddBlitPass(paraHorizontal, k_HeatPassName);
     }
 }

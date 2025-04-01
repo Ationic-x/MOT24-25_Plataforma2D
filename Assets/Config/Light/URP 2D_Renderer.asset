@@ -70,6 +70,7 @@ MonoBehaviour:
   settings:
     strength: 3.27
     speed: 2.33
+    yCoverage: 0
     cellDensity: 2.27
     angleSpeed: 2
     angleOffset: 2.33
@@ -90,6 +91,7 @@ MonoBehaviour:
   settings:
     strength: 0
     speed: 0
+    yCoverage: 0
     cellDensity: 0
     angleSpeed: 0
     angleOffset: 0

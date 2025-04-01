@@ -51,8 +51,9 @@ public class HeatRendererFeature : ScriptableRendererFeature
 [Serializable]
 public class HeatSettings
 {
-	[Range(0, 10f)] public float strength;
+	[Range(0, 1f)] public float strength;
 	[Range(0, 10f)] public float speed;
+	[Range(0, 10f)] public float yCoverage;
 	[Range(0, 10f)] public float cellDensity;
 	[Range(0, 10f)] public float angleSpeed;
 	[Range(0, 10f)] public float angleOffset;

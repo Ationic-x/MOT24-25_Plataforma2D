@@ -19,6 +19,9 @@ MonoBehaviour:
   speed:
     m_OverrideState: 1
     m_Value: 10
+  yCoverage:
+    m_OverrideState: 0
+    m_Value: 0
   cellDensity:
     m_OverrideState: 1
     m_Value: 10
@@ -61,6 +64,9 @@ MonoBehaviour:
   speed:
     m_OverrideState: 0
     m_Value: 0.05
+  yCoverage:
+    m_OverrideState: 0
+    m_Value: 0
   cellDensity:
     m_OverrideState: 0
     m_Value: 0.05
@@ -82,19 +88,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c73cf4a136f94114a97a3fe59bedfb74, type: 3}
   m_Name: HeatVolumeComponent
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   strength:
     m_OverrideState: 1
-    m_Value: 0.05
+    m_Value: 0.052
   speed:
     m_OverrideState: 1
-    m_Value: 0.42
+    m_Value: 0.8
+  yCoverage:
+    m_OverrideState: 1
+    m_Value: 0.74
   cellDensity:
     m_OverrideState: 1
-    m_Value: 2.51
+    m_Value: 15.1
   angleSpeed:
     m_OverrideState: 1
-    m_Value: 0.39
+    m_Value: 0.8
   angleOffset:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 0.8
