@@ -5,8 +5,8 @@ using UnityEngine.Rendering.Universal;
 
 public class HeatRendererFeature : ScriptableRendererFeature
 {
-	[SerializeField] private HeatSettings settings;
 	[SerializeField] private Shader shader;
+	private HeatSettings settings;
 	private Material material;
 	private HeatRenderPass heatRenderPass;
 
@@ -51,10 +51,12 @@ public class HeatRendererFeature : ScriptableRendererFeature
 [Serializable]
 public class HeatSettings
 {
-	[Range(0, 1f)] public float strength;
-	[Range(0, 10f)] public float speed;
-	[Range(0, 10f)] public float yCoverage;
-	[Range(0, 10f)] public float cellDensity;
-	[Range(0, 10f)] public float angleSpeed;
-	[Range(0, 10f)] public float angleOffset;
+	public Texture noiseTex;
+	public float strength;
+	public float yCoverage;
+	public float speedX;
+	public float speedY;
+	public float scale;
+	public float rotationSpeed;
+	public float rotationOffset;
 }

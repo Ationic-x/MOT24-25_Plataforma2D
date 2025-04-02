@@ -13,24 +13,76 @@ MonoBehaviour:
   m_Name: HeatVolumeComponent
   m_EditorClassIdentifier: 
   active: 1
+  noiseTex:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
   strength:
-    m_OverrideState: 1
-    m_Value: 10
-  speed:
     m_OverrideState: 1
     m_Value: 10
   yCoverage:
     m_OverrideState: 0
     m_Value: 0
-  cellDensity:
+  scale:
+    m_OverrideState: 0
+    m_Value: 0
+  speedX:
+    m_OverrideState: 0
+    m_Value: 0.05
+  speedY:
+    m_OverrideState: 0
+    m_Value: 0.05
+  rotationSpeed:
+    m_OverrideState: 0
+    m_Value: 0.05
+  rotationOffset:
+    m_OverrideState: 0
+    m_Value: 0.05
+--- !u!114 &-2204752611714378386
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7878d8f1de42ced4f8056e00263dc6ba, type: 3}
+  m_Name: FogVolumeComponent
+  m_EditorClassIdentifier: 
+  active: 0
+  noiseTex:
     m_OverrideState: 1
-    m_Value: 10
-  angleSpeed:
+    m_Value: {fileID: 2800000, guid: 49d17714ca489674586377c5a395d708, type: 3}
+  scale:
     m_OverrideState: 1
-    m_Value: 10
-  angleOffset:
+    m_Value: 1.61
+  yCoverage:
     m_OverrideState: 1
-    m_Value: 10
+    m_Value: 0.74
+  fogColor:
+    m_OverrideState: 1
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
+  fogOpacity:
+    m_OverrideState: 1
+    m_Value: 0.063
+  speedX:
+    m_OverrideState: 1
+    m_Value: 0.4
+  speedY:
+    m_OverrideState: 1
+    m_Value: -0.1
+  smoothnessMin:
+    m_OverrideState: 1
+    m_Value: 1
+  smoothnessMax:
+    m_OverrideState: 1
+    m_Value: 0
+  remapMin:
+    m_OverrideState: 1
+    m_Value: 0
+  remapMax:
+    m_OverrideState: 1
+    m_Value: 0.434
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45,6 +97,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   components:
   - {fileID: 6335233256348956427}
+  - {fileID: -2204752611714378386}
 --- !u!114 &2104183549675291236
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -58,22 +111,28 @@ MonoBehaviour:
   m_Name: HeatDistortion2VolumeComponent
   m_EditorClassIdentifier: 
   active: 1
-  strength:
+  noiseTex:
     m_OverrideState: 0
-    m_Value: 0.05
-  speed:
+    m_Value: {fileID: 0}
+  strength:
     m_OverrideState: 0
     m_Value: 0.05
   yCoverage:
     m_OverrideState: 0
     m_Value: 0
-  cellDensity:
+  scale:
+    m_OverrideState: 0
+    m_Value: 0
+  speedX:
     m_OverrideState: 0
     m_Value: 0.05
-  angleSpeed:
+  speedY:
     m_OverrideState: 0
     m_Value: 0.05
-  angleOffset:
+  rotationSpeed:
+    m_OverrideState: 0
+    m_Value: 0.05
+  rotationOffset:
     m_OverrideState: 0
     m_Value: 0.05
 --- !u!114 &6335233256348956427
@@ -89,21 +148,27 @@ MonoBehaviour:
   m_Name: HeatVolumeComponent
   m_EditorClassIdentifier: 
   active: 0
+  noiseTex:
+    m_OverrideState: 1
+    m_Value: {fileID: 2800000, guid: 222cf0d52ac7775468d6eee2a847c2e9, type: 3}
   strength:
     m_OverrideState: 1
-    m_Value: 0.052
-  speed:
-    m_OverrideState: 1
-    m_Value: 0.8
+    m_Value: 0.035
   yCoverage:
     m_OverrideState: 1
-    m_Value: 0.74
-  cellDensity:
+    m_Value: 0.91
+  scale:
     m_OverrideState: 1
-    m_Value: 15.1
-  angleSpeed:
+    m_Value: 1.42
+  speedX:
     m_OverrideState: 1
-    m_Value: 0.8
-  angleOffset:
+    m_Value: 2
+  speedY:
     m_OverrideState: 1
-    m_Value: 0.8
+    m_Value: 0.1
+  rotationSpeed:
+    m_OverrideState: 1
+    m_Value: 2
+  rotationOffset:
+    m_OverrideState: 1
+    m_Value: 100

@@ -6,12 +6,14 @@ using UnityEngine.Rendering.Universal;
 
 public class HeatRenderPass : ScriptableRenderPass
 {
+	private static readonly int noiseTexID = Shader.PropertyToID("_NoiseTex");
 	private static readonly int strengthID = Shader.PropertyToID("_Strength");
-	private static readonly int speedID = Shader.PropertyToID("_Speed");
 	private static readonly int yCoverageID = Shader.PropertyToID("_YCoverage");
-	private static readonly int cellDensityID = Shader.PropertyToID("_CellDensity");
-	private static readonly int angleSpeedID = Shader.PropertyToID("_AngleSpeed");
-	private static readonly int angleOffsetID = Shader.PropertyToID("_AngleOffset");
+	private static readonly int speedXID = Shader.PropertyToID("_SpeedX");
+	private static readonly int speedYID = Shader.PropertyToID("_SpeedY");
+	private static readonly int scaleID = Shader.PropertyToID("_Scale");
+	private static readonly int rotationSpeedID = Shader.PropertyToID("_RotationSpeed");
+	private static readonly int rotationOffsetID = Shader.PropertyToID("_RotationOffset");
 
     private const string k_HeatTextureName = "_HeatTexture";
     private const string k_HeatPassName = "HeatRenderPass";
@@ -37,19 +39,23 @@ public class HeatRenderPass : ScriptableRenderPass
 
 		var volumeComponent = VolumeManager.instance.stack.GetComponent<HeatVolumeComponent>();
 
+		Texture noiseTex = OverrideState(defaultSettings.noiseTex, volumeComponent.noiseTex);
 		float strength = OverrideState(defaultSettings.strength, volumeComponent.strength);
-		float speed = OverrideState(defaultSettings.speed, volumeComponent.speed);
         float yCoverage = OverrideState(defaultSettings.yCoverage, volumeComponent.yCoverage);
-        float cellDensity = OverrideState(defaultSettings.cellDensity, volumeComponent.cellDensity);
-        float angleSpeed = OverrideState(defaultSettings.angleSpeed, volumeComponent.angleSpeed);
-        float angleOffset = OverrideState(defaultSettings.angleOffset, volumeComponent.angleOffset);
+		float speedX = OverrideState(defaultSettings.speedX, volumeComponent.speedX);
+		float speedY = OverrideState(defaultSettings.speedX, volumeComponent.speedY);
+        float scale = OverrideState(defaultSettings.scale, volumeComponent.scale);
+        float rotationSpeed = OverrideState(defaultSettings.rotationSpeed, volumeComponent.rotationSpeed);
+        float rotationOffset = OverrideState(defaultSettings.rotationOffset, volumeComponent.rotationOffset);
 
-        material.SetFloat(strengthID, strength);
-		material.SetFloat(speedID, speed);
-		material.SetFloat(yCoverageID, yCoverage);
-		material.SetFloat(cellDensityID, cellDensity);
-		material.SetFloat(angleSpeedID, angleSpeed);
-		material.SetFloat(angleOffsetID, angleOffset);
+        material.SetTexture(noiseTexID, noiseTex);
+		material.SetFloat(strengthID, strength);
+        material.SetFloat(yCoverageID, yCoverage);
+        material.SetFloat(speedXID, speedX);
+        material.SetFloat(speedYID, speedY);
+        material.SetFloat(scaleID, scale);
+        material.SetFloat(rotationSpeedID, rotationSpeed);
+        material.SetFloat(rotationOffsetID, rotationOffset);
 	}
 
 	private T OverrideState<T, Y>(T defaultValue, Y volumeParameters) where Y : VolumeParameter<T>
@@ -83,10 +89,10 @@ public class HeatRenderPass : ScriptableRenderPass
         if (!srcCamColor.IsValid() || !dst.IsValid())
             return;
 
-        RenderGraphUtils.BlitMaterialParameters paraHeat = new(srcCamColor, dst, material, 0);
-        renderGraph.AddBlitPass(paraHeat, k_BlitPassName);
+        RenderGraphUtils.BlitMaterialParameters paraBlit = new(srcCamColor, dst, material, 0);
+        renderGraph.AddBlitPass(paraBlit, k_BlitPassName);
         
-        RenderGraphUtils.BlitMaterialParameters paraHorizontal = new(dst, srcCamColor, material, 1);
-        renderGraph.AddBlitPass(paraHorizontal, k_HeatPassName);
+        RenderGraphUtils.BlitMaterialParameters paraHeat = new(dst, srcCamColor, material, 1);
+        renderGraph.AddBlitPass(paraHeat, k_HeatPassName);
     }
 }

@@ -52,8 +52,8 @@ public class GhosTrail : MonoBehaviour
         Material material = ghostSR.material;
 
         ghost.transform.position = transform.position;
-        ghostSR.sprite = playerSR.sprite;
-        ghostSR.flipX = playerSR.flipX;
+        ghost.transform.localScale = transform.lossyScale;
+		ghostSR.sprite = playerSR.sprite;
 
         material.SetFloat("_TimeLimit", Time.time + _ghostLifetime);
         material.SetFloat("_Duration", _ghostLifetime);

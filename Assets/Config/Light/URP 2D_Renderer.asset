@@ -1,5 +1,31 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-4153455768554605347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43f8cef7cba60f94fadd309681191d6d, type: 3}
+  m_Name: FogRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings:
+    noiseTex: {fileID: 0}
+    fogColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+    fogOpacity: 0.3
+    speedX: 0.05
+    speedY: 0.01
+    noiseScale: 2
+    fogCoverage: 0.5
+    fogThresholdMin: 0.4
+    fogThresholdMax: 0.7
+    remapMin: 0.3
+    remapMax: 0.8
+  shader: {fileID: 4800000, guid: 7b1e9b36d4e000b49933c91e01d32de3, type: 3}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26,7 +52,8 @@ MonoBehaviour:
     probeVolumeBlendStatesCS: {fileID: 0}
   m_RendererFeatures:
   - {fileID: 4410479676499656304}
-  m_RendererFeatureMap: 707ed7e6e52b353d
+  - {fileID: -4153455768554605347}
+  m_RendererFeatureMap: 707ed7e6e52b353ddd740105fcf55bc6
   m_UseNativeRenderPass: 0
   m_TransparencySortMode: 0
   m_TransparencySortAxis: {x: 0, y: 1, z: 0}
