@@ -58,7 +58,7 @@ MonoBehaviour:
     m_Value: 1.61
   yCoverage:
     m_OverrideState: 1
-    m_Value: 0.74
+    m_Value: 0.94
   fogColor:
     m_OverrideState: 1
     m_Value: {r: 1, g: 1, b: 1, a: 1}
@@ -67,7 +67,7 @@ MonoBehaviour:
     m_Value: 0.063
   speedX:
     m_OverrideState: 1
-    m_Value: 0.4
+    m_Value: 0.39
   speedY:
     m_OverrideState: 1
     m_Value: -0.1
@@ -79,10 +79,10 @@ MonoBehaviour:
     m_Value: 0
   remapMin:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   remapMax:
     m_OverrideState: 1
-    m_Value: 0.434
+    m_Value: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98,6 +98,7 @@ MonoBehaviour:
   components:
   - {fileID: 6335233256348956427}
   - {fileID: -2204752611714378386}
+  - {fileID: 3213405121484659381}
 --- !u!114 &2104183549675291236
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -135,6 +136,37 @@ MonoBehaviour:
   rotationOffset:
     m_OverrideState: 0
     m_Value: 0.05
+--- !u!114 &3213405121484659381
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b82ffc72d95c6f4da670cc0067bbda4, type: 3}
+  m_Name: RainVolumeComponent
+  m_EditorClassIdentifier: 
+  active: 0
+  dropTex:
+    m_OverrideState: 1
+    m_Value: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
+  dropCount:
+    m_OverrideState: 1
+    m_Value: 100
+  dropScale:
+    m_OverrideState: 1
+    m_Value: 0.02
+  fallSpeed:
+    m_OverrideState: 1
+    m_Value: 18.5
+  color:
+    m_OverrideState: 1
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
+  Opacity:
+    m_OverrideState: 1
+    m_Value: 0.3
 --- !u!114 &6335233256348956427
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -150,25 +182,25 @@ MonoBehaviour:
   active: 0
   noiseTex:
     m_OverrideState: 1
-    m_Value: {fileID: 2800000, guid: 222cf0d52ac7775468d6eee2a847c2e9, type: 3}
+    m_Value: {fileID: 2800000, guid: fbaa240caba2c5a4390b9873d26a19fb, type: 3}
   strength:
     m_OverrideState: 1
-    m_Value: 0.035
+    m_Value: 0.09
   yCoverage:
     m_OverrideState: 1
-    m_Value: 0.91
+    m_Value: 0.9
   scale:
     m_OverrideState: 1
-    m_Value: 1.42
+    m_Value: 1.02
   speedX:
     m_OverrideState: 1
-    m_Value: 2
+    m_Value: 0.398
   speedY:
     m_OverrideState: 1
-    m_Value: 0.1
+    m_Value: 0.413
   rotationSpeed:
     m_OverrideState: 1
-    m_Value: 2
+    m_Value: 0.059
   rotationOffset:
     m_OverrideState: 1
-    m_Value: 100
+    m_Value: 9.9

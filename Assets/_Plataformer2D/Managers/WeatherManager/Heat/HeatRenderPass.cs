@@ -35,9 +35,9 @@ public class HeatRenderPass : ScriptableRenderPass
 
     private void UpdateHeatSettings()
 	{
-		if (material == null) return;
+		HeatVolumeComponent volumeComponent = VolumeManager.instance.stack.GetComponent<HeatVolumeComponent>();
 
-		var volumeComponent = VolumeManager.instance.stack.GetComponent<HeatVolumeComponent>();
+		if (material == null || defaultSettings == null || volumeComponent == null) return;
 
 		Texture noiseTex = OverrideState(defaultSettings.noiseTex, volumeComponent.noiseTex);
 		float strength = OverrideState(defaultSettings.strength, volumeComponent.strength);

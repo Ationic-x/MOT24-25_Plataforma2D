@@ -1,0 +1,55 @@
+using System;
+using UnityEngine;
+using UnityEngine.Rendering;
+
+[Serializable]
+public sealed class RainVolumeComponent : VolumeComponent
+{
+	[Header("Heat Settings")]
+	//public Texture2DParameter noiseTex =
+	//	new Texture2DParameter(null);
+
+	public Texture2DParameter dropTex =
+		new Texture2DParameter(null);
+
+	public ClampedFloatParameter dropCount =
+		new ClampedFloatParameter(0.05f, 0, 100f);
+
+	public ClampedFloatParameter dropScale =
+	new ClampedFloatParameter(0.05f, 0, 100f);
+
+	public ClampedFloatParameter fallSpeed =
+	new ClampedFloatParameter(0.05f, 0, 100f);
+
+	public ColorParameter color =
+		new ColorParameter(Color.white);
+
+	public ClampedFloatParameter Opacity =
+	new ClampedFloatParameter(0.05f, 0, 100f);
+
+	//public ClampedFloatParameter strength = 
+	//	new ClampedFloatParameter(0.05f, 0, 1f);
+
+	//public ClampedFloatParameter yCoverage =
+	//	new ClampedFloatParameter(0f, 0, 10f);
+
+	//public ClampedFloatParameter scale = 
+	//	new ClampedFloatParameter(0f, 0, 10f);
+
+	//public Vector2Parameter tiling =
+	//	new Vector2Parameter(new Vector2(0, 0));
+
+	//public ColorParameter color =
+	//	new ColorParameter(Color.white);
+
+	//[Header("Noise Speed")]
+	//public ClampedFloatParameter speedX = 
+	//	new ClampedFloatParameter(0.05f, 0, 2f);
+
+	//public ClampedFloatParameter speedY = 
+	//	new ClampedFloatParameter(0.05f, 0, 2f);
+
+	//[Header("Noise Rotation")]
+	//public ClampedFloatParameter distortionAmount =
+	//	new ClampedFloatParameter(0.05f, 0, 2f);
+}

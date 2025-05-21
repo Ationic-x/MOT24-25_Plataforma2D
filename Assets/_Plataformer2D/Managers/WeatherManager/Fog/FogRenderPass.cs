@@ -38,9 +38,9 @@ public class FogRenderPass : ScriptableRenderPass
 
     private void UpdateFogSettings()
 	{
-		if (material == null) return;
+		FogVolumeComponent volumeComponent = VolumeManager.instance.stack.GetComponent<FogVolumeComponent>();
 
-		var volumeComponent = VolumeManager.instance.stack.GetComponent<FogVolumeComponent>();
+		if (material == null || defaultSettings == null || volumeComponent == null) return;
 
 		float fogOpacity = OverrideState(defaultSettings.fogOpacity, volumeComponent.fogOpacity);
 		float speedX = OverrideState(defaultSettings.speedX, volumeComponent.speedX);

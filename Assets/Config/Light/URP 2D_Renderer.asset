@@ -13,19 +13,21 @@ MonoBehaviour:
   m_Name: FogRendererFeature
   m_EditorClassIdentifier: 
   m_Active: 1
-  settings:
-    noiseTex: {fileID: 0}
-    fogColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
-    fogOpacity: 0.3
-    speedX: 0.05
-    speedY: 0.01
-    noiseScale: 2
-    fogCoverage: 0.5
-    fogThresholdMin: 0.4
-    fogThresholdMax: 0.7
-    remapMin: 0.3
-    remapMax: 0.8
   shader: {fileID: 4800000, guid: 7b1e9b36d4e000b49933c91e01d32de3, type: 3}
+--- !u!114 &-2984081396969612464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1eec5e5199fa1bd4193beb0783505a83, type: 3}
+  m_Name: RainRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  shader: {fileID: 4800000, guid: d11bd647ac503964fabdc1943a420a18, type: 3}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53,7 +55,8 @@ MonoBehaviour:
   m_RendererFeatures:
   - {fileID: 4410479676499656304}
   - {fileID: -4153455768554605347}
-  m_RendererFeatureMap: 707ed7e6e52b353ddd740105fcf55bc6
+  - {fileID: -2984081396969612464}
+  m_RendererFeatureMap: 707ed7e6e52b353ddd740105fcf55bc6505bc6a0c76996d6
   m_UseNativeRenderPass: 0
   m_TransparencySortMode: 0
   m_TransparencySortAxis: {x: 0, y: 1, z: 0}
@@ -94,13 +97,6 @@ MonoBehaviour:
   m_Name: HeatRendererFeature
   m_EditorClassIdentifier: 
   m_Active: 1
-  settings:
-    strength: 3.27
-    speed: 2.33
-    yCoverage: 0
-    cellDensity: 2.27
-    angleSpeed: 2
-    angleOffset: 2.33
   shader: {fileID: 4800000, guid: c955270ac478aaf438787fd093766595, type: 3}
 --- !u!114 &5371414039891358511
 MonoBehaviour:
@@ -115,11 +111,4 @@ MonoBehaviour:
   m_Name: HeatRendererFeature
   m_EditorClassIdentifier: 
   m_Active: 1
-  settings:
-    strength: 0
-    speed: 0
-    yCoverage: 0
-    cellDensity: 0
-    angleSpeed: 0
-    angleOffset: 0
   shader: {fileID: 4800000, guid: c955270ac478aaf438787fd093766595, type: 3}
